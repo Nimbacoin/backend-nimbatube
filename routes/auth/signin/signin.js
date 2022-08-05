@@ -1,42 +1,38 @@
 import express from "express";
 import mongoose from "mongoose";
-const router = express.Router();
-import dbConnect from "../../../db/dbConnect.js";
+const routerSignIn = express.Router();
+import dbConnect from "../../../db/DbConnect.js";
 import User from "../../../db/schema/user.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-router.post("/", async (req, res) => {
+routerSignIn.post("/", async (req, res) => {
   const { password, email } = req.body;
-  dbConnect();
+  console.log(req.body);
   await User.findOne({ email: email }).then((docadded) => {
-    console.log(password, email);
+    console.log(docadded);
     if (docadded) {
       bcrypt.compare(password, docadded.password).then((result) => {
         if (result) {
           const id = docadded._id.toString("hex");
-          const username = docadded.username;
-          let auth = true;
-          let userdata = { email, auth, id,  username  };
-          const user = { user: docadded.id };
-          const accesTokken = jwt.sign(user, process.env.ACCCES_TOKKEN_SECRET);
+          const accessToken = jwt.sign(id, process.env.ACCESS_TOKEN_SECRET);
+          const user = { email: email, accessToken: accessToken };
           res.json({
             message: "you successfully log in",
-            user: userdata,
-            accesToken: accesTokken,
+            user: user,
           });
         } else {
           res.json({
-            error: "This is a wrong password",
+            message: "This is a wrong password",
           });
         }
       });
     } else if (!docadded) {
       res.json({
-        error: "This email address was not founded, create account instead",
+        message: "This email address was not founded, create account instead",
       });
     }
   });
 });
 
-export default router;
+export default routerSignIn;

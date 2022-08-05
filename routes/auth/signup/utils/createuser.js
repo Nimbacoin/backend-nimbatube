@@ -1,13 +1,12 @@
 import express from "express";
 import mongoose from "mongoose";
-import dbConnect from "../../../../db/dbConnect.js";
+import dbConnect from "../../../../db/DbConnect.js";
 import User from "../../../../db/schema/user.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 const createuser = async (req, res) => {
-  dbConnect();
-  //cheking password is not spam
+  console.log(req.body);
   const { email, password, conifrmpassword, username } = req.body;
   if (
     !email.includes("@") ||
@@ -17,23 +16,25 @@ const createuser = async (req, res) => {
     email.includes("https:")
   ) {
     res.json({
-      error:
+      message:
         "this does not seems to email addres please enter your correct email addrres",
     });
   } else if (password != conifrmpassword) {
-    res.json({ error: "password does not match" , error1 : password +"" + conifrmpassword });
+    res.json({
+      message: "password does not match",
+      message: password + "" + conifrmpassword,
+    });
   } else if (password.length <= 7) {
     res.json({
-      error:
+      message:
         "password is too short, password should cotain at less 8 characters",
     });
   } else {
     await User.findOne({ email: email }).then((doc) => {
       if (doc) {
         res.json({
-          error: "Sorry this email is arlady avalible",
+          message: "Sorry this email is arlady avalible",
         });
-
       } else if (!doc) {
         const CreateUser = async () => {
           const salt = await bcrypt.genSalt();
@@ -41,17 +42,11 @@ const createuser = async (req, res) => {
           User.create({ email: email, password: hashPassword, username }).then(
             (docadded) => {
               const id = docadded._id.toString("hex");
-              let auth = true;
-              let userdata = { email, auth, id, username };
-              const user = { user: id };
-              const accesTokken = jwt.sign(
-                user,
-                process.env.ACCCES_TOKKEN_SECRET
-              );
+              const accessToken = jwt.sign(id, process.env.ACCESS_TOKEN_SECRET);
+              const user = { email: email, accessToken: accessToken };
               res.json({
                 message: "user created successfully",
-                user: userdata,
-                accesToken: accesTokken,
+                user: user,
               });
             }
           );
