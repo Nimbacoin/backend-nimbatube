@@ -23,13 +23,13 @@ routerSignIn.post("/", async (req, res) => {
           });
         } else {
           res.json({
-            message: "This is a wrong password",
+            message: "WrongPassWord",
           });
         }
       });
     } else if (!docadded) {
       res.json({
-        message: "This email address was not founded, create account instead",
+        message: "EamilNotFinded",
       });
     }
   });

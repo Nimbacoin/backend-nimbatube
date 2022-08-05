@@ -7,7 +7,7 @@ import jwt from "jsonwebtoken";
 
 const createuser = async (req, res) => {
   console.log(req.body);
-  const { email, password, conifrmpassword, username } = req.body;
+  const { email, password, conifirmpassword, username } = req.body;
   if (
     !email.includes("@") ||
     email.length <= 0 ||
@@ -16,24 +16,21 @@ const createuser = async (req, res) => {
     email.includes("https:")
   ) {
     res.json({
-      message:
-        "this does not seems to email addres please enter your correct email addrres",
-    });
-  } else if (password != conifrmpassword) {
-    res.json({
-      message: "password does not match",
-      message: password + "" + conifrmpassword,
+      message: "RandomTextNotEmailAdress",
     });
   } else if (password.length <= 7) {
     res.json({
-      message:
-        "password is too short, password should cotain at less 8 characters",
+      message: "ShortPassWord",
+    });
+  } else if (password != conifirmpassword) {
+    res.json({
+      message: "PasswordNotMatch",
     });
   } else {
     await User.findOne({ email: email }).then((doc) => {
       if (doc) {
         res.json({
-          message: "Sorry this email is arlady avalible",
+          message: "AvalibleEmail",
         });
       } else if (!doc) {
         const CreateUser = async () => {
