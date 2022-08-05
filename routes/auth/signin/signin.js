@@ -1,7 +1,6 @@
 import express from "express";
 import mongoose from "mongoose";
 const routerSignIn = express.Router();
-import dbConnect from "../../../db/DbConnect.js";
 import User from "../../../db/schema/user.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";

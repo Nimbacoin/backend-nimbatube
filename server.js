@@ -3,9 +3,9 @@ import http from "http";
 import cors from "cors";
 import dotenv from "dotenv";
 import { Server, Socket } from "socket.io";
-import dbConnect from "./db/DbConnect.js";
 import Routes from "./routes/routes.js";
 import bodyParser from "body-parser";
+import dbConnect from "./db/DbConnect.js";
 
 const app = express();
 const PORT = process.env.PORT || 5000;
