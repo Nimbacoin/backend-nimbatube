@@ -5,7 +5,9 @@ import dotenv from "dotenv";
 import { Server, Socket } from "socket.io";
 import Routes from "./routes/routes.js";
 import bodyParser from "body-parser";
-import dbConnect from "./db/DbConnect.js";
+console.log("yes");
+import dbConnect from "./db/dbConnect.js";
+console.log("yes");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
