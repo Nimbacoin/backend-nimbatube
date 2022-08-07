@@ -29,7 +29,11 @@ const ChanelSchema = mongoose.Schema(
       email: {
         type: String,
       },
-      name: {
+
+      title: {
+        type: String,
+      },
+      website: {
         type: String,
       },
       chanelImg: {

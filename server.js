@@ -7,6 +7,7 @@ import Routes from "./routes/routes.js";
 import bodyParser from "body-parser";
 import dbConnect from "./db/dbConnect.js";
 import cookieParser from "cookie-parser";
+import AuthToken from "./utils/verify-user/VerifyUser.js";
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -49,17 +50,8 @@ app.use(function (req, res, next) {
   next();
 });
 
-app.get("/api", (req, res) => {
+app.get("/api", AuthToken, (req, res) => {
   const Cookies = JSON.stringify(req.cookies);
-  if (Cookies) {
-    const CookiesParsed = JSON.parse(Cookies);
-    const User = CookiesParsed.user;
-    if (User) {
-      res.user = User;
-      console.log(res.user);
-    }
-  }
-
   res.json("non");
 });
 app.use("/", Routes);

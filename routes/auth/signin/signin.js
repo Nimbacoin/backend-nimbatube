@@ -14,8 +14,11 @@ routerSignIn.post("/", async (req, res) => {
           const id = docadded._id.toString("hex");
           const accessToken = jwt.sign(id, process.env.ACCESS_TOKEN_SECRET);
           const user = { email: email, accessToken: accessToken };
-          if (!req.user) {
-            res.user = user;
+          const reqUser = req.user;
+          if (typeof reqUser === "undefined") {
+            req.userId = id;
+            req.userEmail = email;
+            console.log(req.userId);
           }
           res.json({
             message: "you successfully log in",

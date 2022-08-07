@@ -41,7 +41,7 @@ const createuser = async (req, res) => {
               const accessToken = jwt.sign(id, process.env.ACCESS_TOKEN_SECRET);
               const user = { email: email, accessToken: accessToken };
               if (!req.user) {
-                res.user = user;
+                req.user = { email, userId: id };
               }
               res.json({
                 message: "user created successfully",
