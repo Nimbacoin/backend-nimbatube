@@ -14,7 +14,8 @@ const UserScheme = mongoose.Schema(
       type: String,
       required: true,
     },
-    senders: { type: [] },
+    chenels: [{ id: String }],
+
     date: {
       type: Date,
       default: Date.now(),
