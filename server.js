@@ -5,15 +5,16 @@ import dotenv from "dotenv";
 import { Server, Socket } from "socket.io";
 import Routes from "./routes/routes.js";
 import bodyParser from "body-parser";
-console.log("yes");
 import dbConnect from "./db/dbConnect.js";
-console.log("yes");
+import cookieParser from "cookie-parser";
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 const ORIGIN = process.env.ORIGIN;
 
 dotenv.config();
+app.use(cookieParser());
+
 cors(
   { "Access-Control-Allow-Origin": `*` },
   "Access-Control-Allow-Methods: POST, PUT, PATCH, GET, DELETE, OPTIONS",
@@ -48,6 +49,19 @@ app.use(function (req, res, next) {
   next();
 });
 
+app.get("/api", (req, res) => {
+  const Cookies = JSON.stringify(req.cookies);
+  if (Cookies) {
+    const CookiesParsed = JSON.parse(Cookies);
+    const User = CookiesParsed.user;
+    if (User) {
+      res.user = User;
+      console.log(res.user);
+    }
+  }
+
+  res.json("non");
+});
 app.use("/", Routes);
 
 server.listen(PORT, (err) => {

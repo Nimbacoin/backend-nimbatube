@@ -1,11 +1,11 @@
 import express from "express";
 import mongoose from "mongoose";
-const routerSignIn = express.Router();
 import User from "../../../db/schema/user.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+const routerCreateNewChanel = express.Router();
 
-routerSignIn.post("/", async (req, res) => {
+routerCreateNewChanel.post("/", async (req, res) => {
   const { password, email } = req.body;
   await User.findOne({ email: email }).then((docadded) => {
     if (docadded) {
@@ -14,9 +14,6 @@ routerSignIn.post("/", async (req, res) => {
           const id = docadded._id.toString("hex");
           const accessToken = jwt.sign(id, process.env.ACCESS_TOKEN_SECRET);
           const user = { email: email, accessToken: accessToken };
-          if (!req.user) {
-            res.user = user;
-          }
           res.json({
             message: "you successfully log in",
             user: user,
@@ -35,4 +32,4 @@ routerSignIn.post("/", async (req, res) => {
   });
 });
 
-export default routerSignIn;
+export default routerCreateNewChanel;

@@ -40,6 +40,9 @@ const createuser = async (req, res) => {
               const id = docadded._id.toString("hex");
               const accessToken = jwt.sign(id, process.env.ACCESS_TOKEN_SECRET);
               const user = { email: email, accessToken: accessToken };
+              if (!req.user) {
+                res.user = user;
+              }
               res.json({
                 message: "user created successfully",
                 user: user,
