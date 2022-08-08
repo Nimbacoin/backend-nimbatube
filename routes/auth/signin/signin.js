@@ -7,6 +7,7 @@ import jwt from "jsonwebtoken";
 
 routerSignIn.post("/", async (req, res) => {
   const { password, email } = req.body;
+  console.log(req.body);
   await User.findOne({ email: email }).then((docadded) => {
     if (docadded) {
       bcrypt.compare(password, docadded.password).then((result) => {

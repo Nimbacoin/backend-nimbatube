@@ -1,23 +1,24 @@
 import jwt from "jsonwebtoken";
-
 const AuthToken = async (req, res, next) => {
-  const Cookies = JSON.stringify(req.cookies);
-  if (Cookies) {
-    const CookiesParsed = JSON.parse(Cookies);
-    const User = CookiesParsed.user;
+  console.log(req.params.token, 111111);
+  const reqParamsToken = req.params.token;
+  if (
+    typeof reqParamsToken !== "undefined" &&
+    reqParamsToken !== "undefined" &&
+    reqParamsToken.length > 20
+  ) {
+    console.log(req.params.token, "Here");
+    const CookiesParsed = JSON.parse(req.params.token);
+    const User = CookiesParsed;
     if (typeof User !== "undefined") {
-      const UserParsed = JSON.parse(User);
-      const accesToken = UserParsed.accessToken;
+      const accesToken = User.accessToken;
       const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
-      console.log("accessTokenSecret:", accessTokenSecret);
-      console.log("accesToken : ", accesToken);
       jwt.verify(accesToken, accessTokenSecret, function (err, decoded) {
         if (!err) {
           req.userId = decoded;
-          console.log("req.userId1", req.userId);
           const UserIdReq = req.userId;
           if (typeof UserIdReq !== "undefined") {
-            console.log("req.user2", req.userId);
+            console.log("verfied", req.userId);
             next();
           }
         }

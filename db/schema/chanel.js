@@ -2,13 +2,14 @@ import mongoose from "mongoose";
 
 const ChanelSchema = mongoose.Schema(
   {
+    creator: { type: String, required: true },
     followers: [
       {
         email: String,
         id: String,
       },
     ],
-    videos: [
+    uploads: [
       {
         title: String,
         id: String,
@@ -33,6 +34,12 @@ const ChanelSchema = mongoose.Schema(
       title: {
         type: String,
       },
+      name: {
+        type: String,
+      },
+      description: {
+        type: String,
+      },
       website: {
         type: String,
       },
@@ -52,5 +59,5 @@ const ChanelSchema = mongoose.Schema(
   { timestamps: true }
 );
 
-const Chanel = mongoose.model("chanel", ChanelSchema);
-export default Chanel;
+const ChanelModal = mongoose.model("chanels", ChanelSchema);
+export default ChanelModal;

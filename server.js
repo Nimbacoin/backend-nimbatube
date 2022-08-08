@@ -51,7 +51,8 @@ app.use(function (req, res, next) {
 });
 
 app.get("/api", AuthToken, (req, res) => {
-  const Cookies = JSON.stringify(req.cookies);
+  console.log("verfied", req.userId);
+
   res.json("non");
 });
 app.use("/", Routes);

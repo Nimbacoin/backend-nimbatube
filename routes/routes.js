@@ -5,8 +5,7 @@ import routesChanel from "./chanel/chanel.js";
 
 const allRoutes = [{ name: routesAuth, auth: false }, { name: routesChanel }];
 
-allRoutes.map(({ name, auth }) => {
-  Routes.use("/api", name);
-});
+Routes.use("/api", routesAuth);
+Routes.use("/api", routesChanel);
 
 export default Routes;
