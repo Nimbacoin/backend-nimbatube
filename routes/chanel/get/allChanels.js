@@ -1,19 +1,19 @@
 import express from "express";
 import ChanelModal from "../../../db/schema/chanel.js";
 import User from "../../../db/schema/user.js";
-const allChanels = express.Router();
+const AllChanels = express.Router();
 
-allChanels.get("/", async (req, res) => {
+AllChanels.get("/", async (req, res) => {
   const userId = req.userId;
   console.log("here");
   await User.findOne({ _id: userId }).then((docadded) => {
     if (docadded) {
       ChanelModal.find({ creator: userId }).then((chanels) => {
-        console.log(chanels)
+        console.log(chanels);
         if (chanels.length) {
-          res.json({ "responsData": chanels });
+          res.json({ responsData: chanels });
         } else {
-          res.json({ "responsMessage": "NoChanelFounded" });
+          res.json({ responsMessage: "NoChanelFounded" });
         }
       });
     } else if (!docadded) {
@@ -24,4 +24,4 @@ allChanels.get("/", async (req, res) => {
   });
 });
 
-export default allChanels;
+export default AllChanels;
