@@ -1,9 +1,9 @@
 import express from "express";
 import ChanelModal from "../../../db/schema/chanel.js";
 import User from "../../../db/schema/user.js";
-const AllChanels = express.Router();
+const allChanels = express.Router();
 
-AllChanels.get("/", async (req, res) => {
+allChanels.get("/", async (req, res) => {
   const userId = req.userId;
   console.log("here");
   await User.findOne({ _id: userId }).then((docadded) => {
@@ -24,4 +24,4 @@ AllChanels.get("/", async (req, res) => {
   });
 });
 
-export default AllChanels;
+export default allChanels;

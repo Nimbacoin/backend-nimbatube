@@ -1,11 +1,11 @@
 import express from "express";
 import AuthToken from "../../../utils/verify-user/VerifyUser.js";
-import AllChanels from "./AllChanels.js";
+import allChanels from "./allChanels.js";
 const routesChanelGet = express.Router();
 
 const allRoutes = [
   {
-    name: AllChanels,
+    name: allChanels,
     auth: true,
     rout: "/all-chanels",
   },
