@@ -9,7 +9,6 @@ allChanels.get("/", async (req, res) => {
   await User.findOne({ _id: userId }).then((docadded) => {
     if (docadded) {
       ChanelModal.find({ creator: userId }).then((chanels) => {
-        console.log(chanels);
         if (chanels.length) {
           res.json({ responsData: chanels });
         } else {

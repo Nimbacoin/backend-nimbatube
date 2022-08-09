@@ -6,9 +6,10 @@ const routerCreateNewChanelGeneral = express.Router();
 routerCreateNewChanelGeneral.post("/", async (req, res) => {
   const userId = req.userId;
   const { general } = req.body;
+  console.log("here is the req", req.body);
   const { title, name, description } = general;
   const { tags } = req.body;
-  
+
   await User.findOne({ _id: userId }).then((docadded) => {
     if (docadded) {
       ChanelModal.create({
