@@ -43,8 +43,10 @@ const ChanelSchema = mongoose.Schema(
       website: {
         type: String,
       },
-      chanelImg: {
-        type: String,
+      profileImg: {
+        url: String,
+        id: String,
+        asset_id: String,
       },
       coverImg: {
         type: String,
