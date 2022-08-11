@@ -1,6 +1,7 @@
 import express from "express";
 import AuthToken from "../../../utils/verify-user/VerifyUser.js";
 import createNewChanelGeneral from "./create-new-chanel/createNewChanelGeneral.js";
+import uploadChanelImages from "./uploads/uploadChanelImages.js";
 const routesChanelPosts = express.Router();
 
 const allRoutes = [
@@ -8,6 +9,11 @@ const allRoutes = [
     name: createNewChanelGeneral,
     auth: true,
     rout: "/create-new-chanel",
+  },
+  {
+    name: uploadChanelImages,
+    auth: true,
+    rout: "/upload-profile",
   },
 ];
 

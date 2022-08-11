@@ -29,10 +29,16 @@ const io = new Server(server, {
   cors: { origin: ORIGIN },
 });
 
-app.use(express.json());
+app.use(
+  bodyParser.json({
+    limit: "50mb",
+  })
+);
 
 app.use(
   bodyParser.urlencoded({
+    limit: "50mb",
+    parameterLimit: 100000,
     extended: true,
   })
 );
