@@ -49,7 +49,9 @@ const ChanelSchema = mongoose.Schema(
         asset_id: String,
       },
       coverImg: {
-        type: String,
+        url: String,
+        id: String,
+        asset_id: String,
       },
     },
 

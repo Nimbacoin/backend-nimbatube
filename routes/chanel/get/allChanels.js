@@ -5,7 +5,6 @@ const allChanels = express.Router();
 
 allChanels.get("/", async (req, res) => {
   const userId = req.userId;
-  console.log("here");
   await User.findOne({ _id: userId }).then((docadded) => {
     if (docadded) {
       ChanelModal.find({ creator: userId }).then((chanels) => {

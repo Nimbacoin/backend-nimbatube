@@ -29,6 +29,13 @@ const io = new Server(server, {
   cors: { origin: ORIGIN },
 });
 
+io.on("connection", (socket) => {
+  socket.on("stream", (image) => {
+    // console.log(image);
+    socket.broadcast.emit("streaming", image);
+  });
+});
+
 app.use(
   bodyParser.json({
     limit: "50mb",
