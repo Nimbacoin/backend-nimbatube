@@ -28,10 +28,9 @@ const server = http.createServer(app);
 const io = new Server(server, {
   cors: { origin: ORIGIN },
 });
-
+let ddd = 0;
 io.on("connection", (socket) => {
   socket.on("stream", (image) => {
-    // console.log(image);
     socket.broadcast.emit("streaming", image);
   });
 });
