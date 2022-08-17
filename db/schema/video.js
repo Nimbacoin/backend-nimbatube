@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const ChanelSchema = mongoose.Schema(
   {
-    videotUrl: {
+    path: {
       type: String,
     },
     tilte: {
