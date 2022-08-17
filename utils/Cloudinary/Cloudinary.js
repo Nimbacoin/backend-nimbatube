@@ -3,7 +3,6 @@ import cloudinary from "cloudinary";
 
 dotenv.config();
 
-console.log(process.env.CLOUDINARY_NAME);
 cloudinary.config({
   cloud_name: "nimbatube",
   api_key: "823672526525528",
@@ -14,4 +13,3 @@ cloudinary.config({
 
 export { cloudinary };
 
-console.log(process.env.CLOUDINARY_NAME);

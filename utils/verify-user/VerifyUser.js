@@ -9,6 +9,7 @@ const AuthToken = async (req, res, next) => {
     reqParamsToken.length > 20
   ) {
     const CookiesParsed = JSON.parse(req.params.token);
+
     const User = CookiesParsed;
     if (typeof User !== "undefined") {
       const accesToken = User.accessToken;
