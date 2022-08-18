@@ -11,12 +11,10 @@ const videoSchema = mongoose.Schema(
     title: {
       type: String,
     },
-    description: {
+    descreption: {
       type: String,
     },
-    thumbnail: {
-      type: String,
-    },
+    thumbnail: String,
     likes: [{ id: String }],
     disLikes: [{ id: String }],
     comments: [{ id: String }],

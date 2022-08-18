@@ -13,6 +13,9 @@ import path from "path";
 import Routes from "./routes/routes.js";
 import { Server, Socket } from "socket.io";
 import bodyParser from "body-parser";
+import User from "./db/schema/user.js";
+import channelModal from "./db/schema/channel.js";
+import videoModal from "./db/schema/video.js";
 
 connectDB();
 dotenv.config();
@@ -119,6 +122,9 @@ app.delete("/delete/:filename", async (req, res) => {
     res.status(400).send(err);
   }
 });
+// videoModal.remove({}, function (err) {
+//   console.log("collection removed");
+// });
 app.use("/", Routes);
 // serves the application at the defined port
 app.listen(PORT, () => {

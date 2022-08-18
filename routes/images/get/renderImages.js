@@ -21,6 +21,7 @@ conn.once("open", () => {
 
 renderImages.get("/get/read/images/:filename", async (req, res) => {
   gfs.files.findOne({ filename: req.params.filename }, (err, file) => {
+    console.log(req.params.filename);
     if (file) {
       const readStream = gridfsBucket.openDownloadStream(file._id);
       readStream.pipe(res);

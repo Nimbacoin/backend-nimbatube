@@ -8,6 +8,7 @@ import mongoose from "mongoose";
 import multer from "multer";
 import crypto from "crypto";
 import path from "path";
+import videoModal from "../../../db/schema/video.js";
 
 const mongoURL = process.env.MONGOCONNECT;
 const conn = mongoose.createConnection(mongoURL);
@@ -22,23 +23,17 @@ conn.once("open", () => {
 });
 
 submiteVideo.post("/", (req, res) => {
-  const File = req.file;
-  console.log("yes");
-  if (File && File.contentType !== "video/mp4") {
-    gfs.files.deleteOne(
-      { filename: File.filename, root: "video" },
-      (err, gridStore) => {
-        if (err) {
-          console.log("i dont want to delete the file ok");
-          return res.status(404).json({ err: err });
-        } else {
-          res.json({ message: "ONLYVIDEOS" });
-        }
+  const { title, descreption } = req.body;
+  const videoId = req.body.video_id;
+
+  if (videoId) {
+    const filter = { _id: videoId };
+    const update = { descreption: descreption, title: title };
+    videoModal.findOneAndUpdate(filter, update, (error, resuel) => {
+      if (resuel) {
+        res.json({ uploaded: true });
       }
-    );
-  } else {
-    console.log(File);
-    res.json({ file: File, uploaded: true });
+    });
   }
 });
 

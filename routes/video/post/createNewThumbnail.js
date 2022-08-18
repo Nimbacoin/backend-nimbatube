@@ -1,5 +1,6 @@
 import express from "express";
 import User from "../../../db/schema/user.js";
+import videoModal from "../../../db/schema/video.js";
 const createNewThumbnail = express.Router();
 import { GridFsStorage } from "multer-gridfs-storage";
 import Grid from "gridfs-stream";
@@ -52,32 +53,43 @@ createNewThumbnail.post(
   "/post/video/create-new-thumbnail/:token",
   AuthToken,
   upload.single("thumbnail"),
-  (req, res) => {
+  async (req, res) => {
     const File = req.file;
     const contentType = File.contentType;
     console.log(contentType);
     if (
       contentType === "image/png" ||
       contentType === "image/gif" ||
+      contentType === "image/jpg" ||
       contentType === "image/jpeg" ||
       contentType === "image/jfif" ||
       contentType === "image/svg"
     ) {
       console.log(File);
-      res.json({ file: File, uploaded: true });
-    } else {
-      gfs.files.deleteOne(
-        { filename: File.filename, root: "images" },
-        (err, gridStore) => {
-          if (err) {
-            console.log("i dont want to delete the file ok");
-            return res.status(404).json({ err: err });
-          } else {
-            res.json({ file: "ONLYIMAGEALLOWED" });
+      const videoId = req.body.videoId;
+      if (videoId) {
+        const filter = { _id: videoId };
+        const update = { thumbnail: File.filename };
+        videoModal.findOneAndUpdate(filter, update, (error, resuel) => {
+          if (resuel) {
+            res.json({ file: File, uploaded: true });
           }
-        }
-      );
+        });
+      }
+    } else {
+      // gfs.files.deleteOne(
+      //   { filename: File.filename, root: "images" },
+      //   (err, gridStore) => {
+      //     if (err) {
+      //       console.log("i dont want to delete the file ok");
+      //       return res.status(404).json({ err: err });
+      //     } else {
+      //       res.json({ file: "ONLYIMAGEALLOWED" });
+      //     }
+      //   }
+      // );
     }
+    req.file = null;
   }
 );
 
