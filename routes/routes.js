@@ -4,11 +4,13 @@ import routesAuth from "./auth/auth.js";
 import routesChannel from "./channel/channel.js";
 import videoRoutes from "./video/videoRoutes.js";
 import tag from "../db/schema/tag.js";
+import imagesRoutes from "./images/imagesRoutes.js";
 // const allRoutes = [{ name: routesAuth, auth: false }, { name: routesChanel }];
 
 Routes.use("/api", routesAuth);
 Routes.use("/api", routesChannel);
 Routes.use("/api", videoRoutes);
+Routes.use("/api", imagesRoutes);
 
 Routes.post("/api/add-tag", async (req, res) => {
   const tagValue = req.body.tag;

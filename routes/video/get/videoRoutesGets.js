@@ -6,7 +6,7 @@ const videoRoutesGets = express.Router();
 const allRoutes = [
   {
     name: renderVideo,
-    false: false,
+    auth: false,
   },
 ];
 

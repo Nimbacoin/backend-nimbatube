@@ -8,6 +8,7 @@ import mongoose from "mongoose";
 import multer from "multer";
 import crypto from "crypto";
 import path from "path";
+import videoModal from "../../../db/schema/video.js";
 
 const mongoURL = process.env.MONGOCONNECT;
 const conn = mongoose.createConnection(mongoURL);
@@ -52,7 +53,7 @@ createNewVideo.post(
   "/post/video/create-new-video/:token",
   AuthToken,
   upload.single("video"),
-  (req, res) => {
+  async (req, res) => {
     const File = req.file;
     console.log("yes");
     if (File && File.contentType !== "video/mp4") {
@@ -68,8 +69,19 @@ createNewVideo.post(
         }
       );
     } else {
-      console.log(File);
-      res.json({ file: File, uploaded: true });
+      const channelId = req.body.channelId;
+      const creatoreId = req.userId;
+      await videoModal
+        .create({
+          channelId,
+          creatore: creatoreId,
+          filename: File.filename,
+          fileId: File.id,
+        })
+        .then((newFile) => {
+          console.log(newFile);
+          res.json({ file: newFile, uploaded: true });
+        });
     }
   }
 );

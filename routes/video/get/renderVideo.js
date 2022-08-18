@@ -1,25 +1,43 @@
-// import the packages
-import mongoose from "mongoose";
 import express from "express";
+import User from "../../../db/schema/user.js";
+const renderVideo = express.Router();
 import { GridFsStorage } from "multer-gridfs-storage";
 import Grid from "gridfs-stream";
-import dbConnect from "../../../db/dbConnect.js";
-const renderVideo = express.Router();
+import mongoose from "mongoose";
+import multer from "multer";
+import videoModal from "../../../db/schema/video.js";
 
-renderVideo.get("/:filename", async (req, res) => {
-  console.log("sdkskdldskd");
-  await dbConnect();
-  const conn = mongoose.connection;
-  const gfs = await Grid(conn.db, mongoose.mongo);
+const mongoURL = process.env.MONGOCONNECT;
+const conn = mongoose.createConnection(mongoURL);
+let gfs, gridfsBucket;
+
+conn.once("open", () => {
+  console.log("db is connected");
+  gridfsBucket = new mongoose.mongo.GridFSBucket(conn.db, {
+    bucketName: "video",
+  });
+  gfs = Grid(conn.db, mongoose.mongo);
   gfs.collection("video");
-  const { filename } = req.params;
-  try {
-    const readstream = await gfs.createReadStream({ filename });
+});
 
-    readstream.pipe(res);
-  } catch (err) {
-    console.log(err);
-    res.status(400).send(err);
+renderVideo.get("/get/read/video/:filename", async (req, res) => {
+  const id = req.params.filename;
+  if (mongoose.Types.ObjectId.isValid(id)) {
+    videoModal.findById({ _id: id }).then((newFile) => {
+      if (newFile) {
+        var fileId = mongoose.Types.ObjectId(newFile.fileId);
+        gfs.files.findOne({ _id: fileId }, (err, file) => {
+          if (file) {
+            const readStream = gridfsBucket.openDownloadStream(file._id);
+            readStream.pipe(res);
+          } else {
+            res.status(404).json({
+              err: "Not an video",
+            });
+          }
+        });
+      }
+    });
   }
 });
 

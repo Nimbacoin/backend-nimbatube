@@ -15,10 +15,10 @@ let gfs, gridfsBucket, gridfsBucketThumbnail;
 conn.once("open", () => {
   console.log("db is connected");
   gridfsBucket = new mongoose.mongo.GridFSBucket(conn.db, {
-    bucketName: "thumbnail",
+    bucketName: "images",
   });
   gfs = Grid(conn.db, mongoose.mongo);
-  gfs.collection("thumbnail");
+  gfs.collection("images");
 });
 
 const storage = new GridFsStorage({
@@ -38,7 +38,7 @@ const storage = new GridFsStorage({
             channelId + buf.toString("hex") + path.extname(file.originalname);
           const fileInfo = {
             filename: filename,
-            bucketName: "thumbnail",
+            bucketName: "images",
           };
           resolve(fileInfo);
         }
@@ -67,7 +67,7 @@ createNewThumbnail.post(
       res.json({ file: File, uploaded: true });
     } else {
       gfs.files.deleteOne(
-        { filename: File.filename, root: "thumbnail" },
+        { filename: File.filename, root: "images" },
         (err, gridStore) => {
           if (err) {
             console.log("i dont want to delete the file ok");
