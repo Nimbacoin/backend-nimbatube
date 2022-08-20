@@ -11,7 +11,6 @@ const conn = mongoose.createConnection(mongoURL);
 let gfs, gridfsBucket;
 
 conn.once("open", () => {
-  console.log("db is connected");
   gridfsBucket = new mongoose.mongo.GridFSBucket(conn.db, {
     bucketName: "images",
   });
@@ -21,7 +20,7 @@ conn.once("open", () => {
 
 renderImages.get("/get/read/images/:filename", async (req, res) => {
   gfs.files.findOne({ filename: req.params.filename }, (err, file) => {
-    console.log(req.params.filename);
+    console;
     if (file) {
       const readStream = gridfsBucket.openDownloadStream(file._id);
       readStream.pipe(res);

@@ -11,6 +11,7 @@ const createLiveStream = async (req, res, allStreams) => {
     ],
   });
   peer.ontrack = (e) => handleTrackEvent(e, peer, body.roomId);
+
   const desc = new webrtc.RTCSessionDescription(body.sdp.sdp);
   await peer.setRemoteDescription(desc);
   const answer = await peer.createAnswer();
@@ -20,9 +21,9 @@ const createLiveStream = async (req, res, allStreams) => {
   };
 
   res.json(payload);
-
   function handleTrackEvent(e, peer, roomId) {
     allStreams.push({ mediaStream: e.streams[0], roomId: roomId });
+    console.log(allStreams);
   }
 };
 export default createLiveStream;

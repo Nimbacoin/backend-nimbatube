@@ -37,7 +37,7 @@ const io = new Server(server, {
 });
 
 io.on("connection", (socket) => {
-  socketFuncs(io, socket);
+  //socketFuncs(io, socket);
 });
 
 app.use(
@@ -84,7 +84,7 @@ app.post("/consumer", async ({ body }, res) => {
     (strm) => strm.roomId === body.roomId
   );
 
-  const streams = streamFiltered[streamFiltered.length - 1].mediaStream;
+  const streams = streamFiltered[streamFiltered.length - 1]?.mediaStream;
   console.log(streams);
 
   streams.getTracks().forEach((track) => peer.addTrack(track, streams));

@@ -1,7 +1,6 @@
 import webrtc from "wrtc";
 
 const joinStream = async (req, res, allStreams) => {
-  console.log("yeeeeeeeeeeeeeeeeeeeeeeee");
   const body = req.body;
   const peer = new webrtc.RTCPeerConnection({
     iceServers: [

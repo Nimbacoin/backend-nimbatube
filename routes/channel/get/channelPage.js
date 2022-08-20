@@ -13,10 +13,8 @@ channelPage.get("/get/channel:channelId", async (req, res) => {
 
   const IsCorrectId = onlyLettersAndNumbers();
   if (mongoose.Types.ObjectId.isValid(channelId) && IsCorrectId) {
-    console.log(channelId);
     await ChannelModal.findOne({ _id: channelId }).then((channel) => {
       if (channel) {
-        console.log(channel);
         res.json({
           responsData: channel,
         });
@@ -27,8 +25,6 @@ channelPage.get("/get/channel:channelId", async (req, res) => {
       }
     });
   } else {
-    console.log(channelId);
-
     res.end();
   }
 });
