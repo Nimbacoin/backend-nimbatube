@@ -14,7 +14,7 @@ import { cloudinary } from "./utils/Cloudinary/Cloudinary.js";
 import webrtc from "wrtc";
 import socketFuncs from "./socket/socketFuncs.js";
 
-let senderStream = [];
+let senderStream;
 const app = express();
 const PORT = process.env.PORT || 5000;
 const ORIGIN = process.env.ORIGIN;
@@ -78,26 +78,21 @@ app.post("/consumer", async ({ body }, res) => {
       },
     ],
   });
-  const desc = new webrtc.RTCSessionDescription(body.sdp.sdp);
+  const desc = new webrtc.RTCSessionDescription(body.sdp);
   await peer.setRemoteDescription(desc);
-  const streamFiltered = senderStream.filter(
-    (strm) => strm.roomId === body.roomId
-  );
-
-  const streams = streamFiltered[streamFiltered.length - 1]?.mediaStream;
-  console.log(streams);
-
-  streams.getTracks().forEach((track) => peer.addTrack(track, streams));
+  senderStream
+    .getTracks()
+    .forEach((track) => peer.addTrack(track, senderStream));
   const answer = await peer.createAnswer();
   await peer.setLocalDescription(answer);
   const payload = {
     sdp: peer.localDescription,
   };
+
   res.json(payload);
 });
 
 app.post("/broadcast", async ({ body }, res) => {
-  console.log(body.sdp.sdp);
   const peer = new webrtc.RTCPeerConnection({
     iceServers: [
       {
@@ -105,8 +100,8 @@ app.post("/broadcast", async ({ body }, res) => {
       },
     ],
   });
-  peer.ontrack = (e) => handleTrackEvent(e, peer, body.roomId);
-  const desc = new webrtc.RTCSessionDescription(body.sdp.sdp);
+  peer.ontrack = (e) => handleTrackEvent(e, peer);
+  const desc = new webrtc.RTCSessionDescription(body.sdp);
   await peer.setRemoteDescription(desc);
   const answer = await peer.createAnswer();
   await peer.setLocalDescription(answer);
@@ -117,8 +112,8 @@ app.post("/broadcast", async ({ body }, res) => {
   res.json(payload);
 });
 
-function handleTrackEvent(e, peer, roomId) {
-  senderStream.push({ mediaStream: e.streams[0], roomId: roomId });
+function handleTrackEvent(e, peer) {
+  senderStream = e.streams[0];
 }
 
 server.listen(PORT, (err) => {
