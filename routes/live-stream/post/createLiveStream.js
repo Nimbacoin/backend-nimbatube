@@ -22,7 +22,7 @@ const createLiveStream = async (req, res, allStreams) => {
 
   res.json(payload);
   function handleTrackEvent(e, peer, roomId) {
-    allStreams.push({ mediaStream: e.streams[0], roomId: roomId });
+    allStreams.push({ mediaStream: e.streams[0], roomId: "12345" });
     console.log(allStreams);
   }
 };

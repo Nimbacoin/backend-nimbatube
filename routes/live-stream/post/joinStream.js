@@ -12,7 +12,7 @@ const joinStream = async (req, res, allStreams) => {
   const desc = new webrtc.RTCSessionDescription(body.sdp.sdp);
   await peer.setRemoteDescription(desc);
   const streamFiltered = allStreams.filter(
-    (strm) => strm.roomId === body.roomId
+    (strm) => strm.roomId === "12345"
   );
 
   const streams = streamFiltered[streamFiltered.length - 1].mediaStream;
