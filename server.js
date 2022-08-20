@@ -12,8 +12,9 @@ import multer from "multer";
 import path from "path";
 import { cloudinary } from "./utils/Cloudinary/Cloudinary.js";
 import webrtc from "wrtc";
+import socketFuncs from "./socket/socketFuncs.js";
 
-let senderStream;
+let senderStream = [];
 const app = express();
 const PORT = process.env.PORT || 5000;
 const ORIGIN = process.env.ORIGIN;
@@ -34,23 +35,9 @@ const server = http.createServer(app);
 const io = new Server(server, {
   cors: { origin: ORIGIN },
 });
-var users = [];
+
 io.on("connection", (socket) => {
-  console.log("here");
-  socket.on("live-stream", (data) => {
-    users.push(data);
-    console.log(data);
-  });
-  socket.on("join-stream", (data) => {
-    console.log(data);
-    const channelStream = users.filter((stream) => stream.channelId === data);
-    const lastUpdate = channelStream[channelStream.length - 1];
-    console.log(lastUpdate);
-    if (lastUpdate) {
-      socket.emit("joined-stream-id", lastUpdate.peerId);
-    }
-  });
-  // socket.on("joined-stream-id", (streamId) => {
+  socketFuncs(io, socket);
 });
 
 app.use(
@@ -91,21 +78,26 @@ app.post("/consumer", async ({ body }, res) => {
       },
     ],
   });
-  const desc = new webrtc.RTCSessionDescription(body.sdp);
+  const desc = new webrtc.RTCSessionDescription(body.sdp.sdp);
   await peer.setRemoteDescription(desc);
-  senderStream
-    .getTracks()
-    .forEach((track) => peer.addTrack(track, senderStream));
+  const streamFiltered = senderStream.filter(
+    (strm) => strm.roomId === body.roomId
+  );
+
+  const streams = streamFiltered[streamFiltered.length - 1].mediaStream;
+  console.log(streams);
+
+  streams.getTracks().forEach((track) => peer.addTrack(track, streams));
   const answer = await peer.createAnswer();
   await peer.setLocalDescription(answer);
   const payload = {
     sdp: peer.localDescription,
   };
-
   res.json(payload);
 });
 
 app.post("/broadcast", async ({ body }, res) => {
+  console.log(body.sdp.sdp);
   const peer = new webrtc.RTCPeerConnection({
     iceServers: [
       {
@@ -113,8 +105,8 @@ app.post("/broadcast", async ({ body }, res) => {
       },
     ],
   });
-  peer.ontrack = (e) => handleTrackEvent(e, peer);
-  const desc = new webrtc.RTCSessionDescription(body.sdp);
+  peer.ontrack = (e) => handleTrackEvent(e, peer, body.roomId);
+  const desc = new webrtc.RTCSessionDescription(body.sdp.sdp);
   await peer.setRemoteDescription(desc);
   const answer = await peer.createAnswer();
   await peer.setLocalDescription(answer);
@@ -125,8 +117,8 @@ app.post("/broadcast", async ({ body }, res) => {
   res.json(payload);
 });
 
-function handleTrackEvent(e, peer) {
-  senderStream = e.streams[0];
+function handleTrackEvent(e, peer, roomId) {
+  senderStream.push({ mediaStream: e.streams[0], roomId: roomId });
 }
 
 server.listen(PORT, (err) => {
