@@ -16,7 +16,7 @@ const joinStream = async (req, res, allStreams) => {
   );
 
   const streams = streamFiltered[streamFiltered.length - 1].mediaStream;
-
+  console.log(allStreams);
   streams.getTracks().forEach((track) => peer.addTrack(track, streams));
   const answer = await peer.createAnswer();
   await peer.setLocalDescription(answer);
