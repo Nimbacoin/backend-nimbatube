@@ -22,7 +22,13 @@ const createLiveStream = async (req, res, allStreams) => {
 
   res.json(payload);
   function handleTrackEvent(e, peer, roomId) {
-    allStreams.push({ mediaStream: e.streams[0], roomId: "12345" });
+    const filterd = allStreams.filter((strm) => strm.roomId === "12345");
+    if (filterd.length) {
+      objIndex = allStreams.findIndex((obj) => obj.roomId === "12345");
+      allStreams[objIndex].mediaStream = e.streams[0];
+    } else {
+      allStreams.push({ mediaStream: e.streams[0], roomId: "12345" });
+    }
     console.log(allStreams);
   }
 };
