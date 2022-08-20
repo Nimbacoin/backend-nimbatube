@@ -88,7 +88,7 @@ app.post("/consumer", async ({ body }, res) => {
   const payload = {
     sdp: peer.localDescription,
   };
-
+  console.log("here view");
   res.json(payload);
 });
 
@@ -108,6 +108,7 @@ app.post("/broadcast", async ({ body }, res) => {
   const payload = {
     sdp: peer.localDescription,
   };
+  console.log("here make");
 
   res.json(payload);
 });
