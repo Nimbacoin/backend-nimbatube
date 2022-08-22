@@ -6,26 +6,26 @@ let socketToRoom = {};
 const maximum = 2;
 const socketFuncs = (io, socket) => {
   socket.on("join_room", (data) => {
-    console.log("yes here");
-    if (users[data.room]) {
-      const length = users[data.room].length;
-      if (length === maximum) {
-        socket.to(socket.id).emit("room_full");
-        return;
-      }
-      users[data.room].push({ id: socket.id });
-    } else {
-      users[data.room] = [{ id: socket.id }];
-    }
-    socketToRoom[socket.id] = data.room;
+    // console.log("yes here");
+    // if (users[data.room]) {
+    //   const length = users[data.room].length;
+    //   if (length === maximum) {
+    //     socket.to(socket.id).emit("room_full");
+    //     return;
+    //   }
+    //   users[data.room].push({ id: socket.id });
+    // } else {
+    //   users[data.room] = [{ id: socket.id }];
+    // }
+    // socketToRoom[socket.id] = data.room;
 
-    socket.join(data.room);
-    console.log(`[${socketToRoom[socket.id]}]: ${socket.id} enter`);
+    // socket.join(data.room);
+    // console.log(`[${socketToRoom[socket.id]}]: ${socket.id} enter`);
 
-    const usersInThisRoom = users[data.room].filter(
-      (user) => user.id !== socket.id
-    );
-
+    // const usersInThisRoom = users[data.room].filter(
+    //   (user) => user.id !== socket.id
+    // );
+    const usersInThisRoom = [{ id: "1234" }];
     console.log(usersInThisRoom);
 
     io.sockets.to(socket.id).emit("all_users", usersInThisRoom);
