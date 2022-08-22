@@ -17,15 +17,9 @@ const socketFuncs = (io, socket) => {
   });
   socket.on("join_room", (data) => {
     const socketId = socket.id;
-
-    io.to(socketId).emit("all_users", usersInThisRoom);
-
     socket.join(data.room);
-    console.log(socketId);
-    console.log("this is ", data.room);
-    // io.to(socketId).emit("all_users", usersInThisRoom);
-    //socket.emit("all_users", usersInThisRoom);
-    //socket.broadcast.emit("all_users", usersInThisRoom);
+
+    io.sockets.to(socketId).emit("all_users", usersInThisRoom);
   });
 
   socket.on("offer", (sdp) => {
