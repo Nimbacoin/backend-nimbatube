@@ -10,15 +10,19 @@ const socketFuncs = (io, socket) => {
   // socket.broadcast.emit("users", usersInThisRoom);
 
   socket.on("create_room", (data) => {
-    socket.join(data.roomId);
-    usersInThisRoom.push({ id: data.roomId });
+    socket.join(data.room);
+    usersInThisRoom.push({ id: data.room });
     io.sockets.to(socket.id).emit("all_users", usersInThisRoom);
-    //  socket.broadcast.emit("users", usersInThisRoom);
+    socket.broadcast.emit("users", usersInThisRoom);
   });
   socket.on("join_room", (data) => {
-    socket.join(data.roomId);
-    console.log(data.roomId);
-    io.to(socket.id).emit("all_users", usersInThisRoom);
+    socket.join(data.room);
+    const socketId = socket.id;
+    console.log(socketId);
+    console.log("this is ", data.room);
+    //  io.sockets.to(socketId).emit("all_users", usersInThisRoom);
+    // io.to(socketId).emit("all_users", usersInThisRoom);
+    socket.emit("all_users", usersInThisRoom);
     //socket.broadcast.emit("all_users", usersInThisRoom);
   });
 
