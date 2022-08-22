@@ -7,19 +7,30 @@ const maximum = 2;
 const usersInThisRoom = [];
 
 const socketFuncs = (io, socket) => {
-  // socket.broadcast.emit("users", usersInThisRoom);
-
-  socket.on("create_room", (data) => {
-    socket.join(data.room);
-    usersInThisRoom.push({ id: data.room });
-    io.sockets.to(socket.id).emit("all_users", usersInThisRoom);
-    socket.broadcast.emit("users", usersInThisRoom);
-  });
   socket.on("join_room", (data) => {
-    const socketId = socket.id;
-    socket.join(data.room);
+    console.log("yes here");
+    if (users[data.room]) {
+      const length = users[data.room].length;
+      if (length === maximum) {
+        socket.to(socket.id).emit("room_full");
+        return;
+      }
+      users[data.room].push({ id: socket.id });
+    } else {
+      users[data.room] = [{ id: socket.id }];
+    }
+    socketToRoom[socket.id] = data.room;
 
-    io.sockets.to(socketId).emit("all_users", usersInThisRoom);
+    socket.join(data.room);
+    console.log(`[${socketToRoom[socket.id]}]: ${socket.id} enter`);
+
+    const usersInThisRoom = users[data.room].filter(
+      (user) => user.id !== socket.id
+    );
+
+    console.log(usersInThisRoom);
+
+    io.sockets.to(socket.id).emit("all_users", usersInThisRoom);
   });
 
   socket.on("offer", (sdp) => {
@@ -37,60 +48,21 @@ const socketFuncs = (io, socket) => {
     socket.broadcast.emit("getCandidate", candidate);
   });
 
-  // let bords;
-  // socket.on("broadcaster", (id) => {
-  //   const broadcaster = id;
-  //   console.log("broadcaster set", broadcaster);
-  //   socket.emit("broadcaster", broadcaster);
-  // });
-
-  // socket.on("new-broadcaster", (broadcaster) => {
-  //   socket.broadcast.emit("active-broadcaster", broadcaster);
-  //   bords = broadcaster;
-  //   console.log("active-broadcaster emitted", broadcaster);
-
-  //   socket.broadcast.emit("here-is-all-ids", broadcaster);
-  // });
-  // socket.on("users", () => {
-  //   socket.broadcast.emit("here-is-all-ids", bords);
-  // });
-  // const Room = "23456543234565434567654345678";
-  // let isAnswered = false;
-  // socket.on("create-room", () => {
-  //   socket.join(Room);
-  //   socket.emit("room-ctreated");
-  //   console.log("room created", Room);
-  // });
-
-  // socket.on("joining-room", () => {
-  //   socket.join(Room);
-  //   socket.emit("joined-the-room");
-  //   console.log("joied a room", Room);
-  // });
-
-  // socket.on("ready", (room) => {
-  //   socket.broadcast.to(Room).emit("ready", "world");
-  //   console.log("ready");
-  // });
-
-  // socket.on("offer", (event) => {
-  //   socket.broadcast.emit("offer", event.sdp);
-  //   socket.broadcast.to(Room).emit("offer", event.sdp);
-  //   // socket.broadcast.emit("answer", event.sdp);
-
-  //   console.log("offer");
-  // });
-  // socket.on("answer", (event) => {
-  //   console.log("answer");
-  //   socket.broadcast.to(Room).emit("answer", event.sdp);
-
-  //   // socket.broadcast.emit("answer", event.sdp);
-  // });
-
-  // socket.on("candidate", (event) => {
-  //   socket.broadcast.emit("candidate", event);
-  //   console.log("candidate");
-  // });
+  socket.on("disconnect", () => {
+    console.log(`[${socketToRoom[socket.id]}]: ${socket.id} exit`);
+    const roomID = socketToRoom[socket.id];
+    let room = users[roomID];
+    if (room) {
+      room = room.filter((user) => user.id !== socket.id);
+      users[roomID] = room;
+      if (room.length === 0) {
+        delete users[roomID];
+        return;
+      }
+    }
+    socket.broadcast.to(room).emit("user_exit", { id: socket.id });
+    console.log(users);
+  });
 };
 
 export default socketFuncs;
