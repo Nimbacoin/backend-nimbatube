@@ -16,13 +16,15 @@ const socketFuncs = (io, socket) => {
     socket.broadcast.emit("users", usersInThisRoom);
   });
   socket.on("join_room", (data) => {
-    socket.join(data.room);
     const socketId = socket.id;
+
+    io.to(socketId).emit("all_users", usersInThisRoom);
+
+    socket.join(data.room);
     console.log(socketId);
     console.log("this is ", data.room);
-    //  io.sockets.to(socketId).emit("all_users", usersInThisRoom);
     // io.to(socketId).emit("all_users", usersInThisRoom);
-    socket.emit("all_users", usersInThisRoom);
+    //socket.emit("all_users", usersInThisRoom);
     //socket.broadcast.emit("all_users", usersInThisRoom);
   });
 
@@ -39,22 +41,6 @@ const socketFuncs = (io, socket) => {
   socket.on("candidate", (candidate) => {
     console.log("candidate: " + socket.id);
     socket.broadcast.emit("getCandidate", candidate);
-  });
-
-  socket.on("disconnect", () => {
-    console.log(`[${socketToRoom[socket.id]}]: ${socket.id} exit`);
-    const roomID = socketToRoom[socket.id];
-    let room = users[roomID];
-    if (room) {
-      room = room.filter((user) => user.id !== socket.id);
-      users[roomID] = room;
-      if (room.length === 0) {
-        delete users[roomID];
-        return;
-      }
-    }
-    socket.broadcast.to(room).emit("user_exit", { id: socket.id });
-    console.log(users);
   });
 
   // let bords;
