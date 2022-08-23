@@ -4,7 +4,6 @@ let users = {};
 let socketToRoom = {};
 
 const maximum = 2;
-const usersInThisRoom = [];
 
 const socketFuncs = (io, socket) => {
   socket.on("join_room", (data) => {
@@ -28,7 +27,7 @@ const socketFuncs = (io, socket) => {
       (user) => user.id !== socket.id
     );
 
-    console.log(usersInThisRoom);
+    console.log(users);
 
     io.sockets.to(socket.id).emit("all_users", usersInThisRoom);
   });
