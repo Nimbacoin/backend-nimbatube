@@ -23,6 +23,16 @@ const videoSchema = mongoose.Schema(
       type: Date,
       default: Date.now(),
     },
+    share: {
+      type: Boolean,
+      default: false,
+    },
+    streaming: {
+      socketId: String,
+      created: { type: Boolean, default: false },
+      completed: { type: Boolean, default: false },
+      isLive: { type: Boolean, default: false },
+    },
   },
   { timestamps: true }
 );

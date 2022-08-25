@@ -1,23 +1,73 @@
+import videoModal from "../db/schema/video.js";
 import streamingVideo from "./streaming/streamingVideo.js";
-let users = [];
 
 let rooms = [];
 let broadcaster;
+
 const socketFuncs = (io, socket) => {
-  socket.on("broadcaster", (id) => {
-    broadcaster = id;
-    console.log("broadcaster set", broadcaster);
+  socket.broadcast.emit("new-broadcaster", broadcaster);
+  socket.on("broadcaster", async ({ socketId, videoId }) => {
+    broadcaster = socketId;
     socket.emit("broadcaster", broadcaster);
+    if (videoId) {
+      const filter = { _id: videoId };
+      const update = {
+        streaming: {
+          socketId: socketId,
+          created: true,
+          isLive: true,
+        },
+      };
+      videoModal.findOneAndUpdate(filter, update, (error, resuel) => {
+        if (resuel) {
+          socket.broadcast.emit("new-broadcaster", socket.id);
+        }
+      });
+    }
+    const roomId = videoId;
+    socket.join(roomId);
+    const filtered = rooms.findIndex((rm) => rm.roomId === roomId);
+    if (filtered >= 0) {
+      rooms[filtered].socketId = socket.id;
+      console.log("hey ", roomId, "socket changed", socket.id);
+    } else if (filtered < 0) {
+      rooms.push({
+        roomId,
+        socketId: socket.id,
+      });
+      console.log("hey ", roomId, "you just creatd your room");
+    }
     socket.broadcast.emit("new-broadcaster", socket.id);
   });
-  socket.on("watcher", (broadcasterId) => {
-    socket.to(broadcasterId).emit("watcher", socket.id);
-    console.log("watcher set", socket.id);
-    console.log("broadcasterId", broadcasterId);
+
+  socket.on("watcher", ({ broadcasterId, videoId }) => {
+    console.log(videoId);
+    const filtered = rooms.filter((rm) => rm.roomId === videoId);
+    console.log("filtered", filtered);
+    if (filtered.length >= 1) {
+      const index = rooms.findIndex((rm) => rm.roomId === videoId);
+      const viewers = rooms[index].viewers;
+      let allviewrs = [];
+      console.log(index);
+      console.log(viewers, allviewrs);
+      if (viewers) {
+        rooms[index].viewers = viewers.push({ socketId: socket.id });
+        allviewrs = rooms[index].viewers;
+      } else {
+        rooms[index].viewers = [{ socketId: socket.id }];
+        allviewrs = rooms[index].viewers;
+      }
+      const roomSocketId = filtered[0].socketId;
+      console.log(viewers, allviewrs);
+
+      socket
+        .to(roomSocketId)
+        .emit("watcher", { id: socket.id, viewers: allviewrs });
+    }
   });
   socket.on("offer", (id, message) => {
     socket.to(id).emit("offer", socket.id, message);
-    console.log("offer sent", message);
+    //console.log("offer sent", message);
   });
   socket.on("answer", (id, message) => {
     socket.to(id).emit("answer", socket.id, message);
@@ -25,7 +75,7 @@ const socketFuncs = (io, socket) => {
   });
   socket.on("candidate", (id, message) => {
     socket.to(id).emit("candidate", socket.id, message);
-    console.log("candidate", message);
+    console.log("candidate", id);
   });
 
   socket.on("close", () => {

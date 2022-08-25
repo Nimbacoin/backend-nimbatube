@@ -1,35 +1,23 @@
 import webrtc from "wrtc";
+import User from "../../../db/schema/user.js";
+import videoModal from "../../../db/schema/video.js";
 
-const createLiveStream = async (req, res, allStreams) => {
-  const body = req.body;
-
-  const peer = new webrtc.RTCPeerConnection({
-    iceServers: [
-      {
-        urls: "stun:stun.stunprotocol.org",
-      },
-    ],
-  });
-  peer.ontrack = (e) => handleTrackEvent(e, peer, body.roomId);
-
-  const desc = new webrtc.RTCSessionDescription(body.sdp.sdp);
-  await peer.setRemoteDescription(desc);
-  const answer = await peer.createAnswer();
-  await peer.setLocalDescription(answer);
-  const payload = {
-    sdp: peer.localDescription,
-  };
-
-  res.json(payload);
-  function handleTrackEvent(e, peer, roomId) {
-    const filterd = allStreams.filter((strm) => strm.roomId === "12345");
-    if (filterd.length>=1) {
-      const objIndex = allStreams.findIndex((obj) => obj.roomId === "12345");
-      allStreams[objIndex].mediaStream = e.streams[0];
-    } else {
-      allStreams.push({ mediaStream: e.streams[0], roomId: "12345" });
+const createLiveStream = async (req, res) => {
+  const { channelId } = req.body;
+  const userId = req.userId;
+  await User.findOne({ _id: userId }).then(async (docadded) => {
+    if (docadded) {
+      await videoModal
+        .create({
+          channelId,
+          creatore: userId,
+          streaming: { created: true },
+        })
+        .then((newFile) => {
+          console.log(newFile);
+          res.json({ responseData: newFile, uploaded: true });
+        });
     }
-    console.log(allStreams);
-  }
+  });
 };
 export default createLiveStream;

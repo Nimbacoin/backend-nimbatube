@@ -6,7 +6,6 @@ import videoModal from "../../../db/schema/video.js";
 
 allVideos.get("/", async (req, res) => {
   videoModal.find({}).then((allVideos) => {
-    console.log(allVideos);
     if (allVideos) {
       new Promise((resolve, reject) => {
         allVideos.map(async (vid) => {

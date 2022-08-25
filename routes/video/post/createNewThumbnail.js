@@ -28,10 +28,8 @@ const storage = new GridFsStorage({
     const channelId = req.body.channelId;
 
     return new Promise((resolve, reject) => {
-      console.log("here");
       crypto.randomBytes(16, (err, buf) => {
         if (err) {
-          console.log("here");
           return reject(err);
         } else {
           console.log("here");
@@ -65,13 +63,14 @@ createNewThumbnail.post(
       contentType === "image/jfif" ||
       contentType === "image/svg"
     ) {
-      console.log(File);
       const videoId = req.body.videoId;
+      console.log(videoId);
       if (videoId) {
         const filter = { _id: videoId };
         const update = { thumbnail: File.filename };
         videoModal.findOneAndUpdate(filter, update, (error, resuel) => {
           if (resuel) {
+            console.log(resuel);
             res.json({ file: File, uploaded: true });
           }
         });
