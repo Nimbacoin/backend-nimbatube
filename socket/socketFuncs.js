@@ -34,6 +34,7 @@ const socketFuncs = (io, socket) => {
       rooms.push({
         roomId,
         socketId: socket.id,
+        viewers: [],
       });
       console.log("hey ", roomId, "you just creatd your room");
     }
@@ -41,33 +42,27 @@ const socketFuncs = (io, socket) => {
   });
 
   socket.on("watcher", ({ broadcasterId, videoId }) => {
-    console.log(videoId);
     const filtered = rooms.filter((rm) => rm.roomId === videoId);
-    console.log("filtered", filtered);
-    if (filtered.length >= 1) {
-      const index = rooms.findIndex((rm) => rm.roomId === videoId);
-      const viewers = rooms[index].viewers;
-      let allviewrs = [];
-      console.log(index);
-      console.log(viewers, allviewrs);
-      if (viewers) {
-        rooms[index].viewers = viewers.push({ socketId: socket.id });
-        allviewrs = rooms[index].viewers;
+    const filteredIndex = rooms.findIndex((rm) => rm.roomId === videoId);
+    let viewers = rooms[filteredIndex].viewers;
+    const isIn = viewers.some((m) => m.socketId === socket.id);
+    console.log(isIn);
+    if (filtered.length >= 1 && !isIn) {
+      if (viewers.length >= 1) {
+        rooms[filteredIndex].viewers.push({ socketId: socket.id });
       } else {
-        rooms[index].viewers = [{ socketId: socket.id }];
-        allviewrs = rooms[index].viewers;
+        rooms[filteredIndex].viewers = [{ socketId: socket.id }];
       }
       const roomSocketId = filtered[0].socketId;
-      console.log(viewers, allviewrs);
 
-      socket
-        .to(roomSocketId)
-        .emit("watcher", { id: socket.id, viewers: allviewrs });
+      socket.to(roomSocketId).emit("watcher", {
+        id: socket.id,
+        viewers: rooms[filteredIndex].viewers,
+      });
     }
   });
   socket.on("offer", (id, message) => {
     socket.to(id).emit("offer", socket.id, message);
-    //console.log("offer sent", message);
   });
   socket.on("answer", (id, message) => {
     socket.to(id).emit("answer", socket.id, message);
@@ -107,73 +102,33 @@ const socketFuncs = (io, socket) => {
     console.log(data);
     socket.leave(data.room);
   });
-  // socket.on("cearte_room", (data) => {
-  //   const roomId = data.room;
-  //   socket.join(data.room);
-  //   const filtered = rooms.filter((rm) => rm.roomId === data.room);
-  //   if (filtered.length) {
-  //     rooms[0].socketId = socket.id;
-  //     rooms[0].room = roomId;
-  //     console.log("hey ", data.room, "socket changed", socket.id);
-  //   } else if (roomId.length) {
-  //     rooms.push({
-  //       room: data.room,
-  //       socketId: socket.id,
-  //     });
-  //     console.log("hey ", data.room, "you just creatd your room");
-  //     console.log(rooms);
-  //   }
-  //   users.push({ userId: data.room, socketId: socket.id });
-  // });
-  // socket.on("join_room", (data) => {
-  //   const roomId = data.room;
-
-  //   if (users.length <= 1 && rooms.length >= 1 && roomId.length) {
-  //     users.push({ userId: data.room, socketId: socket.id });
-  //     socket.join(data.room);
-  //     console.log("hey ", data.room, "you just joined a  room");
-  //   }
-
-  //   io.sockets.to(socket.id).emit("all_users", users);
-  // });
-
-  // socket.on("offer", (data) => {
-  //   console.log("offer: " + data.user);
-  //   const socketId = rooms[0]?.socketId;
-  //   // if (socketId) {
-  //   //   console.log("offered to : streamer" + socketId, "rooms", rooms);
-  //   //   io.to(socketId).emit("getOffer", data.sdp);
-  //   //   io.to(socket.id).emit("getOffer", data.sdp);
-  //   // }
-  //   console.log
-  //   socket.broadcast.emit("getOffer", data.sdp);
-  // });
-
-  // socket.on("answer", (data) => {
-  //   console.log("answer: ", data.user);
-  //   socket.broadcast.emit("getAnswer", data.mySdp);
-  // });
-
-  // socket.on("candidate", (candidate) => {
-  //   console.log("candidate: " + socket.id);
-  //   socket.broadcast.emit("getCandidate", candidate);
-  // });
-
-  // socket.on("disconnect", () => {
-  //   const filtered = rooms.filter((rm) => rm.socketId === socket.id);
-  //   const filteredUsers = users.filter((rm) => rm.socketId === socket.id);
-  //   const userIndex = users.findIndex((user) => user.socketId === socket.id);
-  //   if (filtered.length >= 1) {
-  //     rooms = [];
-  //     console.log("you just delete your room");
-  //     console.log(rooms);
-  //   }
-  //   if (filteredUsers.length >= 1 && userIndex >= 0) {
-  //     users.splice(userIndex, 1);
-  //     console.log("you just desconncted");
-  //     console.log("users", users);
-  //   }
-  // });
+  socket.on("disconnect", (data) => {
+    // console.log("disconnect", socket.id);
+    rooms.map(({ viewers, socketId }) => {
+      const findIndexLeaver = viewers.findIndex(
+        (useeer) => useeer.socketId === socket.id
+      );
+      if (findIndexLeaver >= 0) {
+        var address = socket.handshake.address;
+        console.log(
+          "New connection from " + address.address + ":" + address.port
+        );
+        viewers.splice(findIndexLeaver, 1);
+        console.log("yes", findIndexLeaver);
+        socket.to(socketId).emit("watcher-leave", {
+          viewers,
+        });
+      }
+      viewers.map(({ socketId }) => {
+        if (socket.id === socketId) {
+          console.log("yes");
+          console.log(socketId, socket.id);
+        }
+      });
+    });
+    //console.log(data);
+    // socket.leave(data.room);
+  });
 };
 
 export default socketFuncs;

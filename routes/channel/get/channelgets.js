@@ -1,6 +1,7 @@
 import express from "express";
 import AuthToken from "../../../utils/verify-user/VerifyUser.js";
 import allChannels from "./allChannels.js";
+import chanelVideos from "./chanelVideos.js";
 import channelPage from "./channelPage.js";
 const routesChannelGet = express.Router();
 
@@ -15,6 +16,11 @@ const allRoutes = [
     auth: false,
     rout: "",
   },
+  {
+    name: chanelVideos,
+    auth: false,
+    rout: "",
+  },
 ];
 
 allRoutes.map(({ name, auth, rout }) => {
@@ -22,7 +28,7 @@ allRoutes.map(({ name, auth, rout }) => {
     routesChannelGet.use(`/get/channel${rout}:token`, AuthToken, name);
   } else {
     if (rout !== "") {
-      routesChannelGet.use(`/get/channel${rout}`, name);
+      routesChannelGet.use(`/get/channel/${rout}`, name);
     } else {
       routesChannelGet.use(`/`, name);
     }
