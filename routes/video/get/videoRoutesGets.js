@@ -2,6 +2,7 @@ import express from "express";
 import AuthToken from "../../../utils/verify-user/VerifyUser.js";
 import allVideos from "./allVideos.js";
 import renderVideo from "./renderVideo.js";
+import videoData from "./videoData.js";
 const videoRoutesGets = express.Router();
 
 const allRoutes = [
@@ -14,6 +15,12 @@ const allRoutes = [
     auth: false,
     rout: "/display",
   },
+  {
+    name: videoData,
+    auth: false,
+    rout: "",
+  },
+  
 ];
 
 allRoutes.map(({ name, auth, rout }) => {

@@ -41,11 +41,11 @@ const socketFuncs = (io, socket) => {
     socket.broadcast.emit("new-broadcaster", socket.id);
   });
 
-  socket.on("watcher", ({ broadcasterId, videoId }) => {
+  socket.on("watcher", ({videoId }) => {
     const filtered = rooms.filter((rm) => rm.roomId === videoId);
     const filteredIndex = rooms.findIndex((rm) => rm.roomId === videoId);
-    let viewers = rooms[filteredIndex].viewers;
-    const isIn = viewers.some((m) => m.socketId === socket.id);
+    let viewers = rooms[filteredIndex]?.viewers;
+    const isIn = viewers?.some((m) => m.socketId === socket.id);
     console.log(isIn);
     if (filtered.length >= 1 && !isIn) {
       if (viewers.length >= 1) {
@@ -76,11 +76,6 @@ const socketFuncs = (io, socket) => {
   socket.on("close", () => {
     console.log("closed socket");
   });
-
-  // socket.on("new-broadcaster", (broadcaster) => {
-  //   socket.broadcast.emit("active-broadcaster", broadcaster);
-  //   console.log("active-broadcaster emitted");
-  // });
 
   socket.on("watcher-disconnect", () => {
     console.log("watcher disconnected");
@@ -126,11 +121,7 @@ const socketFuncs = (io, socket) => {
         }
       });
     });
-    //console.log(data);
-    // socket.leave(data.room);
   });
 };
 
 export default socketFuncs;
-
-// streamingVideo(io, socket);

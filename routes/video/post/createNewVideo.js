@@ -55,7 +55,6 @@ createNewVideo.post(
   upload.single("video"),
   async (req, res) => {
     const File = req.file;
-    console.log("yes");
     if (File && File.contentType !== "video/mp4") {
       gfs.files.deleteOne(
         { filename: File.filename, root: "video" },

@@ -14,6 +14,7 @@ const videoSchema = mongoose.Schema(
     descreption: {
       type: String,
     },
+    duration: String,
     thumbnail: String,
     likes: [{ id: String }],
     disLikes: [{ id: String }],

@@ -13,6 +13,7 @@ import path from "path";
 import { cloudinary } from "./utils/Cloudinary/Cloudinary.js";
 import webrtc from "wrtc";
 import socketFuncs from "./socket/socketFuncs.js";
+import addRequestId from "express-request-id";
 
 let senderStream;
 const app = express();
@@ -22,6 +23,7 @@ const ORIGIN = process.env.ORIGIN;
 dotenv.config();
 app.use(cookieParser());
 app.use(express.json());
+app.use(addRequestId());
 
 cors(
   { "Access-Control-Allow-Origin": `*` },
