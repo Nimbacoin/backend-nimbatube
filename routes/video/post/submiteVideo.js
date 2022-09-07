@@ -46,18 +46,24 @@ submiteVideo.post("/", (req, res) => {
         var rounded = Number(roundedString);
         dur = `${rounded}`;
       }
-//df
       const filter = { _id: videoId };
       const update = {
-        descreption: descreption,
-        title: title,
         duration: dur,
       };
       videoModal.findOneAndUpdate(filter, update, (error, resuel) => {
         if (resuel) {
-          res.json({ uploaded: true });
         }
       });
+    });
+    const filter = { _id: videoId };
+    const update = {
+      descreption: descreption,
+      title: title,
+    };
+    videoModal.findOneAndUpdate(filter, update, (error, resuel) => {
+      if (resuel) {
+        res.json({ uploaded: true });
+      }
     });
   }
 });
