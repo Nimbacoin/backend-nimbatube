@@ -14,7 +14,6 @@ const mongoURL = process.env.MONGOCONNECT;
 const conn = mongoose.createConnection(mongoURL);
 let gfs, gridfsBucket, gridfsBucketThumbnail;
 conn.once("open", () => {
-  console.log("db is connected");
   gridfsBucket = new mongoose.mongo.GridFSBucket(conn.db, {
     bucketName: "images",
   });
@@ -32,7 +31,6 @@ const storage = new GridFsStorage({
         if (err) {
           return reject(err);
         } else {
-          console.log("here");
           const filename =
             channelId + buf.toString("hex") + path.extname(file.originalname);
           const fileInfo = {
@@ -54,7 +52,6 @@ createNewThumbnail.post(
   async (req, res) => {
     const File = req.file;
     const contentType = File.contentType;
-    console.log(contentType);
     if (
       contentType === "image/png" ||
       contentType === "image/gif" ||
@@ -64,13 +61,12 @@ createNewThumbnail.post(
       contentType === "image/svg"
     ) {
       const videoId = req.body.videoId;
-      console.log(videoId);
+
       if (videoId) {
         const filter = { _id: videoId };
         const update = { thumbnail: File.filename };
         videoModal.findOneAndUpdate(filter, update, (error, resuel) => {
           if (resuel) {
-            console.log(resuel);
             res.json({ file: File, uploaded: true });
           }
         });
