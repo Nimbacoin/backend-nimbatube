@@ -35,7 +35,8 @@ renderVideo.get("/get/read/video/:filename", async (req, res) => {
             const videoSize = file.length;
             const start = Number(range.replace(/\D/g, ""));
             const end = videoSize - 1;
-
+            console.log(start);
+            console.log(end);
             const contentLength = end - start + 1;
             const headers = {
               "Content-Range": `bytes ${start}-${end}/${videoSize}`,

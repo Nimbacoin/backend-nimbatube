@@ -22,6 +22,7 @@ import { getVideoDurationInSeconds } from "get-video-duration";
 //   gfs = Grid(conn.db, mongoose.mongo);
 //   gfs.collection("video");
 // });
+//
 
 submiteVideo.post("/", (req, res) => {
   const { title, descreption } = req.body;
