@@ -5,21 +5,25 @@ const allVideos = express.Router();
 import videoModal from "../../../db/schema/video.js";
 
 allVideos.get("/", async (req, res) => {
-  videoModal.find({}).then((allVideos) => {
+  videoModal.find({}).then(async (allVideos) => {
+    const vidoesData = allVideos;
+    let dataFinal = [];
+    let vidId;
     if (allVideos) {
-      new Promise((resolve, reject) => {
-        allVideos.map(async (vid) => {
-          await channelModal
-            .findOne({ _id: vid.chanenelId })
-            .then((channelData) => {
-              if (channelData) {
-                return resolve;
-              }
-            });
-        });
-      }).then((resolve) => {});
+      await Promise.all(
+        vidoesData.map(async (vid, index) => {
+          vidId = vid.channelId;
 
-      res.json({ responseData: allVideos });
+          await channelModal.findOne({ _id: vidId }).then(async (channel) => {
+            const data = { channelData: channel, videoData :vid };
+            console.log(data);
+            await dataFinal.push(data);
+          });
+        })
+      );
+      //    console.log(dataFinal[0]);
+
+      res.json({ responseData: dataFinal });
     }
   });
 });

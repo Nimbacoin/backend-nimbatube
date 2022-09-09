@@ -33,7 +33,7 @@ renderVideo.get("/get/read/video/:filename", async (req, res) => {
               res.status(400).send("Requires Range header");
             }
             const videoSize = file.length;
-            const start = Number(range.replace(/\D/g, ""));
+            const start = 0;
             const end = videoSize - 1;
             console.log(start);
             console.log(end);
