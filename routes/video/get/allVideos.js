@@ -15,8 +15,8 @@ allVideos.get("/", async (req, res) => {
           vidId = vid.channelId;
 
           await channelModal.findOne({ _id: vidId }).then(async (channel) => {
-            const data = { channelData: channel, videoData :vid };
-            console.log(data);
+            const data = { channelData: channel, videoData: vid };
+            // console.log(data);
             await dataFinal.push(data);
           });
         })

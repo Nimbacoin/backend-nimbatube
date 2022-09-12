@@ -2,6 +2,7 @@ import express from "express";
 import AuthToken from "../../../utils/verify-user/VerifyUser.js";
 import createNewThumbnail from "./createNewThumbnail.js";
 import createNewVideo from "./createNewVideo.js";
+import likeVideo from "./likeVideo.js";
 import submiteVideo from "./submiteVideo.js";
 const videoRoutesPosts = express.Router();
 
@@ -18,6 +19,11 @@ const allRoutes = [
     name: submiteVideo,
     auth: true,
     rout: "/submite-video/",
+  },
+  {
+    name: likeVideo,
+    auth: true,
+    rout: "/like-video/",
   },
 ];
 

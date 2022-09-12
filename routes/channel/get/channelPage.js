@@ -6,13 +6,15 @@ const channelPage = express.Router();
 
 channelPage.get("/get/channel:channelId", async (req, res) => {
   const userId = req.userId;
+
   const channelId = req.params.channelId;
   function onlyLettersAndNumbers(channelId) {
     return /^[A-Za-z0-9]*$/.test(channelId);
   }
+  console.log(userId, channelId);
 
   const IsCorrectId = onlyLettersAndNumbers();
-  if (mongoose.Types.ObjectId.isValid(channelId) && IsCorrectId) {
+  if (channelId && mongoose.Types.ObjectId.isValid(channelId) && IsCorrectId) {
     await ChannelModal.findOne({ _id: channelId }).then((channel) => {
       if (channel) {
         res.json({
