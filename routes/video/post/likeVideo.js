@@ -12,27 +12,38 @@ import videoModal from "../../../db/schema/video.js";
 import { getVideoDurationInSeconds } from "get-video-duration";
 
 likeVideo.post("/", (req, res) => {
-  let dataArrayLikes = [];
-  let dataArrayDisLikes = [];
-  const { userId, IsLiked, IsDisLiked, videoId } = req.body;
-  if (!IsLiked && !IsDisLiked) {
-    dataArray = [];
-    dataArrayDisLikes = [];
-    // remove likes and disLikes
-  } else if (IsLiked && !IsDisLiked) {
-    // lived
-  } else if (!IsLiked && IsDisLiked) {
-    // disliked
-  }
+  const { IsLiked, IsDisLiked, videoId } = req.body;
+  const userId = req.userId;
+
   if (mongoose.Types.ObjectId.isValid(videoId)) {
-    const filter = { _id: videoId };
-    const update = {
-      descreption: descreption,
-      title: title,
-    };
-    videoModal.findOneAndUpdate(filter, update, (error, resuel) => {
-      if (resuel) {
-        res.json({ responseData: true });
+    videoModal.findOne({ _id: videoId }).then((vid) => {
+      if (vid) {
+        
+        const arrayDisLikes = vid.disLikes;
+        const arrayLikes = vid.likes;
+        if (IsLiked && !IsDisLiked) {
+          arrayLikes.push({ id: videoId });
+          arrayDisLikes.filter((user) => user.id !== userId);
+          const update = { likes: arrayLikes, disLikes: arrayDisLikes };
+          const filter = { _id: videoId };
+          videoModal.findOneAndUpdate(filter, update, (error, resuel) => {
+            if (resuel) {
+              console.log(resuel);
+              res.json({ responseData: true });
+            }
+          });
+        } else if (!IsLiked && IsDisLiked) {
+          arrayDisLikes.push({ id: videoId });
+          arrayLikes.filter((user) => user.id !== userId);
+          const update = { likes: arrayLikes, disLikes: arrayDisLikes };
+          const filter = { _id: videoId };
+          videoModal.findOneAndUpdate(filter, update, (error, resuel) => {
+            if (resuel) {
+              console.log(resuel);
+              res.json({ responseData: true });
+            }
+          });
+        }
       }
     });
   }

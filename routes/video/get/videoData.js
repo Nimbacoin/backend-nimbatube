@@ -35,7 +35,6 @@ const AuthToken = async (req, reqParamsToken) => {
 };
 
 videoData.get("/get/video/:videoId/:unique_id/:userId", async (req, res) => {
-  console.log("herer", req.path);
   const userId = req.params.userId;
   await AuthToken(req, userId);
   const reqUserId = req.userId;
