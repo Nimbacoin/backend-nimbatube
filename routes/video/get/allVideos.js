@@ -13,7 +13,6 @@ allVideos.get("/", async (req, res) => {
       await Promise.all(
         vidoesData.map(async (vid, index) => {
           vidId = vid.channelId;
-
           await channelModal.findOne({ _id: vidId }).then(async (channel) => {
             const data = { channelData: channel, videoData: vid };
             // console.log(data);
@@ -21,8 +20,6 @@ allVideos.get("/", async (req, res) => {
           });
         })
       );
-      //    console.log(dataFinal[0]);
-
       res.json({ responseData: dataFinal });
     }
   });

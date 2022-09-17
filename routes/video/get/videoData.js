@@ -19,7 +19,6 @@ const AuthToken = async (req, reqParamsToken) => {
     if (typeof User !== "undefined") {
       const accesToken = User.accessToken;
       const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
-      //console.log(accessTokenSecret, accesToken);
       jwt.verify(accesToken, accessTokenSecret, function (err, decoded) {
         if (!err) {
           req.userId = decoded;
@@ -49,12 +48,30 @@ videoData.get("/get/video/:videoId/:unique_id/:userId", async (req, res) => {
         const filter = { _id: videoId };
         let update = { views: [...views, { id: unique_id }] };
         videoModal.findOneAndUpdate(filter, update, async (error, resuel) => {
-          const likes = resuel.likes;
-          const disLikes = resuel.disLikes;
+          let likes = resuel.likes;
+          let disLikes = resuel.disLikes;
+          let isLiked = likes.some(({ id }) => id === reqUserId);
+          let isDisLiked = disLikes.some(({ id }) => id === reqUserId);
           if (resuel) {
+            let resuelData = JSON.stringify([resuel]);
+            var deniedTimeIDs = JSON.parse(resuelData);
+            // console.log(deniedTimeIDs);
+            deniedTimeIDs.map((items) => {
+              items.likes = { liked: isLiked, likes: likes.length };
+              items.disLikes = {
+                isDisLiked: isDisLiked,
+                disLikes: disLikes.length,
+              };
+
+              //  console.log(items);
+            });
+            // resuelData.likes = [{ liked: isLiked, likesNumber: likes.length }];
+            // resuelData.disLikes = [
+            //   { isDisLiked, disLikesNumber: disLikes.length },
+            // ];
             channelModal.findById({ _id: resuel.channelId }).then((channel) => {
               res.json({
-                responseData: resuel,
+                responseData: deniedTimeIDs[0],
                 channelData: channel,
                 getting: unique_id,
               });

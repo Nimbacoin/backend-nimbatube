@@ -14,39 +14,91 @@ import { getVideoDurationInSeconds } from "get-video-duration";
 likeVideo.post("/", (req, res) => {
   const { IsLiked, IsDisLiked, videoId } = req.body;
   const userId = req.userId;
-
   if (mongoose.Types.ObjectId.isValid(videoId)) {
     videoModal.findOne({ _id: videoId }).then((vid) => {
       if (vid) {
-        
-        const arrayDisLikes = vid.disLikes;
-        const arrayLikes = vid.likes;
+        let arrayDisLikes = vid.disLikes;
+        let arrayLikes = vid.likes;
+        let isLiked = arrayLikes.some(({ id }) => id === userId);
+        let isDisLiked = arrayDisLikes.some(({ id }) => id === userId);
+        //
+        console.log("body data:", { IsLiked, IsDisLiked });
+        console.log("db data:", { isLiked: isLiked, isDisLiked: isDisLiked });
         if (IsLiked && !IsDisLiked) {
-          arrayLikes.push({ id: videoId });
+          if (isDisLiked) {
+            arrayDisLikes = arrayDisLikes.filter(({ id }) => id !== userId);
+          }
+          if (!isLiked) {
+            arrayLikes.push({ id: userId });
+          }
+          const update = { likes: arrayLikes, disLikes: arrayDisLikes };
+          const filter = { _id: videoId };
+          videoModal.findOneAndUpdate(filter, update, (error, resuel) => {
+            if (resuel) {
+              isLiked = resuel.likes.some(({ id }) => id === userId);
+              console.log("likes:", isLiked);
+              res.json({
+                responseData: {
+                  likes: { liked: isLiked, likes: resuel.likes.length },
+                  disLikes: {
+                    isDisLiked: isDisLiked,
+                    disLikes: resuel.disLikes.length,
+                  },
+                },
+              });
+            }
+          });
+        } else if (!IsLiked && IsDisLiked) {
+          if (isLiked) {
+            arrayLikes = arrayLikes.filter(({ id }) => id !== userId);
+          }
+          //console.log(arrayLikes);
+          if (!isDisLiked) {
+            arrayDisLikes.push({ id: userId });
+          }
+          const update = { likes: arrayLikes, disLikes: arrayDisLikes };
+          const filter = { _id: videoId };
+          videoModal.findOneAndUpdate(filter, update, (error, resuel) => {
+            if (resuel) {
+              res.json({
+                responseData: {
+                  likes: { liked: isLiked, likes: resuel.likes.length },
+                  disLikes: {
+                    isDisLiked: isDisLiked,
+                    disLikes: resuel.disLikes.length,
+                  },
+                },
+              });
+            }
+          });
+        } else if (!IsLiked && !IsDisLiked) {
+          console.log("nothing ");
+
+          arrayLikes.filter(({ id }) => id !== userId);
           arrayDisLikes.filter((user) => user.id !== userId);
           const update = { likes: arrayLikes, disLikes: arrayDisLikes };
           const filter = { _id: videoId };
           videoModal.findOneAndUpdate(filter, update, (error, resuel) => {
             if (resuel) {
-              console.log(resuel);
-              res.json({ responseData: true });
-            }
-          });
-        } else if (!IsLiked && IsDisLiked) {
-          arrayDisLikes.push({ id: videoId });
-          arrayLikes.filter((user) => user.id !== userId);
-          const update = { likes: arrayLikes, disLikes: arrayDisLikes };
-          const filter = { _id: videoId };
-          videoModal.findOneAndUpdate(filter, update, (error, resuel) => {
-            if (resuel) {
-              console.log(resuel);
-              res.json({ responseData: true });
+              console.log(arrayLikes);
+              console.log(isLiked);
+
+              res.json({
+                responseData: {
+                  likes: { liked: isLiked, likes: resuel.likes.length },
+                  disLikes: {
+                    isDisLiked: isDisLiked,
+                    disLikes: resuel.disLikes.length,
+                  },
+                },
+              });
             }
           });
         }
       }
     });
   }
+  //res.json({ da: "SD" });
 });
 
 export default likeVideo;

@@ -6,12 +6,20 @@ const channelVideos = express.Router();
 
 channelVideos.get("/get/channel/all-vidoes/:channelId", async (req, res) => {
   const channelId = req.params.channelId;
-  const channelData = await channelModal.findOne({ _id: channelId });
-  console.log(channelData);
-  videoModal.find({ channelId: channelId }).then((allVideos) => {
-    if (allVideos.length && channelData) {
-      res.json({ responseData: allVideos, channelData: channelData });
-    }
+  await channelModal.findOne({ _id: channelId }).then((channelData) => {
+    videoModal.find({ channelId: channelData._id }).then(async (allVideos) => {
+      const vidoesData = allVideos;
+      let dataFinal = [];
+      if (allVideos) {
+        await Promise.all(
+          vidoesData.map(async (vid, index) => {
+            const data = { channelData: channelData, videoData: vid };
+            await dataFinal.push(data);
+          })
+        );
+        res.json({ responseData: dataFinal });
+      }
+    });
   });
 });
 
