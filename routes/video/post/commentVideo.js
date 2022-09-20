@@ -10,6 +10,7 @@ import crypto from "crypto";
 import path from "path";
 import videoModal from "../../../db/schema/video.js";
 import commentModal from "../../../db/schema/comment.js";
+import channelModal from "../../../db/schema/channel.js";
 
 submiteVideo.post("/", async (req, res) => {
   const { videoId, comment } = req.body;
@@ -26,20 +27,54 @@ submiteVideo.post("/", async (req, res) => {
         })
         .then((com) => {
           if (com) {
-            //console.log(com);
             let allCom = video.comments;
             allCom.push({ id: com._id });
-            // console.log(allCom);
             const filter = { _id: videoId };
             const update = {
               comments: allCom,
             };
-            videoModal.findOneAndUpdate(filter, update, (error, resuel) => {
-              if (resuel) {
-                // console.log(resuel.comments);
-                res.json({ responseData: resuel.comments });
+            videoModal.findOneAndUpdate(
+              filter,
+              update,
+              async (error, resuel) => {
+                if (resuel) {
+                  let deniedTimeIDs = resuel.comments;
+                  const comments = [];
+                  await Promise.all(
+                    deniedTimeIDs.map(async (com, index) => {
+                      let comId = com.id;
+                      if (mongoose.Types.ObjectId.isValid(comId))
+                        await commentModal
+                          .findOne({ _id: comId })
+                          .then(async (commentData) => {
+                            console.log(
+                              "comment creatore: ",
+                              commentData.creatore
+                            );
+                            await channelModal
+                              .findOne({ creator: commentData.creatore })
+                              .then(async (channel) => {
+                                const data = {
+                                  commentData: commentData,
+                                  creatoreData: channel.channelData,
+                                };
+                                console.log(
+                                  "channel creator: ",
+                                  channel.creator
+                                );
+                                data.commentData.creatore = null;
+                                // data.creatoreData.creator = null;
+                                await comments.push(data);
+                              });
+                          });
+                    })
+                  );
+                  console.log("here is all comments herer man", comments);
+                  deniedTimeIDs = comments;
+                  res.json({ responseData: deniedTimeIDs });
+                }
               }
-            });
+            );
           }
         });
     });
