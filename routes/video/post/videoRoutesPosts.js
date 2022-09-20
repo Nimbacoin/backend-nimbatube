@@ -1,5 +1,6 @@
 import express from "express";
 import AuthToken from "../../../utils/verify-user/VerifyUser.js";
+import commentVideo from "./commentVideo.js";
 import createNewThumbnail from "./createNewThumbnail.js";
 import createNewVideo from "./createNewVideo.js";
 import likeVideo from "./likeVideo.js";
@@ -24,6 +25,11 @@ const allRoutes = [
     name: likeVideo,
     auth: true,
     rout: "/like-video/",
+  },
+  {
+    name: commentVideo,
+    auth: true,
+    rout: "/comment-video/",
   },
 ];
 

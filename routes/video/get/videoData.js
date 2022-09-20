@@ -7,6 +7,7 @@ import videoModal from "../../../db/schema/video.js";
 import https from "http";
 import axios from "axios";
 import jwt from "jsonwebtoken";
+import commentModal from "../../../db/schema/comment.js";
 const AuthToken = async (req, reqParamsToken) => {
   if (
     typeof reqParamsToken !== "undefined" &&
@@ -55,20 +56,43 @@ videoData.get("/get/video/:videoId/:unique_id/:userId", async (req, res) => {
           if (resuel) {
             let resuelData = JSON.stringify([resuel]);
             var deniedTimeIDs = JSON.parse(resuelData);
-            // console.log(deniedTimeIDs);
-            deniedTimeIDs.map((items) => {
-              items.likes = { liked: isLiked, likes: likes.length };
-              items.disLikes = {
-                isDisLiked: isDisLiked,
-                disLikes: disLikes.length,
-              };
+            let comId;
 
-              //  console.log(items);
-            });
-            // resuelData.likes = [{ liked: isLiked, likesNumber: likes.length }];
-            // resuelData.disLikes = [
-            //   { isDisLiked, disLikesNumber: disLikes.length },
-            // ];
+            await Promise.all(
+              deniedTimeIDs.map(async (items) => {
+                items.likes = { liked: isLiked, likes: likes.length };
+                items.disLikes = {
+                  isDisLiked: isDisLiked,
+                  disLikes: disLikes.length,
+                };
+              })
+            );
+            const comments = [];
+            await Promise.all(
+              deniedTimeIDs[0].comments.map(async (com, index) => {
+                let comId = com.id;
+                if (mongoose.Types.ObjectId.isValid(comId))
+                  await commentModal
+                    .findOne({ _id: comId })
+                    .then(async (commentData) => {
+                      console.log("comment creatore: ", commentData.creatore);
+                      await channelModal
+                        .findOne({ creator: commentData.creatore })
+                        .then(async (channel) => {
+                          const data = {
+                            commentData: commentData,
+                            creatoreData: channel.channelData,
+                          };
+                          console.log("channel creator: ", channel.creator);
+                          data.commentData.creatore = null;
+                          // data.creatoreData.creator = null;
+                          await comments.push(data);
+                        });
+                    });
+              })
+            );
+            //console.log(comments);
+            deniedTimeIDs[0].comments = comments;
             channelModal.findById({ _id: resuel.channelId }).then((channel) => {
               res.json({
                 responseData: deniedTimeIDs[0],

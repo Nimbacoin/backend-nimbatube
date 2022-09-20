@@ -17,7 +17,7 @@ createNewChannel.post("/", async (req, res) => {
       if (typeof name !== "undefined") {
         const profileImg = await uploadChannelImages(profileImage);
         const coverImg = await uploadChannelCoverImages(coverImage);
-        // console.log(coverImg);
+
         ChannelModal.create({
           creator: userId,
           channelData: {

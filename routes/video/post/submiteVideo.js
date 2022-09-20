@@ -11,18 +11,7 @@ import path from "path";
 import videoModal from "../../../db/schema/video.js";
 import { getVideoDurationInSeconds } from "get-video-duration";
 
-// const mongoURL = process.env.MONGOCONNECT;
-// const conn = mongoose.createConnection(mongoURL);
-// let gfs, gridfsBucket;
-// conn.once("open", () => {
-//   console.log("db is connected");
-//   gridfsBucket = new mongoose.mongo.GridFSBucket(conn.db, {
-//     bucketName: "video",
-//   });
-//   gfs = Grid(conn.db, mongoose.mongo);
-//   gfs.collection("video");
-// });
-//
+
 
 submiteVideo.post("/", (req, res) => {
   const { title, descreption } = req.body;
