@@ -20,6 +20,8 @@ const UserScheme = mongoose.Schema(
       type: Date,
       default: Date.now(),
     },
+    videoHistory: [{ id: String, watcheddAt: String }],
+    // followingChannels: [{ id: String, followedAt: String }],
   },
   { timestamps: true }
 );

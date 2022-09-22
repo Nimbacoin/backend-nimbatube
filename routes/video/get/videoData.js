@@ -8,17 +8,23 @@ import https from "http";
 import axios from "axios";
 import jwt from "jsonwebtoken";
 import commentModal from "../../../db/schema/comment.js";
+import * as cookie from "cookie";
+
 const AuthToken = async (req, reqParamsToken) => {
   if (
     typeof reqParamsToken !== "undefined" &&
     reqParamsToken !== "undefined" &&
     reqParamsToken.length > 20
   ) {
-    const CookiesParsed = JSON.parse(reqParamsToken);
+    // const CookiesParsed = JSON.parse(reqParamsToken);
+    const CookiesParsed = cookie.parse(reqParamsToken);
+    
+    const User = CookiesParsed.user;
 
-    const User = CookiesParsed;
     if (typeof User !== "undefined") {
-      const accesToken = User.accessToken;
+      const userTokken = JSON.parse(User);
+      const accesToken = userTokken.accessToken;
+
       const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
       jwt.verify(accesToken, accessTokenSecret, function (err, decoded) {
         if (!err) {
@@ -55,12 +61,13 @@ videoData.get("/get/video/:videoId/:unique_id/:userId", async (req, res) => {
           let isDisLiked = disLikes.some(({ id }) => id === reqUserId);
           if (resuel) {
             let resuelData = JSON.stringify([resuel]);
-            var deniedTimeIDs = JSON.parse(resuelData);
+            var videoData = JSON.parse(resuelData);
             let comId;
 
             await Promise.all(
-              deniedTimeIDs.map(async (items) => {
+              videoData.map(async (items) => {
                 items.likes = { liked: isLiked, likes: likes.length };
+
                 items.disLikes = {
                   isDisLiked: isDisLiked,
                   disLikes: disLikes.length,
@@ -69,13 +76,12 @@ videoData.get("/get/video/:videoId/:unique_id/:userId", async (req, res) => {
             );
             const comments = [];
             await Promise.all(
-              deniedTimeIDs[0].comments.map(async (com, index) => {
+              videoData[0].comments.map(async (com, index) => {
                 let comId = com.id;
                 if (mongoose.Types.ObjectId.isValid(comId))
                   await commentModal
                     .findOne({ _id: comId })
                     .then(async (commentData) => {
-                      console.log("comment creatore: ", commentData.creatore);
                       await channelModal
                         .findOne({ creator: commentData.creatore })
                         .then(async (channel) => {
@@ -83,7 +89,6 @@ videoData.get("/get/video/:videoId/:unique_id/:userId", async (req, res) => {
                             commentData: commentData,
                             creatoreData: channel.channelData,
                           };
-                          console.log("channel creator: ", channel.creator);
                           data.commentData.creatore = null;
                           // data.creatoreData.creator = null;
                           await comments.push(data);
@@ -92,14 +97,29 @@ videoData.get("/get/video/:videoId/:unique_id/:userId", async (req, res) => {
               })
             );
             //console.log(comments);
-            deniedTimeIDs[0].comments = comments;
-            channelModal.findById({ _id: resuel.channelId }).then((channel) => {
-              res.json({
-                responseData: deniedTimeIDs[0],
-                channelData: channel,
-                getting: unique_id,
+            videoData[0].comments = comments;
+            channelModal
+              .findById({ _id: resuel.channelId })
+              .then(async (channel) => {
+                let channelDataJSON = JSON.stringify([channel]);
+                var channelData = JSON.parse(channelDataJSON);
+                const inInFollowers = channel.followers.some(
+                  ({ id }) => id === reqUserId
+                );
+                channelData.map((item) => {
+                  item.followers = {
+                    followers: channel.followers.length,
+                    followed: inInFollowers,
+                  };
+                });
+                // console.log(channelData[0].followers);
+
+                res.json({
+                  responseData: videoData[0],
+                  channelData: channelData[0],
+                  getting: unique_id,
+                });
               });
-            });
           }
         });
       }

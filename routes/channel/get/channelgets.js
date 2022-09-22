@@ -3,6 +3,7 @@ import AuthToken from "../../../utils/verify-user/VerifyUser.js";
 import allChannels from "./allChannels.js";
 import chanelVideos from "./chanelVideos.js";
 import channelPage from "./channelPage.js";
+import followingChannels from "./followingChannels.js";
 const routesChannelGet = express.Router();
 
 const allRoutes = [
@@ -21,6 +22,12 @@ const allRoutes = [
     auth: false,
     rout: "",
   },
+  {
+    name: followingChannels,
+    auth: true,
+    rout: "/following-channels/",
+  },
+  ,
 ];
 
 allRoutes.map(({ name, auth, rout }) => {

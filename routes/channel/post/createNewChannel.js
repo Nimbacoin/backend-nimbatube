@@ -1,8 +1,8 @@
 import express from "express";
-import User from "../../../../db/schema/user.js";
-import ChannelModal from "../../../../db/schema/channel.js";
-import uploadChannelImages from "../uploads/uploadChannelImages.js";
-import uploadChannelCoverImages from "../uploads/uploadChannelCoverImages.js";
+import User from "../../../db/schema/user.js";
+import ChannelModal from "../../../db/schema/channel.js";
+import uploadChannelImages from "./uploads/uploadChannelImages.js";
+import uploadChannelCoverImages from "./uploads/uploadChannelCoverImages.js";
 const createNewChannel = express.Router();
 
 createNewChannel.post("/", async (req, res) => {

@@ -5,7 +5,6 @@ const channelSchema = mongoose.Schema(
     creator: { type: String, required: true },
     followers: [
       {
-        email: String,
         id: String,
       },
     ],

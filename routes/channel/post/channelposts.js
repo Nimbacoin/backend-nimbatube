@@ -1,6 +1,7 @@
 import express from "express";
 import AuthToken from "../../../utils/verify-user/VerifyUser.js";
-import createNewChannel from "./create-new-channel/createNewChannel.js";
+import createNewChannel from "./createNewChannel.js";
+import followChannel from "./followChannel.js";
 const routesChannelPosts = express.Router();
 
 const allRoutes = [
@@ -9,6 +10,12 @@ const allRoutes = [
     auth: true,
     rout: "/create-new-channel",
   },
+  {
+    name: followChannel,
+    auth: true,
+    rout: "/follow-channel",
+  },
+  //
 ];
 
 allRoutes.map(({ name, auth, rout }) => {
