@@ -13,6 +13,11 @@ const allRoutes = [
     rout: "/all-channels",
   },
   {
+    name: allChannels,
+    auth: true,
+    rout: "/all-channels",
+  },
+  {
     name: channelPage,
     auth: false,
     rout: "",
