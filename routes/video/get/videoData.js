@@ -53,10 +53,21 @@ videoData.get("/get/video/:videoId/:unique_id/:userId", async (req, res) => {
           const Index = allHistroy.findIndex(({ id }) => id === videoId);
           const Some = allHistroy.some(({ id }) => id === videoId);
           console.log(Some, Index);
-          if (!Some && Index < allHistroy.length - 1) {
+
+          if (allHistroy.length == 0) {
             try {
-              console.log("added");
-              const udpate = { videoHistory: [...allHistroy, { id: videoId }] };
+              const udpate = {
+                videoHistory: [...allHistroy, { id: videoId }],
+              };
+              await User.updateOne({ _id: reqUserId }, udpate);
+            } catch (error) {
+              console.log(error);
+            }
+          } else if (Index < allHistroy.length - 1 && allHistroy.length >= 1) {
+            try {
+              const udpate = {
+                videoHistory: [...allHistroy, { id: videoId }],
+              };
               await User.updateOne({ _id: reqUserId }, udpate);
             } catch (error) {
               console.log(error);
