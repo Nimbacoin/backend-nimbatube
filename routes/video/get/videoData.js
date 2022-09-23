@@ -16,9 +16,7 @@ const AuthToken = async (req, reqParamsToken) => {
     reqParamsToken !== "undefined" &&
     reqParamsToken.length > 20
   ) {
-    // const CookiesParsed = JSON.parse(reqParamsToken);
     const CookiesParsed = cookie.parse(reqParamsToken);
-    
     const User = CookiesParsed.user;
 
     if (typeof User !== "undefined") {
@@ -44,11 +42,29 @@ videoData.get("/get/video/:videoId/:unique_id/:userId", async (req, res) => {
   const userId = req.params.userId;
   await AuthToken(req, userId);
   const reqUserId = req.userId;
-
   const unique_id = req.params.unique_id;
   const videoId = req.params.videoId;
-
   if (mongoose.Types.ObjectId.isValid(videoId)) {
+    if (reqUserId) {
+      await User.findOne({ _id: reqUserId }).then(async (userData) => {
+        if (userData) {
+          const allHistroy = await userData.videoHistory;
+          console.log(userData.videoHistory);
+          const Index = allHistroy.findIndex(({ id }) => id === videoId);
+          const Some = allHistroy.some(({ id }) => id === videoId);
+          console.log(Some, Index);
+          if (!Some && Index < allHistroy.length - 1) {
+            try {
+              console.log("added");
+              const udpate = { videoHistory: [...allHistroy, { id: videoId }] };
+              await User.updateOne({ _id: reqUserId }, udpate);
+            } catch (error) {
+              console.log(error);
+            }
+          }
+        }
+      });
+    }
     videoModal.findOne({ _id: videoId }).then((video) => {
       if (video) {
         const views = video?.views;

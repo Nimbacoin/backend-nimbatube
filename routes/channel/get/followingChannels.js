@@ -4,15 +4,22 @@ import User from "../../../db/schema/user.js";
 const followingChannels = express.Router();
 followingChannels.get("/", async (req, res) => {
   const userId = req.userId;
-  console.log("followingChannels");
   await User.findOne({ _id: userId }).then((docadded) => {
     if (docadded) {
       chanelModal
-        .find({ followers: { $in: [{ id: userId }] } })
+        .find({
+          followers: { $elemMatch: { id: userId } },
+        })
         .then((channels) => {
           console.log(channels);
           if (channels.length) {
-            res.json({ responsData: channels });
+            const allChannels = channels;
+            const resChannel = [];
+            allChannels.map((item) => {
+              resChannel.push({ channelData: item.channelData, _id: item._id });
+            });
+            console.log(resChannel);
+            res.json({ responsData: resChannel });
           } else {
             res.json({ responsMessage: "NoChanelFounded" });
           }
