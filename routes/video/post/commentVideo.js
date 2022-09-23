@@ -25,7 +25,7 @@ submiteVideo.post("/", async (req, res) => {
           videoId,
           comment,
         })
-        .then((com) => {
+        .then(async (com) => {
           if (com) {
             let allCom = video.comments;
             allCom.push({ id: com._id });
@@ -33,10 +33,9 @@ submiteVideo.post("/", async (req, res) => {
             const update = {
               comments: allCom,
             };
-            videoModal.findOneAndUpdate(
-              filter,
-              update,
-              async (error, resuel) => {
+            try {
+              await videoModal.updateOne(filter, update);
+              videoModal.findOne(filter, async (error, resuel) => {
                 if (resuel) {
                   let deniedTimeIDs = resuel.comments;
                   const comments = [];
@@ -73,8 +72,10 @@ submiteVideo.post("/", async (req, res) => {
                   deniedTimeIDs = comments;
                   res.json({ responseData: deniedTimeIDs });
                 }
-              }
-            );
+              });
+            } catch (error) {
+              console.log(error);
+            }
           }
         });
     });

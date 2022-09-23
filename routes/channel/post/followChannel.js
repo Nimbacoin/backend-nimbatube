@@ -31,10 +31,10 @@ followChannel.post("/", async (req, res) => {
             await channelModal.findOne(filter).then((resuelt) => {
               if (resuelt) {
                 const followers = resuelt.followers.length;
-                console.log("not followed", followers);
+                console.log("followed", followers);
                 res.json({
                   responseData: {
-                    followers: followers.length,
+                    followers: followers,
                     followed: true,
                   },
                 });
@@ -59,7 +59,7 @@ followChannel.post("/", async (req, res) => {
                 console.log("not followed", followers);
                 res.json({
                   responseData: {
-                    followers: followers.length,
+                    followers: followers,
                     followed: false,
                   },
                 });
