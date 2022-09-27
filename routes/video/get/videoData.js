@@ -51,10 +51,9 @@ videoData.get("/get/video/:videoId/:unique_id/:userId", async (req, res) => {
           const allHistroy = await userData.videoHistory;
           console.log(userData.videoHistory);
           const Index = allHistroy.findIndex(({ id }) => id === videoId);
-          const Some = allHistroy.some(({ id }) => id === videoId);
-          console.log(Some, Index);
+          const Some = allHistroy[allHistroy.length - 1].id;
 
-          if (allHistroy.length == 0) {
+          if (allHistroy.length <= 0) {
             try {
               const udpate = {
                 videoHistory: [...allHistroy, { id: videoId }],
@@ -63,7 +62,7 @@ videoData.get("/get/video/:videoId/:unique_id/:userId", async (req, res) => {
             } catch (error) {
               console.log(error);
             }
-          } else if (Index < allHistroy.length - 1 && allHistroy.length >= 1) {
+          } else if (Some !== videoId) {
             try {
               const udpate = {
                 videoHistory: [...allHistroy, { id: videoId }],
