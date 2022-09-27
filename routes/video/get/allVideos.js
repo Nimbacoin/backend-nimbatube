@@ -20,7 +20,9 @@ allVideos.get("/", async (req, res) => {
           });
         })
       );
-      res.json({ responseData: dataFinal });
+      // dataFinal.sort((a, b) => (a.index < b.index ? 1 : -1));
+
+      res.json({ responseData: dataFinal.splice(0, 10) });
     }
   });
 });
