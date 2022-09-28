@@ -5,6 +5,7 @@ const allVideos = express.Router();
 import videoModal from "../../../db/schema/video.js";
 
 allVideos.get("/", async (req, res) => {
+  console.log("helo");
   videoModal.find({}).then(async (allVideos) => {
     const vidoesData = allVideos;
     let dataFinal = [];
