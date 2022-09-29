@@ -37,7 +37,7 @@ const io = new Server(server, {
 });
 
 io.on("connection", (socket) => {
-  //socketFuncs(io, socket);
+  socketFuncs(io, socket);
 });
 
 app.use(
