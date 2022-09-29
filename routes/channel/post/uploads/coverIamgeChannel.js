@@ -8,6 +8,7 @@ import multer from "multer";
 import crypto from "crypto";
 import path from "path";
 import AuthToken from "../../../../utils/verify-user/VerifyUser.js";
+import channelModal from "../../../../db/schema/channel.js";
 
 const mongoURL = process.env.MONGOCONNECT;
 const conn = mongoose.createConnection(mongoURL);
@@ -24,7 +25,7 @@ const storage = new GridFsStorage({
   url: mongoURL,
   file: (req, file) => {
     const channelId = req.body.channelId;
-    console.log("channelId", channelId);
+    console.log("channelId", req.body.channelId);
     return new Promise((resolve, reject) => {
       crypto.randomBytes(16, (err, buf) => {
         if (err) {
@@ -60,21 +61,26 @@ coverIamgeChannel.post(
       contentType === "image/svg"
     ) {
       const channelId = req.body.channelId;
-
+      // console.log(File);
       if (channelId) {
         const filter = { _id: channelId };
-        const update = {
-          coverImg: {
-            url: File.filename,
-            id: File.id,
-          },
-        };
-        videoModal.findOneAndUpdate(filter, update, (error, resuel) => {
-          if (resuel) {
-            console.log("SF");
-            res.json({ file: File, uploaded: true });
-          }
-        });
+
+        try {
+          await channelModal.findOne(filter).then(async (doc) => {
+            var update = doc;
+            const channelData = doc.channelData;
+            update.channelData.coverImg.url = File.filename;
+            if (doc) {
+              // update = { coverImg: { url: File.filename, id: File.id } };
+              console.log(update);
+              await channelModal.updateOne(filter, update);
+              await channelModal.findOne(filter).then(async (fd) => {
+                console.log("changed", fd.channelData.coverImg);
+              });
+              res.json({ file: File, uploaded: true });
+            }
+          });
+        } catch (error) {}
       }
     } else {
       // gfs.files.deleteOne(

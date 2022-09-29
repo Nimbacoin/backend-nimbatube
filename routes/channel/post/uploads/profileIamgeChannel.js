@@ -1,14 +1,14 @@
 import express from "express";
-import User from "../../../db/schema/user.js";
-import videoModal from "../../../db/schema/video.js";
-const createNewThumbnail = express.Router();
+
+const profileIamgeChannel = express.Router();
 import { GridFsStorage } from "multer-gridfs-storage";
 import Grid from "gridfs-stream";
-import AuthToken from "../../../utils/verify-user/VerifyUser.js";
 import mongoose from "mongoose";
 import multer from "multer";
 import crypto from "crypto";
 import path from "path";
+import AuthToken from "../../../../utils/verify-user/VerifyUser.js";
+import channelModal from "../../../../db/schema/channel.js";
 
 const mongoURL = process.env.MONGOCONNECT;
 const conn = mongoose.createConnection(mongoURL);
@@ -25,7 +25,7 @@ const storage = new GridFsStorage({
   url: mongoURL,
   file: (req, file) => {
     const channelId = req.body.channelId;
-    console.log("channelId", channelId);
+    console.log("channelId", req.body.channelId);
     return new Promise((resolve, reject) => {
       crypto.randomBytes(16, (err, buf) => {
         if (err) {
@@ -45,8 +45,8 @@ const storage = new GridFsStorage({
 });
 
 const upload = multer({ storage });
-createNewThumbnail.post(
-  "/post/video/create-new-thumbnail/:token",
+profileIamgeChannel.post(
+  "/post/channel/channel-profile-image/:token",
   AuthToken,
   upload.single("thumbnail"),
   async (req, res) => {
@@ -60,16 +60,27 @@ createNewThumbnail.post(
       contentType === "image/jfif" ||
       contentType === "image/svg"
     ) {
-      const videoId = req.body.videoId;
+      const channelId = req.body.channelId;
+      // console.log(File);
+      if (channelId) {
+        const filter = { _id: channelId };
 
-      if (videoId) {
-        const filter = { _id: videoId };
-        const update = { thumbnail: File.filename };
-        videoModal.findOneAndUpdate(filter, update, (error, resuel) => {
-          if (resuel) {
-            res.json({ file: File, uploaded: true });
-          }
-        });
+        try {
+          await channelModal.findOne(filter).then(async (doc) => {
+            var update = doc;
+            const channelData = doc.channelData;
+            update.channelData.profileImg.url = File.filename;
+            if (doc) {
+              // update = { coverImg: { url: File.filename, id: File.id } };
+              console.log(update);
+              await channelModal.updateOne(filter, update);
+              await channelModal.findOne(filter).then(async (fd) => {
+                console.log("changed", fd.channelData.coverImg);
+              });
+              res.json({ file: File, uploaded: true });
+            }
+          });
+        } catch (error) {}
       }
     } else {
       // gfs.files.deleteOne(
@@ -88,4 +99,4 @@ createNewThumbnail.post(
   }
 );
 
-export default createNewThumbnail;
+export default profileIamgeChannel;

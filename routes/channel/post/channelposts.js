@@ -6,6 +6,7 @@ import testChannel from "./tesChannel.js";
 import initChannel from "./initChannel.js";
 import coverIamgeChannel from "./uploads/coverIamgeChannel.js";
 import uploadChannelCoverImages from "./uploads/uploadChannelCoverImages.js";
+import profileIamgeChannel from "./uploads/profileIamgeChannel.js";
 const routesChannelPosts = express.Router();
 
 const allRoutes = [
@@ -30,13 +31,12 @@ const allRoutes = [
     rout: "/init-channel/",
   },
 
-  // {
-  //   name: uploadChannelCoverImages,
-  //   auth: true,
-  //   rout: "/init-channel/",
-  // },
   {
     name: coverIamgeChannel,
+    auth: true,
+  },
+  {
+    name: profileIamgeChannel,
     auth: true,
   },
 
@@ -48,7 +48,7 @@ allRoutes.map(({ name, auth, rout }) => {
     if (rout) {
       routesChannelPosts.use(`/post/channel${rout}:token`, AuthToken, name);
     } else {
-      routesChannelPosts.use(`/`, AuthToken, name);
+      routesChannelPosts.use(`/`, name);
     }
   } else {
     routesChannelPosts.use(`/post/channel${rout}:token`, name);

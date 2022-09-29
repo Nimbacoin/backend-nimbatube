@@ -12,6 +12,10 @@ allChannels.get("/", async (req, res) => {
       if (docadded) {
         chanelModal.find({ creator: userId }).then((channels) => {
           if (channels.length) {
+            channels.map((item) => {
+              console.log(item);
+              console.log(item.channelData);
+            });
             res.json({ responsData: channels });
           } else {
             res.json({ responsMessage: "NoChanelFounded" });
