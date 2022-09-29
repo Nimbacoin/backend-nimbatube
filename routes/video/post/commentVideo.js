@@ -16,7 +16,7 @@ submiteVideo.post("/", async (req, res) => {
   const { videoId, comment } = req.body;
 
   const userId = req.userId;
-  console.log(userId);
+  console.log("comment");
   if (mongoose.Types.ObjectId.isValid(videoId)) {
     await videoModal.findOne({ _id: videoId }).then(async (video) => {
       commentModal
@@ -68,7 +68,6 @@ submiteVideo.post("/", async (req, res) => {
                           });
                     })
                   );
-                  console.log("here is all comments herer man", comments);
                   deniedTimeIDs = comments;
                   res.json({ responseData: deniedTimeIDs });
                 }

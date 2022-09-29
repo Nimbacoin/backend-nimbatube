@@ -8,9 +8,13 @@ import imagesRoutes from "./images/imagesRoutes.js";
 import liveStream from "./live-stream/liveStream.js";
 // const allRoutes = [{ name: routesAuth, auth: false }, { name: routesChanel }];
 
+// Routes.get("/api/get/video/display", (rq, rs) => {
+//   console.log("video");
+//   rs.json([]);
+// });
+Routes.use("/api", videoRoutes);
 Routes.use("/api", routesAuth);
 Routes.use("/api", routesChannel);
-Routes.use("/api", videoRoutes);
 Routes.use("/api", imagesRoutes);
 Routes.use("/api", liveStream);
 

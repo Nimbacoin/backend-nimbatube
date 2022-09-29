@@ -6,7 +6,7 @@ const allChannels = express.Router();
 
 allChannels.get("/", async (req, res) => {
   const userId = req.userId;
-  console.log(userId);
+  console.log("all channels sent");
   if (mongoose.Types.ObjectId.isValid(userId)) {
     await User.findOne({ _id: userId }).then((docadded) => {
       if (docadded) {

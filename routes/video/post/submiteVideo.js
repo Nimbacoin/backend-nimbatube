@@ -11,11 +11,10 @@ import path from "path";
 import videoModal from "../../../db/schema/video.js";
 import { getVideoDurationInSeconds } from "get-video-duration";
 
-
-
 submiteVideo.post("/", (req, res) => {
   const { title, descreption } = req.body;
   const videoId = req.body.video_id;
+  console.log("videos submited");
   let dur;
   if (mongoose.Types.ObjectId.isValid(videoId)) {
     getVideoDurationInSeconds(

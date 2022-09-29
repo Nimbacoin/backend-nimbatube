@@ -5,6 +5,7 @@ import historyVideo from "./historyVideo.js";
 import renderVideo from "./renderVideo.js";
 import videoData from "./videoData.js";
 const videoRoutesGets = express.Router();
+videoRoutesGets.use(`/get/video/display`, allVideos);
 
 const allRoutes = [
   {

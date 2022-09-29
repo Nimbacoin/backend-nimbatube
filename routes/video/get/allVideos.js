@@ -10,7 +10,7 @@ allVideos.get("/", async (req, res) => {
     const vidoesData = allVideos;
     let dataFinal = [];
     let vidId;
-    if (allVideos) {
+    if (allVideos.length >= 1) {
       await Promise.all(
         vidoesData.map(async (vid, index) => {
           vidId = vid.channelId;
@@ -24,6 +24,8 @@ allVideos.get("/", async (req, res) => {
       // dataFinal.sort((a, b) => (a.index < b.index ? 1 : -1));
 
       res.json({ responseData: dataFinal.splice(0, 10) });
+    } else {
+      res.json({ responseData: [] });
     }
   });
 });

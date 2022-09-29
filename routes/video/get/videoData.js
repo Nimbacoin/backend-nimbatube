@@ -49,7 +49,6 @@ videoData.get("/get/video/:videoId/:unique_id/:userId", async (req, res) => {
       await User.findOne({ _id: reqUserId }).then(async (userData) => {
         if (userData) {
           const allHistroy = await userData.videoHistory;
-          console.log(userData.videoHistory);
           const Index = allHistroy.findIndex(({ id }) => id === videoId);
           const Some = allHistroy[allHistroy.length - 1].id;
 
