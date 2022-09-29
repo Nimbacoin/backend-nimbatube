@@ -12,11 +12,11 @@ import liveStream from "./live-stream/liveStream.js";
 //   console.log("video");
 //   rs.json([]);
 // });
+Routes.use("/api", liveStream);
+Routes.use("/api", imagesRoutes);
 Routes.use("/api", videoRoutes);
 Routes.use("/api", routesAuth);
 Routes.use("/api", routesChannel);
-Routes.use("/api", imagesRoutes);
-Routes.use("/api", liveStream);
 
 Routes.post("/api/add-tag", async (req, res) => {
   const tagValue = req.body.tag;
