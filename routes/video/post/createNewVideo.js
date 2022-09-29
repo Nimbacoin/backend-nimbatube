@@ -25,8 +25,8 @@ conn.once("open", () => {
 const storage = new GridFsStorage({
   url: mongoURL,
   file: (req, file) => {
+    console.log("video created");
     const channelId = req.body.channelId;
-
     return new Promise((resolve, reject) => {
       crypto.randomBytes(16, (err, buf) => {
         if (err) {
@@ -65,6 +65,7 @@ createNewVideo.post(
         }
       );
     } else {
+      console.log("video created");
       const channelId = req.body.channelId;
       const creatoreId = req.userId;
       await videoModal

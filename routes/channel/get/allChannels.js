@@ -6,6 +6,7 @@ const allChannels = express.Router();
 
 allChannels.get("/", async (req, res) => {
   const userId = req.userId;
+  console.log(userId);
   if (mongoose.Types.ObjectId.isValid(userId)) {
     await User.findOne({ _id: userId }).then((docadded) => {
       if (docadded) {
@@ -22,6 +23,8 @@ allChannels.get("/", async (req, res) => {
         });
       }
     });
+  } else {
+    console.log("SD");
   }
 });
 

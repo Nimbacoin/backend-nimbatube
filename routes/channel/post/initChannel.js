@@ -14,7 +14,8 @@ initChannel.post("/", async (req, res) => {
         creator: userId,
       })
       .then((channel) => {
-        console.log(channel);
+        // console.log(channel);
+
         res.json({ responsData: channel });
       });
   });

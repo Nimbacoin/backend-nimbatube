@@ -21,7 +21,7 @@ app.use(express.json());
 app.use(addRequestId());
 
 cors(
-  { "Access-Control-Allow-Origin": ORIGIN },
+  { "Access-Control-Allow-Origin": `*` },
   "Access-Control-Allow-Methods: POST, PUT, PATCH, GET, DELETE, OPTIONS",
   "Access-Control-Allow-Headers: Origin, X-Api-Key, X-Requested-With, Content-Type, Accept, Authorization"
 );
@@ -52,7 +52,7 @@ app.use(
 );
 
 app.use(function (req, res, next) {
-  res.setHeader("Access-Control-Allow-Origin", ORIGIN);
+  res.setHeader("Access-Control-Allow-Origin", `*`);
   res.setHeader(
     "Access-Control-Allow-Methods",
     "GET, POST, OPTIONS,  PUT,PATCH, DELETE"

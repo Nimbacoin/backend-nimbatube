@@ -2,6 +2,7 @@ import express from "express";
 import AuthToken from "../../../utils/verify-user/VerifyUser.js";
 import createNewChannel from "./createNewChannel.js";
 import followChannel from "./followChannel.js";
+import testChannel from "./testChannel.js";
 import initChannel from "./initChannel.js";
 import coverIamgeChannel from "./uploads/coverIamgeChannel.js";
 import uploadChannelCoverImages from "./uploads/uploadChannelCoverImages.js";
@@ -19,15 +20,21 @@ const allRoutes = [
     rout: "/follow-channel",
   },
   {
+    name: testChannel,
+    auth: true,
+    rout: "/delete-channel/",
+  },
+  {
     name: initChannel,
     auth: true,
     rout: "/init-channel/",
   },
-  {
-    name: uploadChannelCoverImages,
-    auth: true,
-    rout: "/init-channel/",
-  },
+
+  // {
+  //   name: uploadChannelCoverImages,
+  //   auth: true,
+  //   rout: "/init-channel/",
+  // },
   {
     name: coverIamgeChannel,
     auth: true,

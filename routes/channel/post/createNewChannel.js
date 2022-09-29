@@ -20,24 +20,26 @@ createNewChannel.post("/", async (req, res) => {
     if (mongoose.Types.ObjectId.isValid(channelId)) {
       if (docadded && typeof name !== "undefined") {
         if (typeof name !== "undefined") {
-          const profileImg = await uploadChannelImages(profileImage);
-          const coverImg = await uploadChannelCoverImages(coverImage);
+          // const profileImg =
+          // await uploadChannelImages(profileImage);
+          // const coverImg =""
+          //  await uploadChannelCoverImages(coverImage);
           try {
             const update = {
               channelData: {
                 title,
                 name,
                 description,
-                profileImg: {
-                  url: profileImg.url,
-                  id: profileImg.public_id,
-                  asset_id: profileImg.asset_id,
-                },
-                coverImg: {
-                  url: coverImg.url,
-                  id: coverImg.public_id,
-                  asset_id: coverImg.asset_id,
-                },
+                // profileImg: {
+                //   url: profileImg.url,
+                //   id: profileImg.public_id,
+                //   asset_id: profileImg.asset_id,
+                // },
+                // coverImg: {
+                //   url: coverImg.url,
+                //   id: coverImg.public_id,
+                //   asset_id: coverImg.asset_id,
+                // },
               },
             };
             const filter = { _id: channelId };

@@ -7,7 +7,7 @@ const allRoutes = [
   {
     name: deleteChannel,
     auth: true,
-    rout: "/delete-channel",
+    rout: "/delete-channel/",
   },
 ];
 
