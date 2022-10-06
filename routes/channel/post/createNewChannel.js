@@ -20,35 +20,29 @@ createNewChannel.post("/", async (req, res) => {
     if (mongoose.Types.ObjectId.isValid(channelId)) {
       if (docadded && typeof name !== "undefined") {
         if (typeof name !== "undefined") {
-          // const profileImg =
-          // await uploadChannelImages(profileImage);
-          // const coverImg =""
-          //  await uploadChannelCoverImages(coverImage);
+          const filter = { _id: channelId };
           try {
             const update = {
               channelData: {
                 title,
                 name,
                 description,
-                // profileImg: {
-                //   url: profileImg.url,
-                //   id: profileImg.public_id,
-                //   asset_id: profileImg.asset_id,
-                // },
-                // coverImg: {
-                //   url: coverImg.url,
-                //   id: coverImg.public_id,
-                //   asset_id: coverImg.asset_id,
-                // },
               },
             };
-            const filter = { _id: channelId };
-
+            await channelModal.findOne(filter).then(async (doc) => {
+              var update = doc;
+              update.channelData.title = title;
+              update.channelData.name = name;
+              update.channelData.title = description;
+              if (doc) {
+                await channelModal.updateOne(filter, update);
+                res.json({ file: File, uploaded: true });
+              }
+            });
             await channelModal
               .findOne({ _id: channelId })
               .then(async (channel) => {
                 if (channel.creator === userId) {
-                  await channelModal.updateOne(filter, update);
                   res.json({ responsData: channel });
                 }
               });

@@ -68,15 +68,9 @@ coverIamgeChannel.post(
         try {
           await channelModal.findOne(filter).then(async (doc) => {
             var update = doc;
-            const channelData = doc.channelData;
             update.channelData.coverImg.url = File.filename;
             if (doc) {
-              // update = { coverImg: { url: File.filename, id: File.id } };
-              console.log(update);
               await channelModal.updateOne(filter, update);
-              await channelModal.findOne(filter).then(async (fd) => {
-                console.log("changed", fd.channelData.coverImg);
-              });
               res.json({ file: File, uploaded: true });
             }
           });
