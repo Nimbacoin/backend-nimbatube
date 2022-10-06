@@ -12,7 +12,6 @@ historyVideo.get("/", async (req, res) => {
   await User.findOne({ _id: userId }).then(async (userData) => {
     if (userData) {
       const hisory = userData.videoHistory;
-      console.log(hisory);
       let videoId;
       await Promise.all(
         hisory.map(async (item, index) => {
@@ -29,18 +28,13 @@ historyVideo.get("/", async (req, res) => {
                     channelData: channel,
                     videoData: histyVid,
                   };
-                  // console.log(data);
-
                   await dataFinal.push(data);
                 });
             }
           });
-
-          // res.json({ responseData: dataFinal });
         })
       );
       dataFinal.sort((a, b) => (a.index < b.index ? 1 : -1));
-
       res.json({ responseData: dataFinal.splice(0, 10) });
     }
   });

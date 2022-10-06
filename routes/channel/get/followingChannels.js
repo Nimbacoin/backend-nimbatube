@@ -5,21 +5,21 @@ const followingChannels = express.Router();
 followingChannels.get("/", async (req, res) => {
   const userId = req.userId;
   await User.findOne({ _id: userId }).then((docadded) => {
+    console.log("is following");
     if (docadded) {
       chanelModal
         .find({
           followers: { $elemMatch: { id: userId } },
         })
         .then((channels) => {
-          console.log(channels);
           if (channels.length) {
             const allChannels = channels;
             const resChannel = [];
             allChannels.map((item) => {
               resChannel.push({ channelData: item.channelData, _id: item._id });
             });
-            console.log(resChannel);
-            res.json({ responsData: resChannel });
+            console.log("channels is here", "channels follwoing:", resChannel);
+            res.json({ responseData: resChannel });
           } else {
             res.json({ responsMessage: "NoChanelFounded" });
           }

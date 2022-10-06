@@ -10,7 +10,7 @@ routerSignIn.post("/", async (req, res) => {
   console.log(req.body);
   await User.findOne({ email: email }).then((docadded) => {
     if (docadded) {
-      console.log(docadded);
+      
       bcrypt.compare(password, docadded.password).then((result) => {
         if (result) {
           const id = docadded._id.toString("hex");
