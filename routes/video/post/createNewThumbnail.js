@@ -25,7 +25,7 @@ const storage = new GridFsStorage({
   url: mongoURL,
   file: (req, file) => {
     const channelId = req.body.channelId;
-    console.log("channelId", channelId);
+    console.log("thum : is creating");
     return new Promise((resolve, reject) => {
       crypto.randomBytes(16, (err, buf) => {
         if (err) {
@@ -50,6 +50,7 @@ createNewThumbnail.post(
   AuthToken,
   upload.single("thumbnail"),
   async (req, res) => {
+    console.log("thum : is created");
     const File = req.file;
     const contentType = File.contentType;
     if (

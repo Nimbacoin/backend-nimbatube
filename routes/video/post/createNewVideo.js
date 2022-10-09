@@ -26,7 +26,7 @@ const storage = new GridFsStorage({
   url: mongoURL,
   file: (req, file) => {
     const channelId = req.body.channelId;
-
+    console.log("video : is creating");
     return new Promise((resolve, reject) => {
       crypto.randomBytes(16, (err, buf) => {
         if (err) {
@@ -51,6 +51,7 @@ createNewVideo.post(
   AuthToken,
   upload.single("video"),
   async (req, res) => {
+    console.log("video : is created");
     const File = req.file;
     if (File && File.contentType !== "video/mp4") {
       gfs.files.deleteOne(
