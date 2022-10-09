@@ -7,6 +7,8 @@ import videoModal from "../../../db/schema/video.js";
 allVideos.get("/", async (req, res) => {
   videoModal
     .find({
+      duration: { $exists: true },
+      $expr: { $gt: [{ $strLenCP: "$duration" }, 1] },
       title: { $exists: true },
       $expr: { $gt: [{ $strLenCP: "$title" }, 1] },
       thumbnail: { $exists: true },
