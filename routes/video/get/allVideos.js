@@ -6,8 +6,13 @@ import videoModal from "../../../db/schema/video.js";
 
 allVideos.get("/", async (req, res) => {
   videoModal
-    .find()
-    .limit(8)
+    .find({
+      title: { $exists: true },
+      $expr: { $gt: [{ $strLenCP: "$title" }, 1] },
+      thumbnail: { $exists: true },
+      $expr: { $gt: [{ $strLenCP: "$thumbnail" }, 1] },
+    })
+    .limit(11)
     .then(async (allVideos) => {
       const vidoesData = allVideos;
       let dataFinal = [];
