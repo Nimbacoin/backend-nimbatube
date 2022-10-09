@@ -1,6 +1,6 @@
 import express from "express";
 import AuthToken from "../../../utils/verify-user/VerifyUser.js";
-import searching from "./Searching.js";
+import searching from "./searching.js";
 
 const videoRoutesPosts = express.Router();
 
