@@ -50,7 +50,7 @@ videoData.get("/get/video/:videoId/:unique_id/:userId", async (req, res) => {
         if (userData) {
           const allHistroy = await userData.videoHistory;
           const Index = allHistroy.findIndex(({ id }) => id === videoId);
-          const Some = allHistroy[allHistroy.length - 1].id;
+          const Some = allHistroy[allHistroy.length - 1]?.id;
 
           if (allHistroy.length <= 0) {
             try {
