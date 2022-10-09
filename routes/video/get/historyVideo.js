@@ -11,31 +11,37 @@ historyVideo.get("/", async (req, res) => {
   //   await User.updateOne({ _id: userId }, { videoHistory: [] });
   await User.findOne({ _id: userId }).then(async (userData) => {
     if (userData) {
+      const videoHistory = userData.videoHistory.length - 11;
       const hisory = userData.videoHistory;
       let videoId;
       await Promise.all(
         hisory.map(async (item, index) => {
-          videoId = item.id;
-          await videoModal.findOne({ _id: videoId }).then(async (histyVid) => {
-            let channelId;
-            if (histyVid) {
-              channelId = histyVid.channelId;
-              await channelModal
-                .findOne({ _id: channelId })
-                .then(async (channel) => {
-                  const data = {
-                    index: index,
-                    channelData: channel,
-                    videoData: histyVid,
-                  };
-                  await dataFinal.push(data);
-                });
-            }
-          });
+          if (index > videoHistory) {
+            videoId = item.id;
+            await videoModal
+              .findOne({ _id: videoId })
+              .then(async (histyVid) => {
+                let channelId;
+                if (histyVid) {
+                  channelId = histyVid.channelId;
+                  await channelModal
+                    .findOne({ _id: channelId })
+                    .then(async (channel) => {
+                      const data = {
+                        index: index,
+                        channelData: channel,
+                        videoData: histyVid,
+                      };
+                      await dataFinal.push(data);
+                    });
+                }
+              });
+          }
         })
       );
+      console.log("videos", dataFinal.length);
       dataFinal.sort((a, b) => (a.index < b.index ? 1 : -1));
-      res.json({ responseData: dataFinal.splice(0, 10) });
+      res.json({ responseData: dataFinal });
     }
   });
 });
