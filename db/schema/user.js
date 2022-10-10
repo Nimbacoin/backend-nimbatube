@@ -15,7 +15,18 @@ const UserScheme = mongoose.Schema(
       required: true,
     },
     chenels: [{ id: String }],
-
+    notification: [
+      {
+        id: String,
+        seen: { type: Boolean, default: false },
+        from: {
+          channel: String,
+          user: String,
+          videoId: String,
+          createAt: String,
+        },
+      },
+    ],
     date: {
       type: Date,
       default: Date.now(),

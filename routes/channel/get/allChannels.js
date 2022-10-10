@@ -11,14 +11,19 @@ allChannels.get("/", async (req, res) => {
     await User.findOne({ _id: userId }).then((docadded) => {
       if (docadded) {
         chanelModal.find({ creator: userId }).then((channels) => {
+          const notification = docadded.notification;
+          console.log(notification);
           if (channels.length) {
             channels.map((item) => {
-              // console.log(item);
               console.log("channels is here", "channels");
             });
-            res.json({ responsData: channels });
+
+            res.json({ responsData: { channels, notification } });
           } else {
-            res.json({ responsMessage: "NoChanelFounded" });
+            res.json({
+              responsData: { notification },
+              responsMessage: "NoChanelFounded",
+            });
           }
         });
       } else if (!docadded) {

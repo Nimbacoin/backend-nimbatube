@@ -1,10 +1,12 @@
 import videoModal from "../db/schema/video.js";
+import notification from "./notification.js";
 import streamingVideo from "./streaming/streamingVideo.js";
 
 let rooms = [];
 let broadcaster;
 
 const socketFuncs = (io, socket) => {
+  notification(io, socket);
   socket.broadcast.emit("new-broadcaster", broadcaster);
   socket.on("broadcaster", async ({ socketId, videoId }) => {
     broadcaster = socketId;
@@ -41,7 +43,7 @@ const socketFuncs = (io, socket) => {
     socket.broadcast.emit("new-broadcaster", socket.id);
   });
 
-  socket.on("watcher", ({videoId }) => {
+  socket.on("watcher", ({ videoId }) => {
     const filtered = rooms.filter((rm) => rm.roomId === videoId);
     const filteredIndex = rooms.findIndex((rm) => rm.roomId === videoId);
     let viewers = rooms[filteredIndex]?.viewers;

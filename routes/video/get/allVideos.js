@@ -14,7 +14,7 @@ allVideos.get("/", async (req, res) => {
       thumbnail: { $exists: true },
       $expr: { $gt: [{ $strLenCP: "$thumbnail" }, 1] },
     })
-    .limit(11)
+    .limit(7)
     .then(async (allVideos) => {
       const vidoesData = allVideos;
       let dataFinal = [];
