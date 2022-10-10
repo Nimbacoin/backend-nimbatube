@@ -16,6 +16,7 @@ const videoSchema = mongoose.Schema(
     },
     duration: String,
     thumbnail: String,
+    forLive: { type: Boolean, default: false },
     likes: [{ id: String }],
     disLikes: [{ id: String }],
     comments: [{ id: String }],
