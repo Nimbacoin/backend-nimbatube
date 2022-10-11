@@ -21,16 +21,16 @@ const notification = (io, socket) => {
 
         if (isInUser) {
           const index = users.findIndex(({ email }) => email === email);
-          console.log(index);
+          //  console.log(index);
           if (index >= 0) {
             users[index].socketId = socket.id;
-            console.log("socket id is changed");
+            // console.log("socket id is changed");
           }
         } else {
           users.push({ email, socketId: socket.id });
         }
 
-        console.log("user is conntected", socket.id, email);
+        // console.log("user is conntected", socket.id, email);
         socket.on("notification", (data) => {
           console.log("notification", data);
           //   socket.to(id).emit("offer", socket.id, message);
