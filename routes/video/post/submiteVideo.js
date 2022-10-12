@@ -79,7 +79,7 @@ submiteVideo.post("/", (req, res) => {
                   },
                 },
               ];
-              console.log(newUserNotfy);
+
               const updateUser = { notification: newUserNotfy };
               const filterUser = { _id: id };
               await User.updateOne(filterUser, updateUser);

@@ -40,7 +40,7 @@ historyVideo.get("/", async (req, res) => {
         })
       );
       console.log("videos", dataFinal.length);
-      dataFinal.sort((a, b) => (a.index < b.index ? 1 : -1));
+      dataFinal.sort((a, b) => (a.index < b.index ? 1 : -1))
       res.json({ responseData: dataFinal });
     }
   });

@@ -10,39 +10,43 @@ allChannels.get("/", async (req, res) => {
   const userId = req.userId;
   console.log("all channels sent");
   if (mongoose.Types.ObjectId.isValid(userId)) {
-    await User.findOne({ _id: userId }).then((docadded) => {
+    await User.findOne({ _id: userId }).then(async (docadded) => {
       if (docadded) {
         let allNofy = [];
-        let vidId;
-        let channelId;
-        channelModal.find({ creator: userId }).then(async (channels) => {
-          const notification = docadded.notification;
+        const notification = docadded.notification;
+        const videoHistory = notification.slice(0, 7);
 
-          await Promise.all(
-            notification.map(async (vid, index) => {
-              channelId = vid.from.channel;
-              vidId = vid.from.videoId;
-              await channelModal
-                .findOne({ _id: channelId })
-                .then(async (channel) => {
-                  await videoModal
-                    .findOne({ _id: vidId })
-                    .then(async (vidoeData) => {
+        let videoId;
+        await Promise.all(
+          notification.map(async (item, index) => {
+            videoId = item.from.videoId;
+            await videoModal
+              .findOne({ _id: videoId })
+              .then(async (histyVid) => {
+                let channelId;
+                if (histyVid) {
+                  channelId = histyVid.channelId;
+                  await channelModal
+                    .findOne({ _id: channelId })
+                    .then(async (channel) => {
                       const data = {
-                        vid,
+                        index: index,
+                        vid: item,
                         channelData: channel,
-                        videoData: vidoeData,
+                        videoData: histyVid,
                       };
-
                       await allNofy.push(data);
                     });
-                });
-            })
-          );
-          console.log(allNofy);
+                }
+              });
+          })
+        );
+        allNofy.sort((a, b) => (a.index < b.index ? 1 : -1));
+        channelModal.find({ creator: userId }).then(async (channels) => {
+        
           if (channels.length) {
             channels.map((item) => {
-              console.log("channels is here", "channels");
+             
             });
             res.json({ responsData: { channels, notification: allNofy } });
           } else {
