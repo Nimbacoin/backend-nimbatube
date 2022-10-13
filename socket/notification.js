@@ -3,6 +3,7 @@ import streamingVideo from "./streaming/streamingVideo.js";
 import cookie from "cookie";
 import channelModal from "../db/schema/channel.js";
 import userModal from "../db/schema/user.js";
+import { v4 as uuidv4 } from "uuid";
 
 let users = [];
 
@@ -19,62 +20,88 @@ const notification = (io, socket) => {
       if (typeof User !== "undefined") {
         const userTokken = JSON.parse(User);
         const email = userTokken.email;
-        const isInUser = users.some(({ email }) => email === email);
-        // console.log(isInUser);
-        if (isInUser) {
-          const index = users.findIndex(({ email }) => email === email);
-          //  console.log(index);
-          if (index >= 0) {
-            users[index].socketId = socket.id;
-            //  console.log("socket id is changed");
-          }
-        } else {
-          // console.log("new user added", email);
-          await userModal.findOne({ email: email }).then(async (docadded) => {
-            if (docadded) {
+        const unicId = uuidv4();
+
+        await userModal.findOne({ email: email }).then(async (docadded) => {
+          if (docadded) {
+            const querySessionStorageUnicId =
+              socket.handshake.query.sessionStorageUnicId;
+            if (
+              querySessionStorageUnicId &&
+              typeof querySessionStorageUnicId !== "undefined" &&
+              querySessionStorageUnicId.length >= 12
+            ) {
+              console.log(
+                "querySessionStorageUnicId",
+                querySessionStorageUnicId
+              );
+              const userUnicId = users.filter(
+                ({ unicId }) => unicId === querySessionStorageUnicId
+              );
+
+              const userId = users.filter(
+                ({ id }) => id === docadded._id.toString()
+              );
+              //  console.log(userUnicId, userId, "exsiteed");
+            } else {
+              const userId = users.filter(
+                ({ id }) => id === docadded._id.toString()
+              );
               users.push({
                 email,
                 id: docadded._id.toString(),
                 socketId: socket.id,
+                unicId: unicId,
               });
-            }
-          });
-        }
 
-        // console.log("users", users);
+              console.log(querySessionStorageUnicId, "userId", userId, "new");
+              io.to(socket.id).emit("unicId", unicId);
+            }
+          }
+        });
+
         socket.on("notification", async (data) => {
+          console.log("notification");
           channelModal
             .findOne({ _id: data?.channelId })
             .then(async (channel) => {
               if (channel) {
                 let allOnlineUsers = [];
-                console.log(channel);
-                //console.log("notification", data);
+                console.log("notification", "data");
+                //  console.log("users", users);
                 const followers = channel.followers;
-                followers.map((user) => {
-                  if (users.some(({ id }) => id === user.id)) {
-                    console.log("user online", user);
-                    //
+                followers.map((userfollowers) => {
+                  if (users.some(({ id }) => id === userfollowers.id)) {
+                    console.log("user online", userfollowers);
                     const indexUser = users.findIndex(
-                      ({ id }) => id === user.id
+                      ({ id }) => id === userfollowers.id
                     );
-                    if (indexUser >= 0) {
-                      const idUserOnLine = users[indexUser]?.socketId;
-                      socket
-                        .to(idUserOnLine)
-                        .emit("nofy-new-video", "idUserOnLine", "message");
-                    }
-                    //
+
+                    console.log("videos emited");
+                    const idUserOnLine = users[indexUser]?.socketId;
+                    socket
+                      .to(idUserOnLine)
+                      .emit("nofy-new-video", "idUserOnLine", "message");
                   }
+
                 });
-                // users.map(() => {});
               }
             });
-
-          //   socket.to(id).emit("offer", socket.id, message);
         });
       }
     }
+  });
+  socket.on("disconnect", () => {
+    const indexUser = users.findIndex(({ socketId }) => socketId === socket.id);
+    console.log(
+      "user loged out",
+      indexUser,
+      " ",
+      socket.id,
+      users[indexUser]?.email
+    );
+    users.splice(indexUser, 1);
+    //console.log(users);
   });
 };
 

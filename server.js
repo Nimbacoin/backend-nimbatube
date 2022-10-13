@@ -13,6 +13,14 @@ import path from "path";
 import { cloudinary } from "./utils/Cloudinary/Cloudinary.js";
 import webrtc from "wrtc";
 import socketFuncs from "./socket/socketFuncs.js";
+import session from "express-session";
+import ios from "socket.io-express-session";
+const Session = new session({
+  secret: "my-secret",
+  resave: true,
+  saveUninitialized: true,
+});
+import sharedsession from "express-socket.io-session";
 
 let senderStream;
 const app = express();
@@ -20,6 +28,8 @@ const PORT = process.env.PORT || 5000;
 const ORIGIN = process.env.ORIGIN;
 //
 dotenv.config();
+app.use(Session);
+
 app.use(cookieParser());
 app.use(express.json());
 
@@ -35,6 +45,12 @@ const server = http.createServer(app);
 const io = new Server(server, {
   cors: { origin: ORIGIN },
 });
+io.use(ios(Session));
+io.use(
+  sharedsession(Session, {
+    autoSave: true,
+  })
+);
 
 io.on("connection", (socket) => {
   socketFuncs(io, socket);
