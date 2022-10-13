@@ -1,5 +1,5 @@
 import express from "express";
-import chanelModal from "../../../db/schema/channel.js";
+import channelModal from "../../../db/schema/channel.js";
 import User from "../../../db/schema/user.js";
 const deleteChannel = express.Router();
 
@@ -10,15 +10,19 @@ deleteChannel.post("/", async (req, res) => {
   await User.findOne({ _id: userId }).then(async (docadded) => {
     if (docadded) {
       try {
-        await chanelModal
+        await channelModal
           .findByIdAndRemove({ _id: channelId })
           .then(async (delted) => {
-            await chanelModal.find({ creator: userId }).then((channels) => {
+            await channelModal.find({ creator: userId }).then((channels) => {
               if (channels.length) {
                 console.log(channelId);
                 res.json({ responsData: channels });
               } else {
-                res.json({ responsMessage: "NoChanelFounded" });
+                console.log(channels);
+                res.json({
+                  responsMessage: "NoChanelFounded",
+                  responsData: [],
+                });
               }
             });
           });
