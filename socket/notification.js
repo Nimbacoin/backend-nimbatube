@@ -42,20 +42,28 @@ const notification = (io, socket) => {
               const userId = users.filter(
                 ({ id }) => id === docadded._id.toString()
               );
-              //  console.log(userUnicId, userId, "exsiteed");
+              if (userUnicId.length <= 0) {
+                users.push({
+                  email,
+                  id: docadded._id.toString(),
+                  socketId: socket.id,
+                  unicId: querySessionStorageUnicId,
+                });
+                console.log("new", userUnicId.length);
+              } else {
+                console.log(userUnicId.length);
+              }
+
+              console.log(users, "exsiteed");
             } else {
-              const userId = users.filter(
-                ({ id }) => id === docadded._id.toString()
-              );
+              io.to(socket.id).emit("unicId", unicId);
+              console.log(querySessionStorageUnicId, "userId", unicId, "new");
               users.push({
                 email,
                 id: docadded._id.toString(),
                 socketId: socket.id,
                 unicId: unicId,
               });
-
-              console.log(querySessionStorageUnicId, "userId", userId, "new");
-              io.to(socket.id).emit("unicId", unicId);
             }
           }
         });
@@ -83,7 +91,6 @@ const notification = (io, socket) => {
                       .to(idUserOnLine)
                       .emit("nofy-new-video", "idUserOnLine", "message");
                   }
-
                 });
               }
             });
@@ -93,15 +100,26 @@ const notification = (io, socket) => {
   });
   socket.on("disconnect", () => {
     const indexUser = users.findIndex(({ socketId }) => socketId === socket.id);
-    console.log(
-      "user loged out",
-      indexUser,
-      " ",
-      socket.id,
-      users[indexUser]?.email
-    );
-    users.splice(indexUser, 1);
-    //console.log(users);
+    console.log(indexUser);
+    if (indexUser >= 0) {
+      console.log(
+        "user loged out",
+        indexUser,
+        socket.id,
+        users[indexUser]?.email,
+        users
+      );
+      users.splice(indexUser, 1);
+      console.log(
+        "user loged out",
+        indexUser,
+        socket.id,
+        users[indexUser]?.email,
+        users
+      );
+    } else {
+      console.log("user loged out");
+    }
   });
 };
 
