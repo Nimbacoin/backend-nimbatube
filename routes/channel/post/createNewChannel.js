@@ -34,18 +34,11 @@ createNewChannel.post("/", async (req, res) => {
               update.channelData.title = title;
               update.channelData.name = name;
               update.channelData.title = description;
-              if (doc) {
+              if (doc && doc.creator === userId) {
                 await channelModal.updateOne(filter, update);
-                res.json({ file: File, uploaded: true });
+                res.json({ uploaded: true, responsData: doc });
               }
             });
-            await channelModal
-              .findOne({ _id: channelId })
-              .then(async (channel) => {
-                if (channel.creator === userId) {
-                  res.json({ responsData: channel });
-                }
-              });
           } catch (error) {
             console.log(error);
           }

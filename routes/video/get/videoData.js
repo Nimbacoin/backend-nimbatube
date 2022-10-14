@@ -112,7 +112,7 @@ videoData.get("/get/video/:videoId/:unique_id/:userId", async (req, res) => {
                         .then(async (channel) => {
                           const data = {
                             commentData: commentData,
-                            creatoreData: channel.channelData,
+                            creatoreData: channel?.channelData,
                           };
                           data.commentData.creatore = null;
                           // data.creatoreData.creator = null;

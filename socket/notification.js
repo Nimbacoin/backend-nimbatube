@@ -31,17 +31,10 @@ const notification = (io, socket) => {
               typeof querySessionStorageUnicId !== "undefined" &&
               querySessionStorageUnicId.length >= 12
             ) {
-              console.log(
-                "querySessionStorageUnicId",
-                querySessionStorageUnicId
-              );
               const userUnicId = users.filter(
                 ({ unicId }) => unicId === querySessionStorageUnicId
               );
 
-              const userId = users.filter(
-                ({ id }) => id === docadded._id.toString()
-              );
               if (userUnicId.length <= 0) {
                 users.push({
                   email,
@@ -49,21 +42,58 @@ const notification = (io, socket) => {
                   socketId: socket.id,
                   unicId: querySessionStorageUnicId,
                 });
-                console.log("new", userUnicId.length);
-              } else {
-                console.log(userUnicId.length);
               }
-
-              console.log(users, "exsiteed");
             } else {
               io.to(socket.id).emit("unicId", unicId);
-              console.log(querySessionStorageUnicId, "userId", unicId, "new");
-              users.push({
-                email,
-                id: docadded._id.toString(),
-                socketId: socket.id,
-                unicId: unicId,
-              });
+            }
+            //
+          }
+        });
+
+        socket.on("send-id", async (userDataClient) => {
+          var reqParamsToken = socket.handshake.headers.cookie;
+          console.log(reqParamsToken);
+          if (
+            typeof reqParamsToken !== "undefined" &&
+            reqParamsToken !== "undefined" &&
+            reqParamsToken.length > 20
+          ) {
+            const CookiesParsed = cookie.parse(reqParamsToken);
+            const User = CookiesParsed.user;
+            if (typeof User !== "undefined") {
+              const userTokken = JSON.parse(User);
+              const email = userTokken.email;
+              await userModal
+                .findOne({ email: email })
+                .then(async (docadded) => {
+                  if (docadded) {
+                    if (
+                      userDataClient &&
+                      typeof userDataClient !== "undefined"
+                    ) {
+                      const userUnicId = users.filter(
+                        ({ unicId }) => unicId === userDataClient
+                      );
+                      if (userUnicId.length >= 1) {
+                        const Indexd = users.findIndex(
+                          ({ unicId }) => unicId === userDataClient
+                        );
+                        if (users >= 0) {
+                          users[Indexd].socketId = socket.id;
+                          console.log(socket.id);
+                        }
+                      } else if (userUnicId.length <= 0) {
+                        users.push({
+                          email,
+                          id: docadded._id.toString(),
+                          socketId: socket.id,
+                          unicId: userDataClient,
+                        });
+                      }
+                      console.log("user in", userDataClient, socket.id);
+                    }
+                  }
+                });
             }
           }
         });
@@ -75,21 +105,53 @@ const notification = (io, socket) => {
             .then(async (channel) => {
               if (channel) {
                 let allOnlineUsers = [];
-                console.log("notification", "data");
-                //  console.log("users", users);
                 const followers = channel.followers;
-                followers.map((userfollowers) => {
+                followers.map(async (userfollowers) => {
                   if (users.some(({ id }) => id === userfollowers.id)) {
-                    console.log("user online", userfollowers);
+                    console.log("user online", userfollowers.id);
                     const indexUser = users.findIndex(
                       ({ id }) => id === userfollowers.id
                     );
+                    if (indexUser.id) {
+                      await User.findOne({ _id: indexUser.id }).then(
+                        async (docadded) => {
+                          console.log(data);
+                          const notification = docadded.notification;
+                          let videoId;
+                          await Promise.all(
+                            notification.map(async (item, index) => {
+                              videoId = item.from.videoId;
+                              await videoModal
+                                .findOne({ _id: videoId })
+                                .then(async (histyVid) => {
+                                  let channelId;
+                                  if (histyVid) {
+                                    channelId = histyVid.channelId;
+                                    await channelModal
+                                      .findOne({ _id: channelId })
+                                      .then(async (channel) => {
+                                        const data = {
+                                          index: index,
+                                          vid: item,
+                                          channelData: channel,
+                                          videoData: histyVid,
+                                        };
+                                      });
+                                  }
+                                });
+                            })
+                          );
+                        }
+                      );
+                    }
 
-                    console.log("videos emited");
                     const idUserOnLine = users[indexUser]?.socketId;
-                    socket
-                      .to(idUserOnLine)
-                      .emit("nofy-new-video", "idUserOnLine", "message");
+
+                    io.to(idUserOnLine).emit(
+                      "nofy-new-video",
+                      "idUserOnLine",
+                      "message"
+                    );
                   }
                 });
               }
@@ -100,23 +162,10 @@ const notification = (io, socket) => {
   });
   socket.on("disconnect", () => {
     const indexUser = users.findIndex(({ socketId }) => socketId === socket.id);
-    console.log(indexUser);
     if (indexUser >= 0) {
-      console.log(
-        "user loged out",
-        indexUser,
-        socket.id,
-        users[indexUser]?.email,
-        users
-      );
+      console.log("user loged out", users[indexUser]?.email);
       users.splice(indexUser, 1);
-      console.log(
-        "user loged out",
-        indexUser,
-        socket.id,
-        users[indexUser]?.email,
-        users
-      );
+      console.log(users);
     } else {
       console.log("user loged out");
     }
