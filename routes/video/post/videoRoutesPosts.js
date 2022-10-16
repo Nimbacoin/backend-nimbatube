@@ -1,5 +1,7 @@
 import express from "express";
 import AuthToken from "../../../utils/verify-user/VerifyUser.js";
+import addToFavorites from "./addToFavorites.js";
+import addToWatchLater from "./addToWatchLater.js";
 import commentVideo from "./commentVideo.js";
 import createNewThumbnail from "./createNewThumbnail.js";
 import createNewVideo from "./createNewVideo.js";
@@ -31,6 +33,17 @@ const allRoutes = [
     auth: true,
     rout: "/comment-video/",
   },
+  {
+    name: addToFavorites,
+    auth: true,
+    rout: "/add-to-favorites/",
+  },
+  {
+    name: addToWatchLater,
+    auth: true,
+    rout: "/add-to-watch-later/",
+  },
+  //
 ];
 
 allRoutes.map(({ name, auth, rout }) => {

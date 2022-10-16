@@ -1,9 +1,11 @@
 import express from "express";
 import AuthToken from "../../../utils/verify-user/VerifyUser.js";
 import allVideos from "./allVideos.js";
+import favoritesVideos from "./favoritesVideos.js";
 import historyVideo from "./historyVideo.js";
 import renderVideo from "./renderVideo.js";
 import videoData from "./videoData.js";
+import watchLater from "./watchLater.js";
 const videoRoutesGets = express.Router();
 videoRoutesGets.use(`/get/video/display`, allVideos);
 
@@ -27,7 +29,18 @@ const allRoutes = [
     auth: true,
     rout: "/history-video/",
   },
-  ,
+
+  {
+    name: favoritesVideos,
+    auth: true,
+    rout: "/favorites-video/",
+  },
+  {
+    name: watchLater,
+    auth: true,
+    rout: "/watch-later-video/",
+  },
+  //
 ];
 
 allRoutes.map(({ name, auth, rout }) => {

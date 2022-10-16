@@ -14,7 +14,9 @@ const UserScheme = mongoose.Schema(
       type: String,
       required: true,
     },
-    chenels: [{ id: String }],
+    channels: [{ id: String }],
+    watchLater: [{ id: String }],
+    favorites: [{ id: String, createdAt: String }],
     notification: [
       {
         id: String,
