@@ -33,11 +33,13 @@ renderVideo.get("/get/read/video/:filename", async (req, res) => {
               if (!range) {
                 res.status(400).send("Requires Range header");
               }
+
               const videoSize = file.length;
-              const start = 0;
+              const start = Number(range.replace(/\D/g, ""));
               const end = videoSize - 1;
-              // console.log(start);
-              // console.log(end);
+              console.log(start);
+              console.log(end);
+              console.log(range);
               const contentLength = end - start + 1;
               const headers = {
                 "Content-Range": `bytes ${start}-${end}/${videoSize}`,
@@ -48,8 +50,10 @@ renderVideo.get("/get/read/video/:filename", async (req, res) => {
 
               // HTTP Status 206 for Partial Content
               res.writeHead(206, headers);
+
               const readStream = gridfsBucket.openDownloadStream(file._id, {
                 start,
+                end,
               });
               readStream.pipe(res);
             } else {
