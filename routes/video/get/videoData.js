@@ -44,6 +44,7 @@ videoData.get("/get/video/:videoId/:unique_id/:userId", async (req, res) => {
   const reqUserId = req.userId;
   const unique_id = req.params.unique_id;
   const videoId = req.params.videoId;
+  console.log(videoId);
   if (mongoose.Types.ObjectId.isValid(videoId)) {
     if (reqUserId) {
       await User.findOne({ _id: reqUserId }).then(async (userData) => {

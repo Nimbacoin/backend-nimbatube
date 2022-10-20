@@ -7,6 +7,26 @@ let broadcaster;
 
 const socketFuncs = (io, socket) => {
   notification(io, socket);
+  // socket.emit("new-comment", []);
+  socket.on("new-comment", (commentData) => {
+    const roomId = commentData.videoId;
+    const filtered = rooms.filter((rm) => rm.roomId === roomId);
+    filtered.map((roomData) => {
+      const userStreamerId = roomData.socketId;
+      console.log("userStreamerId", userStreamerId);
+      socket.to(userStreamerId).emit("new-comment", commentData.comments);
+      io.to(userStreamerId).emit("new-comment", commentData.comments);
+      const viewers = roomData.viewers;
+      console.log(viewers);
+      if (viewers?.length) {
+        viewers.map(({ socketId }) => {
+          if (socketId) {
+            socket.to(socketId).emit("new-comment", commentData.comments);
+          }
+        });
+      }
+    });
+  });
   socket.broadcast.emit("new-broadcaster", broadcaster);
   socket.on("broadcaster", async ({ socketId, videoId }) => {
     broadcaster = socketId;

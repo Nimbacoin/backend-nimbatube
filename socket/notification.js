@@ -52,7 +52,7 @@ const notification = (io, socket) => {
 
         socket.on("send-id", async (userDataClient) => {
           var reqParamsToken = socket.handshake.headers.cookie;
-          console.log(reqParamsToken);
+         // console.log(reqParamsToken);
           if (
             typeof reqParamsToken !== "undefined" &&
             reqParamsToken !== "undefined" &&
@@ -90,7 +90,7 @@ const notification = (io, socket) => {
                           unicId: userDataClient,
                         });
                       }
-                      console.log("user in", userDataClient, socket.id);
+                   //   console.log("user in", userDataClient, socket.id);
                     }
                   }
                 });
@@ -108,7 +108,7 @@ const notification = (io, socket) => {
                 const followers = channel.followers;
                 followers.map(async (userfollowers) => {
                   if (users.some(({ id }) => id === userfollowers.id)) {
-                    console.log("user online", userfollowers.id);
+                    // console.log("user online", userfollowers.id);
                     const indexUser = users.findIndex(
                       ({ id }) => id === userfollowers.id
                     );
