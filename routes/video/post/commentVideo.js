@@ -14,7 +14,6 @@ import channelModal from "../../../db/schema/channel.js";
 
 submiteVideo.post("/", async (req, res) => {
   const { videoId, comment } = req.body;
-
   const userId = req.userId;
   console.log("comment");
   if (mongoose.Types.ObjectId.isValid(videoId)) {
@@ -54,6 +53,7 @@ submiteVideo.post("/", async (req, res) => {
                               .findOne({ creator: commentData.creatore })
                               .then(async (channel) => {
                                 const data = {
+                                  index: index,
                                   commentData: commentData,
                                   creatoreData: channel?.channelData,
                                 };
@@ -69,7 +69,10 @@ submiteVideo.post("/", async (req, res) => {
                     })
                   );
                   deniedTimeIDs = comments;
-                  res.json({ responseData: deniedTimeIDs });
+                  const newData = comments.sort((a, b) =>
+                    a.index > b.index ? 1 : -1
+                  );
+                  res.json({ responseData: newData });
                 }
               });
             } catch (error) {
