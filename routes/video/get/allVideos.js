@@ -24,9 +24,22 @@ allVideos.get("/:length", async (req, res) => {
   }
   console.log(limit);
   console.log(skip);
-
-  const data = await videoModal.countDocuments();
-  console.log("data", data);
+  let allVideoLength = 0;
+  videoModal.countDocuments(
+    {
+      duration: { $exists: true },
+      $expr: { $gt: [{ $strLenCP: "$duration" }, 1] },
+      title: { $exists: true },
+      $expr: { $gt: [{ $strLenCP: "$title" }, 1] },
+      thumbnail: { $exists: true },
+      $expr: { $gt: [{ $strLenCP: "$thumbnail" }, 1] },
+    },
+    function (err, count) {
+      allVideoLength = count;
+      console.log(count);
+    }
+  );
+  console.log(allVideoLength);
   videoModal
     .find({
       duration: { $exists: true },
