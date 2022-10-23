@@ -5,17 +5,28 @@ const allVideos = express.Router();
 import videoModal from "../../../db/schema/video.js";
 
 allVideos.get("/:length", async (req, res) => {
-  let limit = req.params.length;
+  let limitLength = req.params.length;
+  let limit = Number(limitLength);
+  console.log("here", limit);
   let skip = limit;
   if (limit <= 0) {
-    limit = 7;
+    console.log("this is the limit", limit);
+    limit = 8;
     skip = 0;
+    console.log("is small");
+    console.log("this is the limit", limit);
+  } else if (limit >= 8) {
+    limit = limit + 4;
+    skip = limit;
+    console.log("is big", limit);
   } else {
     skip = limit;
   }
   console.log(limit);
   console.log(skip);
 
+  const data = await videoModal.countDocuments();
+  console.log("data", data);
   videoModal
     .find({
       duration: { $exists: true },
@@ -41,6 +52,7 @@ allVideos.get("/:length", async (req, res) => {
             });
           })
         );
+        console.log(dataFinal.length, limit);
         res.json({
           responseData: dataFinal.sort((a, b) => (a.index < b.index ? 1 : -1)),
           limit: limit,
