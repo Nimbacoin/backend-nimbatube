@@ -60,17 +60,31 @@ allVideos.get("/:length", async (req, res) => {
           vidoesData.map(async (vid, index) => {
             vidId = vid.channelId;
             await channelModal.findOne({ _id: vidId }).then(async (channel) => {
-              const data = { channelData: channel, videoData: vid };
+              const data = {
+                index: index,
+                channelData: channel,
+                videoData: vid,
+              };
               await dataFinal.push(data);
             });
           })
         );
         console.log(dataFinal.length, limit);
-        res.json({
-          responseData: dataFinal.sort((a, b) => (a.index < b.index ? 1 : -1)),
-          limit: limit,
-          skip: skip,
-        });
+        if (limit <= allVideoLength) {
+          res.json({
+            responseData: dataFinal.sort((a, b) =>
+              a.index < b.index ? 1 : -1
+            ),
+            limit: limit,
+            skip: skip,
+          });
+        } else {
+          res.json({
+            responseData: [],
+            limit,
+            skip: skip,
+          });
+        }
       } else {
         res.json({ responseData: [] });
       }
