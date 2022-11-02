@@ -11,6 +11,7 @@ const createLiveStream = async (req, res) => {
         .create({
           channelId,
           creatore: userId,
+          forLive: true,
           streaming: { created: true },
         })
         .then((newFile) => {

@@ -25,6 +25,11 @@ const channelSchema = mongoose.Schema(
         id: String,
       },
     ],
+    community: [
+      {
+        id: String,
+      },
+    ],
     channelData: {
       email: {
         type: String,
