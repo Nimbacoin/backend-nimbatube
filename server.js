@@ -49,13 +49,13 @@ dbConnect();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: [
-      `${ORIGIN}*`,
-      `${ORIGINWWW}*`,
-      `${ORIGINHTTP}*`,
-      `${ORIGINHTTPWWW}*`,
-      `${ORIGINHTTPS}*`,
-      `${ORIGINHTTPSWWW}*`,
+    origins: [
+      `${ORIGIN}`,
+      `${ORIGINWWW}`,
+      `${ORIGINHTTP}`,
+      `${ORIGINHTTPWWW}`,
+      `${ORIGINHTTPS}`,
+      `${ORIGINHTTPSWWW}`,
     ],
   },
 });
