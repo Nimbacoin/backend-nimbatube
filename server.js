@@ -49,12 +49,14 @@ dbConnect();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: ORIGINWWW,
-    ORIGINHTTP,
-    ORIGINHTTPS,
-    ORIGIN,
-    ORIGINHTTPSWWW,
-    ORIGINHTTPWWW,
+    origin: [
+      `${ORIGIN}*`,
+      `${ORIGINWWW}*`,
+      `${ORIGINHTTP}*`,
+      `${ORIGINHTTPWWW}*`,
+      `${ORIGINHTTPS}*`,
+      `${ORIGINHTTPSWWW}*`,
+    ],
   },
 });
 io.use(ios(Session));
