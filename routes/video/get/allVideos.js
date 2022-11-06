@@ -40,6 +40,9 @@ allVideos.get("/:length", async (req, res) => {
     }
   );
   console.log(allVideoLength);
+  // .skip(0)
+  // .limit(1)
+
   videoModal
     .find({
       duration: { $exists: true },
@@ -49,8 +52,6 @@ allVideos.get("/:length", async (req, res) => {
       thumbnail: { $exists: true },
       $expr: { $gt: [{ $strLenCP: "$thumbnail" }, 1] },
     })
-    // .skip(0)
-    // .limit(1)
     .then(async (allVideos) => {
       const vidoesData = allVideos;
       let dataFinal = [];
@@ -69,22 +70,20 @@ allVideos.get("/:length", async (req, res) => {
             });
           })
         );
-        console.log(dataFinal.length, limit);
-        if (limit <= allVideoLength) {
-          res.json({
-            responseData: dataFinal.sort((a, b) =>
-              a.index < b.index ? 1 : -1
-            ),
-            limit: limit,
-            skip: skip,
-          });
-        } else {
-          res.json({
-            responseData: [],
-            limit,
-            skip: skip,
-          });
-        }
+
+        // if (limit <= allVideoLength) {
+        res.json({
+          responseData: dataFinal.sort((a, b) => (a.index < b.index ? 1 : -1)),
+          limit: limit,
+          skip: skip,
+        });
+        // } else {
+        //   res.json({
+        //     responseData: [],
+        //     limit,
+        //     skip: skip,
+        //   });
+        // }
       } else {
         res.json({ responseData: [] });
       }
