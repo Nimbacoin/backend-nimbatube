@@ -26,6 +26,7 @@ const storage = new GridFsStorage({
   file: (req, file) => {
     const channelId = req.body.channelId;
     console.log("channelId", req.body.channelId);
+    console.log("thumbnail", req.body);
     return new Promise((resolve, reject) => {
       crypto.randomBytes(16, (err, buf) => {
         if (err) {
@@ -51,6 +52,7 @@ coverIamgeChannel.post(
   upload.single("thumbnail"),
   async (req, res) => {
     const File = req.file;
+    console.log(File);
     const contentType = File.contentType;
     if (
       contentType === "image/png" ||
@@ -61,7 +63,7 @@ coverIamgeChannel.post(
       contentType === "image/svg"
     ) {
       const channelId = req.body.channelId;
-      // console.log(File);
+      console.log("File", File);
       if (channelId) {
         const filter = { _id: channelId };
 

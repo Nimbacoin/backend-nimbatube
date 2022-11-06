@@ -43,11 +43,9 @@ allChannels.get("/", async (req, res) => {
         );
         allNofy.sort((a, b) => (a.index < b.index ? 1 : -1));
         channelModal.find({ creator: userId }).then(async (channels) => {
-        
+          console.log(channels[0]?.channelData);
           if (channels.length) {
-            channels.map((item) => {
-             
-            });
+            channels.map((item) => {});
             res.json({ responsData: { channels, notification: allNofy } });
           } else {
             res.json({

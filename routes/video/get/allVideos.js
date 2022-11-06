@@ -49,8 +49,8 @@ allVideos.get("/:length", async (req, res) => {
       thumbnail: { $exists: true },
       $expr: { $gt: [{ $strLenCP: "$thumbnail" }, 1] },
     })
-    .skip(skip)
-    .limit(limit)
+    // .skip(0)
+    // .limit(1)
     .then(async (allVideos) => {
       const vidoesData = allVideos;
       let dataFinal = [];

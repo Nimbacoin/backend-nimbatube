@@ -1,71 +1,54 @@
 import mongoose from "mongoose";
 
-const channelSchema = mongoose.Schema(
-  {
-    creator: { type: String, required: true },
-    followers: [
-      {
-        id: String,
-      },
-    ],
-    uploads: [
-      {
-        title: String,
-        id: String,
-      },
-    ],
-    tags: [
-      {
-        name: String,
-        id: String,
-      },
-    ],
-    comments: [
-      {
-        id: String,
-      },
-    ],
-    community: [
-      {
-        id: String,
-      },
-    ],
-    channelData: {
-      email: {
-        type: String,
-      },
-
-      title: {
-        type: String,
-      },
-      name: {
-        type: String,
-      },
-      description: {
-        type: String,
-      },
-      website: {
-        type: String,
-      },
-      profileImg: {
-        url: String,
-        id: String,
-        asset_id: String,
-      },
-      coverImg: {
-        url: String,
-        id: String,
-        asset_id: String,
-      },
+const channelSchema = {
+  creator: { type: String, required: true },
+  followers: [],
+  uploads: [],
+  tags: [],
+  comments: [],
+  likes: [],
+  community: [{}],
+  channelData: {
+    numbers: {},
+    email: {
+      type: String,
     },
 
-    date: {
-      type: Date,
-      default: Date.now(),
+    title: {
+      type: String,
+    },
+    name: {
+      type: String,
+    },
+    description: {
+      type: String,
+    },
+    website: {
+      type: String,
+    },
+    profileImg: {
+      url: String,
+      id: String,
+      asset_id: String,
+    },
+    coverImg: {
+      url: String,
+      id: String,
+      asset_id: String,
     },
   },
-  { timestamps: true }
-);
+};
+//   // { timestamps: true }
+var lengthOfAsUsers = channelSchema.followers.length;
+const uploads = channelSchema.uploads.length;
+const likes = channelSchema.likes.length;
 
-const channelModal = mongoose.model("channels", channelSchema);
+// channelSchema.channelData.numbers = {
+//   followers: { type: Number, default: lengthOfAsUsers },
+//   uploads: { type: Number, default: uploads },
+//   linkes: { type: Number, default: likes },
+// };
+var SkillSchema = new mongoose.Schema(channelSchema, { timestamps: true });
+
+const channelModal = mongoose.model("channels", SkillSchema);
 export default channelModal;
