@@ -15,18 +15,26 @@ channelVideos.get("/get/channel/all-vidoes/:channelId", async (req, res) => {
         if (channelData) {
           videoModal
             .find({ channelId: channelData._id })
-            .limit(8)
+            // .limit(8)
             .then(async (allVideos) => {
               const vidoesData = allVideos;
               let dataFinal = [];
               if (allVideos) {
                 await Promise.all(
                   vidoesData.map(async (vid, index) => {
-                    const data = { channelData: channelData, videoData: vid };
+                    const data = {
+                      channelData: channelData,
+                      videoData: vid,
+                      index: index,
+                    };
                     await dataFinal.push(data);
                   })
                 );
-                res.json({ responseData: dataFinal });
+                res.json({
+                  responseData: dataFinal.sort((a, b) =>
+                    a.index < b.index ? 1 : -1
+                  ),
+                });
               }
             });
         }
