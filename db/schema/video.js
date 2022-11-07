@@ -4,10 +4,9 @@ const videoSchema = mongoose.Schema(
   {
     creatore: String,
     channelId: String,
-
+    location: String,
     filename: String,
     fileId: String,
-
     title: {
       type: String,
     },
