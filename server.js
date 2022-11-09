@@ -51,9 +51,9 @@ const io = new Server(server, {
   cors: {
     origins: [
       `${ORIGIN}`,
-      `${ORIGINWWW}`,
-      `${ORIGINHTTP}`,
-      `${ORIGINHTTPWWW}`,
+      // `${ORIGINWWW}`,
+      // `${ORIGINHTTP}`,
+      // `${ORIGINHTTPWWW}`,
       `${ORIGINHTTPS}`,
       `${ORIGINHTTPSWWW}`,
     ],

@@ -18,33 +18,7 @@ submiteVideo.post("/", (req, res) => {
   const userId = req.userId;
   let dur;
   if (mongoose.Types.ObjectId.isValid(videoId)) {
-    getVideoDurationInSeconds(
-      process.env.MAIN_ORIGN + "/api/get/read/video/" + videoId
-    ).then((duration) => {
-      if (duration < 60) {
-        var roundedString = duration.toFixed(0);
-        dur = `0.${roundedString}`;
-        console.log(dur);
-      } else if (duration >= 60 && duration < 3600) {
-        const minutes = duration / 60;
-        var roundedString = minutes.toFixed(2);
-        var rounded = Number(roundedString);
-        dur = `${rounded}`;
-      } else if (duration >= 3600) {
-        const minutes = duration / 120;
-        var roundedString = minutes.toFixed(2);
-        var rounded = Number(roundedString);
-        dur = `${rounded}`;
-      }
-      const filter = { _id: videoId };
-      const update = {
-        duration: dur,
-      };
-      videoModal.findOneAndUpdate(filter, update, (error, resuel) => {
-        if (resuel) {
-        }
-      });
-    });
+    
 
     const filter = { _id: videoId };
     const update = {
