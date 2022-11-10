@@ -15,6 +15,8 @@ import s3UploadVideo from "./upload/aws3.js";
 import { getVideoDurationInSeconds } from "get-video-duration";
 import timeHandelr from "./timeHandelr.js";
 
+timeHandelr();
+
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 newUpload.post(
@@ -28,8 +30,7 @@ newUpload.post(
     if (reslt && reslt.Location) {
       const channelId = req.body.channelId;
       const creatoreId = req.userId;
-      let duration = timeHandelr(reslt.Location);
-      console.log("duration", duration);
+
       await videoModal
         .create({
           channelId,
