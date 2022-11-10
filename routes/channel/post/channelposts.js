@@ -7,6 +7,7 @@ import initChannel from "./initChannel.js";
 import coverIamgeChannel from "./uploads/coverIamgeChannel.js";
 import uploadChannelCoverImages from "./uploads/uploadChannelCoverImages.js";
 import profileIamgeChannel from "./uploads/profileIamgeChannel.js";
+import channelCommunity from "./channelCommunity.js";
 const routesChannelPosts = express.Router();
 
 const allRoutes = [
@@ -29,6 +30,11 @@ const allRoutes = [
     name: initChannel,
     auth: true,
     rout: "/init-channel/",
+  },
+  {
+    name: channelCommunity,
+    auth: true,
+    rout: "/comment-channel/",
   },
 
   {

@@ -8,32 +8,38 @@ const createNewChannel = express.Router();
 
 createNewChannel.post("/", async (req, res) => {
   const userId = req.userId;
-  const { general, images } = req.body;
+  const { general, other } = req.body;
   const { title, name, description } = general;
-  const { profileImage, coverImage } = images;
+  const { website, email } = other;
   const channelId = req.body.channelId;
   const { tags } = req.body;
 
-  console.log(channelId);
-
   await User.findOne({ _id: userId }).then(async (docadded) => {
+    console.log("sfd", description);
     if (mongoose.Types.ObjectId.isValid(channelId)) {
+      console.log(other, general, req.body);
       if (docadded && typeof name !== "undefined") {
         if (typeof name !== "undefined") {
           const filter = { _id: channelId };
           try {
-            const update = {
-              channelData: {
-                title,
-                name,
-                description,
-              },
-            };
             await channelModal.findOne(filter).then(async (doc) => {
               var update = doc;
-              update.channelData.title = title;
-              update.channelData.name = name;
-              update.channelData.title = description;
+              if (title.length) {
+                update.channelData.title = title;
+              }
+              if (name.length) {
+                update.channelData.name = name;
+              }
+              if (description.length) {
+                update.channelData.description = description;
+              }
+              if (website.length) {
+                update.channelData.website = website;
+              }
+              if (email.length) {
+                update.channelData.email = email;
+              }
+              console.log("channel", update.channelData);
               if (doc && doc.creator === userId) {
                 await channelModal.updateOne(filter, update);
                 res.json({ uploaded: true, responsData: doc });
