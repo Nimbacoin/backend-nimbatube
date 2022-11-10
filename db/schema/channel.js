@@ -9,7 +9,7 @@ const channelSchema = {
   likes: [],
   community: [{}],
   channelData: {
-    numbers: {},
+    numbers: { uploads: { type: Number, default: 0 } },
     email: {
       type: String,
     },

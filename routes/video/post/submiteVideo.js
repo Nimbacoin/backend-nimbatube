@@ -18,8 +18,6 @@ submiteVideo.post("/", (req, res) => {
   const userId = req.userId;
   let dur;
   if (mongoose.Types.ObjectId.isValid(videoId)) {
-    
-
     const filter = { _id: videoId };
     const update = {
       descreption: descreption,
