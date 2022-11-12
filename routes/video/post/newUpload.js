@@ -53,7 +53,7 @@ newUpload.post(
                   console.log(update.channelData);
                   await channelModal.updateOne(filter, update);
                 } catch (error) {}
-                timeHandelr(newFile._id);
+                // timeHandelr(newFile._id);
                 res.json({ file: newFile, uploaded: true });
               });
           }
