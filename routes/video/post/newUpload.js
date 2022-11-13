@@ -44,7 +44,12 @@ newUpload.post(
             console.log("buffer", buffer);
             const reslt = await s3UploadVideo(buffer, File.originalname);
             console.log(reslt, File.path);
-           
+            // try {
+            //   fs.unlinkSync(path);
+            //   //file removed
+            // } catch (err) {
+            //   console.error(err);
+            // }
             if (reslt && reslt.Location) {
               const creatoreId = req.userId;
               await videoModal
