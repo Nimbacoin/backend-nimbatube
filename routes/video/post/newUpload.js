@@ -15,8 +15,20 @@ import s3UploadVideo from "./upload/aws3.js";
 import { getVideoDurationInSeconds } from "get-video-duration";
 import timeHandelr from "./timeHandelr.js";
 import channelModal from "../../../db/schema/channel.js";
+const __dirname = path.resolve();
+import ffmpeg from "fluent-ffmpeg";
 
-const storage = multer.memoryStorage();
+// const storage = multer.memoryStorage();
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, path.resolve(__dirname, "./uploads"));
+  },
+
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
+  },
+});
+
 const upload = multer({ storage });
 newUpload.post(
   "/post/video/create-new-video/:token",
@@ -28,35 +40,45 @@ newUpload.post(
       channelModal.findOne({ id: channelId }).then(async (channel) => {
         if (channel.creator === req.userId) {
           const File = req.file;
-          const reslt = await s3UploadVideo(File);
-          console.log(reslt);
-          if (reslt && reslt.Location) {
-            const creatoreId = req.userId;
-            await videoModal
-              .create({
-                channelId,
-                location: reslt.Location,
-                creatore: creatoreId,
-                filename: File.filename,
-                fileId: File.id,
-              })
-              .then(async (newFile) => {
-                //console.log(newFile._id);
-                const update = channel;
-                try {
-                  const filter = {
-                    _id: channel._id,
-                  };
+          fs.readFile(File.path, async (err, buffer) => {
+            console.log("buffer", buffer);
+            const reslt = await s3UploadVideo(buffer, File.originalname);
+            console.log(reslt, File.path);
+            // try {
+            //   fs.unlinkSync(path);
+            //   //file removed
+            // } catch (err) {
+            //   console.error(err);
+            // }
+            if (reslt && reslt.Location) {
+              const creatoreId = req.userId;
+              await videoModal
+                .create({
+                  channelId,
+                  location: reslt.Location,
+                  creatore: creatoreId,
+                  filename: File.filename,
+                  fileId: File.id,
+                })
+                .then(async (newFile) => {
+                  const update = channel;
+                  try {
+                    const filter = {
+                      _id: channel._id,
+                    };
 
-                  update.channelData.numbers.uploads =
-                    update.channelData.numbers.uploads + 1;
-                  console.log(update.channelData);
-                  await channelModal.updateOne(filter, update);
-                } catch (error) {}
-                // timeHandelr(newFile._id);
-                res.json({ file: newFile, uploaded: true });
-              });
-          }
+                    update.channelData.numbers.uploads =
+                      update.channelData.numbers.uploads + 1;
+                    console.log(update.channelData);
+                    console.log(newFile._id, File);
+                    await timeHandelr(newFile._id, File.path);
+                    await channelModal.updateOne(filter, update);
+                  } catch (error) {}
+
+                  res.json({ file: newFile, uploaded: true });
+                });
+            }
+          });
         }
       });
     }
