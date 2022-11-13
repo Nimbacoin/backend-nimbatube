@@ -1,7 +1,7 @@
 import { getVideoDurationInSeconds } from "get-video-duration";
 import videoModal from "../../../db/schema/video.js";
 import VideoTimeReader from "./timer.js";
-
+import fs from "fs";
 const timeHandelr = async (Id, path) => {
   console.log(Id, path);
   if (Id) {
@@ -20,12 +20,8 @@ const timeHandelr = async (Id, path) => {
 
           try {
             await videoModal.updateOne(filter, updateUser);
-             // try {
-            //   fs.unlinkSync(path);
-            //   //file removed
-            // } catch (err) {
-            //   console.error(err);
-            // }
+            fs.unlinkSync(path);
+            //file removed
           } catch (error) {
             console.log(error);
           }
