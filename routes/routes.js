@@ -7,17 +7,16 @@ import tag from "../db/schema/tag.js";
 import imagesRoutes from "./images/imagesRoutes.js";
 import liveStream from "./live-stream/liveStream.js";
 import searchRoutes from "./search/searchRoutes.js";
-// const allRoutes = [{ name: routesAuth, auth: false }, { name: routesChanel }];
 
-// Routes.get("/api/get/video/display", (rq, rs) => {
-//   console.log("video");
-//   rs.json([]);
-// });
 Routes.use("/api", liveStream);
 Routes.use("/api", imagesRoutes);
 Routes.use("/api", videoRoutes);
 Routes.use("/api", routesAuth);
 Routes.use("/api", routesChannel);
+// Routes.use("/api/get/search/all-search", (req, res) => {
+//   console.log("·SD");
+//   res.json("s´f");
+// });
 Routes.use("/api", searchRoutes);
 
 Routes.post("/api/add-tag", async (req, res) => {

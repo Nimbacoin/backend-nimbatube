@@ -8,6 +8,10 @@ const searchRoutes = express.Router();
 // });
 searchRoutes.use("/", searchRoutesGets);
 searchRoutes.use("/", searchRoutesPosts);
+// searchRoutes.get("/get/search/all-search", (req, res) => {
+//   console.log("2sd");
+//   res.json("aposdcaopcoapscaopsc");
+// });
 // searchRoutes.use("/", searchRoutesDeletes);
 
 export default searchRoutes;

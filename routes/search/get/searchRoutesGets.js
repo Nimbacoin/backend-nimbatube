@@ -1,20 +1,33 @@
 import express from "express";
 import AuthToken from "../../../utils/verify-user/VerifyUser.js";
+import allSearch from "./allSearch.js";
+const searchRoutesGets = express.Router();
 
-const videoRoutesPosts = express.Router();
-
-const allRoutes = [];
-
+const allRoutes = [
+  {
+    name: allSearch,
+    auth: false,
+    rout: "/all-search",
+  },
+];
 allRoutes.map(({ name, auth, rout }) => {
   if (auth) {
     if (rout) {
-      videoRoutesPosts.use(`/post/video${rout}:token`, AuthToken, name);
+      searchRoutesGets.use(`/get/search${rout}:token`, AuthToken, name);
     } else {
-      videoRoutesPosts.use(`/`, name);
+      searchRoutesGets.use(`/`, name);
     }
   } else {
-    videoRoutesPosts.use(`/post/chanel${rout}:token`, name);
+    if (rout) {
+      searchRoutesGets.use(`/get/search${rout}`, name);
+    } else {
+      searchRoutesGets.use(`/`, name);
+    }
   }
 });
+searchRoutesGets.get("/get/search/all-search", (req, res) => {
+  console.log("2sd");
+  res.json("ASPO");
+});
 
-export default videoRoutesPosts;
+export default searchRoutesGets;
