@@ -5,7 +5,8 @@ const searching = express.Router();
 
 searching.post("/", async (req, res) => {
   const tr = 1600;
-  const hotel = 95;
+  const double = 60;
+  const single = 40;
 
   const sdfsdfdf = new Array(20).fill().map((_, i) => {
     const bb = i + 1;
@@ -27,11 +28,10 @@ searching.post("/", async (req, res) => {
 
   const myNewARRAY = multiplesOf(sdfsdfdf, 2);
   const addondesFunc = addondes(sdfsdfdf);
-  console.log(myNewARRAY);
-  console.log(addondesFunc);
+
   myNewARRAY.map((i, ii) => {
     if (i <= 18) {
-      const newss = 30 * i;
+      const newss = (double / 2) * i;
       const forday = newss * 7;
       const ddd = forday + 1600;
       const lastdat = ddd / i;
@@ -41,9 +41,9 @@ searching.post("/", async (req, res) => {
 
   addondesFunc.map((i, ii) => {
     if (i <= 18) {
-      const iiiiiii = -1;
-      const newss = 30 * iiiiiii;
-      const priceddd = 40 * 7;
+      const iiiiiii = i - 1;
+      const newss = (double / 2) * iiiiiii;
+      const priceddd = single * 7;
       const forday = newss * 7;
       const ddd = forday + priceddd + 1600;
       const lastdat = ddd / i;
