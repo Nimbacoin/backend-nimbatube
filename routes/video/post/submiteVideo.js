@@ -16,7 +16,6 @@ submiteVideo.post("/", (req, res) => {
   const { title, descreption } = req.body;
   const videoId = req.body.video_id;
   const userId = req.userId;
-  let dur;
   if (mongoose.Types.ObjectId.isValid(videoId)) {
     const filter = { _id: videoId };
     const update = {
@@ -37,8 +36,13 @@ submiteVideo.post("/", (req, res) => {
               // const updateUse = { notification: [] };
               // const filterUse = { _id: id };
               // await User.updateOne(filterUse, updateUse);
+              console.log(useData);
               const event = new Date();
-              const userNotfy = useData.notification;
+              let userNotfy = [];
+              if (useData?.notification) {
+                userNotfy = useData?.notification;
+              }
+
               const newUserNotfy = [
                 ...userNotfy,
                 {
@@ -51,6 +55,8 @@ submiteVideo.post("/", (req, res) => {
                   },
                 },
               ];
+              console.log("console.log(userNotfy);", userNotfy);
+              console.log("console.log(userNotfy);", newUserNotfy);
 
               const updateUser = { notification: newUserNotfy };
               const filterUser = { _id: id };

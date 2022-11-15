@@ -17,18 +17,19 @@ const UserScheme = mongoose.Schema(
     channels: [{ id: String }],
     watchLater: [{ id: String }],
     favorites: [{ id: String, createdAt: String }],
-    notification: [
-      {
-        id: String,
-        seen: { type: Boolean, default: false },
-        from: {
-          channel: String,
-          user: String,
-          videoId: String,
-          createAt: String,
-        },
-      },
-    ],
+    notification: { type: Array, default: [] },
+    // notification: [
+    //   {
+    //     id: String,
+    //     seen: { type: Boolean, default: false },
+    //     from: {
+    //       channel: String,
+    //       user: String,
+    //       videoId: String,
+    //       createAt: String,
+    //     },
+    //   },
+    // ],
     date: {
       type: Date,
       default: Date.now(),
