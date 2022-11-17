@@ -38,15 +38,14 @@ submiteVideo.post("/", (req, res) => {
               // await User.updateOne(filterUse, updateUse);
               console.log(useData);
               const event = new Date();
-              let userNotfy = [];
-              if (useData?.notification) {
-                userNotfy = useData?.notification;
-              }
+              let userNotfy = useData?.notification;
 
               const newUserNotfy = [
                 ...userNotfy,
                 {
                   id: "VIDEO-UPLAOD",
+                  seen: false,
+                  name: event + "VIDEO-UPLAOD",
                   from: {
                     channel: channelId,
                     user: userId,
@@ -55,9 +54,6 @@ submiteVideo.post("/", (req, res) => {
                   },
                 },
               ];
-              console.log("console.log(userNotfy);", userNotfy);
-              console.log("console.log(userNotfy);", newUserNotfy);
-
               const updateUser = { notification: newUserNotfy };
               const filterUser = { _id: id };
               await User.updateOne(filterUser, updateUser);
