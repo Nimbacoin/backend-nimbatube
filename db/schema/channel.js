@@ -6,6 +6,8 @@ const channelSchema = {
   uploads: [],
   tags: [],
   comments: [],
+  walletId: { type: String },
+  playList: [],
   likes: [],
   community: [{}],
   channelData: {

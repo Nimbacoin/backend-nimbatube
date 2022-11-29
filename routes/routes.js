@@ -7,12 +7,15 @@ import tag from "../db/schema/tag.js";
 import imagesRoutes from "./images/imagesRoutes.js";
 import liveStream from "./live-stream/liveStream.js";
 import searchRoutes from "./search/searchRoutes.js";
+import cryptoRoutes from "./crypto/cryptoRoutes.js";
 
 Routes.use("/api", liveStream);
 Routes.use("/api", imagesRoutes);
 Routes.use("/api", videoRoutes);
 Routes.use("/api", routesAuth);
 Routes.use("/api", routesChannel);
+Routes.use("/api", cryptoRoutes);
+
 // Routes.use("/api/get/search/all-search", (req, res) => {
 //   console.log("·SD");
 //   res.json("s´f");

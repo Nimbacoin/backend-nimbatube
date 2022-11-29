@@ -15,7 +15,6 @@ initChannel.post("/", async (req, res) => {
       })
       .then((channel) => {
         // console.log(channel);
-
         res.json({ responsData: channel });
       });
   });

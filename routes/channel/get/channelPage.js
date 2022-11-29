@@ -4,15 +4,45 @@ import mongoose from "mongoose";
 import User from "../../../db/schema/user.js";
 import commentModal from "../../../db/schema/comment.js";
 const channelPage = express.Router();
+import * as cookie from "cookie";
+import jwt from "jsonwebtoken";
 
-channelPage.get("/get/channel:channelId", async (req, res) => {
-  const userId = req.userId;
+const AuthToken = async (req, reqParamsToken) => {
+  if (
+    typeof reqParamsToken !== "undefined" &&
+    reqParamsToken !== "undefined" &&
+    reqParamsToken.length > 20
+  ) {
+    const CookiesParsed = cookie.parse(reqParamsToken);
+    const User = CookiesParsed.user;
 
+    if (typeof User !== "undefined") {
+      const userTokken = JSON.parse(User);
+      const accesToken = userTokken.accessToken;
+      const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
+      jwt.verify(accesToken, accessTokenSecret, function (err, decoded) {
+        if (!err) {
+          console.log("decoded", decoded);
+          req.userId = decoded;
+          return decoded;
+        } else if (err) {
+          console.log(err);
+        }
+      });
+    } else {
+      return null;
+    }
+  }
+};
+channelPage.get("/get/channel/:channelId/:userId", async (req, res) => {
+  const userId = req.params.userId;
+  const reqUserId = req.userId;
+  await AuthToken(req, userId);
   const channelId = req.params.channelId;
+  console.log(reqUserId);
   function onlyLettersAndNumbers(channelId) {
     return /^[A-Za-z0-9]*$/.test(channelId);
   }
-  console.log(userId, channelId);
 
   const IsCorrectId = onlyLettersAndNumbers();
   if (channelId && mongoose.Types.ObjectId.isValid(channelId) && IsCorrectId) {
@@ -41,6 +71,11 @@ channelPage.get("/get/channel:channelId", async (req, res) => {
           })
         );
         channelData[0].community = comments;
+        const inInFollowers = channel.followers.some(
+          ({ id }) => id === reqUserId
+        );
+        console.log(inInFollowers);
+
         res.json({
           responsData: channelData[0],
         });

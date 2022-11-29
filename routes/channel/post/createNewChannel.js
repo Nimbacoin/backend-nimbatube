@@ -24,22 +24,22 @@ createNewChannel.post("/", async (req, res) => {
           try {
             await channelModal.findOne(filter).then(async (doc) => {
               var update = doc;
-              if (title.length) {
+              if (title?.length) {
                 update.channelData.title = title;
               }
-              if (name.length) {
+              if (name?.length) {
                 update.channelData.name = name;
               }
-              if (description.length) {
+              if (description?.length) {
                 update.channelData.description = description;
               }
-              if (website.length) {
+              if (website?.length) {
                 update.channelData.website = website;
               }
-              if (email.length) {
+              if (email?.length) {
                 update.channelData.email = email;
               }
-              console.log("channel", update.channelData);
+              console.log("channel data", update.channelData);
               if (doc && doc.creator === userId) {
                 await channelModal.updateOne(filter, update);
                 res.json({ uploaded: true, responsData: doc });

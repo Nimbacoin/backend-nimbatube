@@ -42,13 +42,22 @@ videoData.get("/get/video/:videoId/:unique_id/:userId", async (req, res) => {
   const userId = req.params.userId;
   await AuthToken(req, userId);
   const reqUserId = req.userId;
+  console.log("user id", reqUserId);
   const unique_id = req.params.unique_id;
   const videoId = req.params.videoId;
   console.log(videoId);
   if (mongoose.Types.ObjectId.isValid(videoId)) {
+    let savedToWatchLater = false;
+    let savedToFavorites = false;
     if (reqUserId) {
       await User.findOne({ _id: reqUserId }).then(async (userData) => {
         if (userData) {
+          const findLargeCity = (element) => {
+            return element.id === videoId;
+          };
+          savedToFavorites = userData.favorites.some(findLargeCity);
+          savedToWatchLater = userData.watchLater.some(findLargeCity);
+
           const allHistroy = await userData.videoHistory;
           const Index = allHistroy.findIndex(({ id }) => id === videoId);
           const Some = allHistroy[allHistroy.length - 1]?.id;
@@ -138,11 +147,20 @@ videoData.get("/get/video/:videoId/:unique_id/:userId", async (req, res) => {
                     followed: inInFollowers,
                   };
                 });
-                // console.log(channelData[0].followers);
+                console.log(
+                  "savedToWatchLater",
+                  savedToWatchLater,
+                  "savedToFavorites",
+                  savedToFavorites
+                );
 
                 res.json({
                   responseData: videoData[0],
                   channelData: channelData[0],
+                  library: {
+                    savedToWatchLater,
+                    savedToFavorites,
+                  },
                   getting: unique_id,
                 });
               });
