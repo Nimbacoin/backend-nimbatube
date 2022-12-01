@@ -72,8 +72,10 @@ allVideos.get("/:length", async (req, res) => {
         );
 
         // if (limit <= allVideoLength) {
+        //shuffledArray = array.sort((a, b) => 0.5 - Math.random());
+        //sort by date .sort((a, b) => (a.index < b.index ? 1 : -1)),
         res.json({
-          responseData: dataFinal.sort((a, b) => (a.index < b.index ? 1 : -1)),
+          responseData: dataFinal.sort((a, b) => 0.5 - Math.random()),
           limit: limit,
           skip: skip,
         });
