@@ -12,7 +12,6 @@ import videoModal from "../../../db/schema/video.js";
 import { dirname } from "path";
 import fs from "fs";
 import s3UploadVideo from "./upload/aws3.js";
-import { getVideoDurationInSeconds } from "get-video-duration";
 import timeHandelr from "./timeHandelr.js";
 import channelModal from "../../../db/schema/channel.js";
 const __dirname = path.resolve();

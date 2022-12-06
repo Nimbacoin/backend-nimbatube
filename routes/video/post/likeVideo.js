@@ -4,7 +4,6 @@ const likeVideo = express.Router();
 import mongoose from "mongoose";
 
 import videoModal from "../../../db/schema/video.js";
-import { getVideoDurationInSeconds } from "get-video-duration";
 
 likeVideo.post("/", async (req, res) => {
   const { IsLiked, IsDisLiked, videoId } = req.body;

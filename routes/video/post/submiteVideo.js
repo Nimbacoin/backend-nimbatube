@@ -9,7 +9,6 @@ import multer from "multer";
 import crypto from "crypto";
 import path from "path";
 import videoModal from "../../../db/schema/video.js";
-import { getVideoDurationInSeconds } from "get-video-duration";
 import channelModal from "../../../db/schema/channel.js";
 
 submiteVideo.post("/", (req, res) => {
