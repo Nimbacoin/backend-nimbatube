@@ -3,7 +3,7 @@ import http from "http";
 import cors from "cors";
 import dotenv from "dotenv";
 import { Server, Socket } from "socket.io";
-import Routes from "./routes/routes.js";
+//import Routes from "./routes/routes.js";
 import bodyParser from "body-parser";
 import dbConnect from "./db/dbConnect.js";
 import cookieParser from "cookie-parser";
