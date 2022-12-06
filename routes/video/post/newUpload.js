@@ -15,7 +15,6 @@ import s3UploadVideo from "./upload/aws3.js";
 import timeHandelr from "./timeHandelr.js";
 import channelModal from "../../../db/schema/channel.js";
 const __dirname = path.resolve();
-import ffmpeg from "fluent-ffmpeg";
 
 // const storage = multer.memoryStorage();
 const storage = multer.diskStorage({
