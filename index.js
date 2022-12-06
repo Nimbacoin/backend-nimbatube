@@ -3,7 +3,7 @@ import http from "http";
 import cors from "cors";
 import dotenv from "dotenv";
 import { Server, Socket } from "socket.io";
-import Routes from "./routes/routes.js";
+// import Routes from "./routes/routes.js";
 import bodyParser from "body-parser";
 import dbConnect from "./db/dbConnect.js";
 import cookieParser from "cookie-parser";
@@ -93,7 +93,7 @@ app.use(function (req, res, next) {
   next();
 });
 
-app.use("/", Routes);
+//app.use("/", Routes);
 
 server.listen(PORT, (err) => {
   if (err) console.log(err);
