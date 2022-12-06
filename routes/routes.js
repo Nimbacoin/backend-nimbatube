@@ -1,8 +1,8 @@
 import express from "express";
 const Routes = express.Router();
 import routesAuth from "./auth/auth.js";
-import routesChannel from "./channel/channel.js";
-// import videoRoutes from "./video/videoRoutes.js";
+//import routesChannel from "./channel/channel.js";
+import videoRoutes from "./video/videoRoutes.js";
 // import tag from "../db/schema/tag.js";
 // import imagesRoutes from "./images/imagesRoutes.js";
 // import liveStream from "./live-stream/liveStream.js";
@@ -11,9 +11,9 @@ import routesChannel from "./channel/channel.js";
 
 // Routes.use("/api", liveStream);
 // Routes.use("/api", imagesRoutes);
-// Routes.use("/api", videoRoutes);
+Routes.use("/api", videoRoutes);
 Routes.use("/api", routesAuth);
-Routes.use("/api", routesChannel);
+//this one has error Routes.use("/api", routesChannel);
 // Routes.use("/api", cryptoRoutes);
 
 // Routes.use("/api/get/search/all-search", (req, res) => {
