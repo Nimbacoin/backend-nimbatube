@@ -7,7 +7,7 @@ import routesChannel from "./channel/channel.js";
 import imagesRoutes from "./images/imagesRoutes.js";
 import liveStream from "./live-stream/liveStream.js";
 import searchRoutes from "./search/searchRoutes.js";
-// import cryptoRoutes from "./crypto/cryptoRoutes.js";
+import cryptoRoutes from "./crypto/cryptoRoutes.js";
 
 Routes.use("/api", routesAuth);
 Routes.use("/api", routesChannel);
@@ -15,7 +15,7 @@ Routes.use("/api", routesChannel);
 Routes.use("/api", imagesRoutes);
 Routes.use("/api", liveStream);
 
-// Routes.use("/api", cryptoRoutes);
+Routes.use("/api", cryptoRoutes);
 
 // Routes.use("/api/get/search/all-search", (req, res) => {
 //   console.log("·SD");
