@@ -93,11 +93,7 @@ app.use(function (req, res, next) {
   next();
 });
 
-// app.use("/", Routes);
-
-
-
-
+app.use("/", Routes);
 
 server.listen(PORT, (err) => {
   if (err) console.log(err);
