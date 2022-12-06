@@ -2,7 +2,7 @@ import express from "express";
 const Routes = express.Router();
 import routesAuth from "./auth/auth.js";
 import routesChannel from "./channel/channel.js";
-import videoRoutes from "./video/videoRoutes.js";
+// this one has error import videoRoutes from "./video/videoRoutes.js";
 // import tag from "../db/schema/tag.js";
 // import imagesRoutes from "./images/imagesRoutes.js";
 // import liveStream from "./live-stream/liveStream.js";
@@ -11,7 +11,7 @@ import videoRoutes from "./video/videoRoutes.js";
 
 Routes.use("/api", routesAuth);
 Routes.use("/api", routesChannel);
-Routes.use("/api", videoRoutes);
+// this one has error Routes.use("/api", videoRoutes);
 // Routes.use("/api", liveStream);
 // Routes.use("/api", imagesRoutes);
 
