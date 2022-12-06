@@ -6,7 +6,7 @@ import routesChannel from "./channel/channel.js";
 // import tag from "../db/schema/tag.js";
 import imagesRoutes from "./images/imagesRoutes.js";
 import liveStream from "./live-stream/liveStream.js";
-// import searchRoutes from "./search/searchRoutes.js";
+import searchRoutes from "./search/searchRoutes.js";
 // import cryptoRoutes from "./crypto/cryptoRoutes.js";
 
 Routes.use("/api", routesAuth);
@@ -21,7 +21,7 @@ Routes.use("/api", liveStream);
 //   console.log("·SD");
 //   res.json("s´f");
 // });
-// Routes.use("/api", searchRoutes);
+Routes.use("/api", searchRoutes);
 
 // Routes.post("/api/add-tag", async (req, res) => {
 //   const tagValue = req.body.tag;
