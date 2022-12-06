@@ -1,7 +1,7 @@
 import express from "express";
 const Routes = express.Router();
 import routesAuth from "./auth/auth.js";
-// import routesChannel from "./channel/channel.js";
+import routesChannel from "./channel/channel.js";
 // import videoRoutes from "./video/videoRoutes.js";
 // import tag from "../db/schema/tag.js";
 // import imagesRoutes from "./images/imagesRoutes.js";
@@ -10,7 +10,7 @@ import routesAuth from "./auth/auth.js";
 // import cryptoRoutes from "./crypto/cryptoRoutes.js";
 
 Routes.use("/api", routesAuth);
-// Routes.use("/api", routesChannel);
+Routes.use("/api", routesChannel);
 // Routes.use("/api", videoRoutes);
 // Routes.use("/api", liveStream);
 // Routes.use("/api", imagesRoutes);
