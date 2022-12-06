@@ -1,12 +1,12 @@
 import express from "express";
 import AuthToken from "../../../utils/verify-user/VerifyUser.js";
 import createNewVideo from "./createNewVideo.js";
+import newUpload from "./newUpload.js";
 // import addToFavorites from "./addToFavorites.js";
 // import addToWatchLater from "./addToWatchLater.js";
 // import commentVideo from "./commentVideo.js";
 // import createNewThumbnail from "./createNewThumbnail.js";
 // import likeVideo from "./likeVideo.js";
-// import newUpload from "./newUpload.js";
 // import submiteVideo from "./submiteVideo.js";
 const videoRoutesPosts = express.Router();
 
@@ -15,10 +15,10 @@ const allRoutes = [
     name: createNewVideo,
     auth: true,
   },
-  // {
-  //   name: newUpload,
-  //   auth: true,
-  // },
+  {
+    name: newUpload,
+    auth: true,
+  },
   // {
   //   name: createNewThumbnail,
   //   auth: true,
