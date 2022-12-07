@@ -1,9 +1,8 @@
 import express from "express";
 import AuthToken from "../../../utils/verify-user/VerifyUser.js";
-import createNewVideo from "./createNewVideo.js";
+// import createNewVideo from "./createNewVideo.js";
 import newUpload from "./newUpload.js";
 import createNewThumbnail from "./createNewThumbnail.js";
-
 import addToFavorites from "./addToFavorites.js";
 import addToWatchLater from "./addToWatchLater.js";
 import commentVideo from "./commentVideo.js";
