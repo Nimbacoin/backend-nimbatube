@@ -40,7 +40,13 @@ newUpload.post(
           const File = req.file;
           fs.readFile(File.path, async (err, buffer) => {
             console.log("buffer", buffer);
-            const reslt = await s3UploadVideo(buffer, File.originalname);
+
+            const reslt = await s3UploadVideo(
+              buffer,
+              File.originalname,
+              "videos",
+              process.env.AWS_BUCKET_NAME
+            );
             console.log(reslt, File.path);
             // try {
             //   fs.unlinkSync(path);
