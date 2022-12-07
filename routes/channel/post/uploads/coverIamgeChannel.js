@@ -10,7 +10,7 @@ import path from "path";
 import AuthToken from "../../../../utils/verify-user/VerifyUser.js";
 import channelModal from "../../../../db/schema/channel.js";
 
-const mongoURL = process.env.MONGOCONNECT;
+const mongoURL = process.env.MONGOCONNECTURL;
 const conn = mongoose.createConnection(mongoURL);
 let gfs, gridfsBucket, gridfsBucketThumbnail;
 conn.once("open", () => {

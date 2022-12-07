@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import Grid from "gridfs-stream";
 
-const mongoURL = process.env.MONGOCONNECT;
+const mongoURL = process.env.MONGOCONNECTURL;
 const conn = mongoose.createConnection(mongoURL);
 export let gfs, gridfsBucket;
 

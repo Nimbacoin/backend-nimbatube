@@ -10,7 +10,7 @@ import crypto from "crypto";
 import path from "path";
 import videoModal from "../../../db/schema/video.js";
 
-const mongoURL = process.env.MONGOCONNECT;
+const mongoURL = process.env.MONGOCONNECTURL;
 const conn = mongoose.createConnection(mongoURL);
 let gfs, gridfsBucket;
 conn.once("open", () => {

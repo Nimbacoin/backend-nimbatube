@@ -10,7 +10,7 @@ import multer from "multer";
 import crypto from "crypto";
 import path from "path";
 
-const mongoURL = process.env.MONGOCONNECT;
+const mongoURL = process.env.MONGOCONNECTURL;
 const conn = mongoose.createConnection(mongoURL);
 let gfs, gridfsBucket, gridfsBucketThumbnail;
 conn.once("open", () => {

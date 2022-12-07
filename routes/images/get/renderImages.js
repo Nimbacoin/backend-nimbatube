@@ -6,7 +6,7 @@ import Grid from "gridfs-stream";
 import mongoose from "mongoose";
 import multer from "multer";
 
-const mongoURL = process.env.MONGOCONNECT;
+const mongoURL = process.env.MONGOCONNECTURL;
 const conn = mongoose.createConnection(mongoURL);
 let gfs, gridfsBucket;
 
