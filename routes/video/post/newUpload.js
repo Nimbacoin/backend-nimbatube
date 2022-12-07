@@ -3,7 +3,7 @@ const newUpload = express.Router();
 // import AuthToken from "../../../utils/verify-user/VerifyUser.js";
 // import User from "../../../db/schema/user.js";
 // import mongoose from "mongoose";
-// import multer from "multer";
+import multer from "multer";
 // import path from "path";
 // import videoModal from "../../../db/schema/video.js";
 // import fs from "fs";
