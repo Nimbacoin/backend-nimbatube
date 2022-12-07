@@ -1,4 +1,4 @@
-// import { getVideoDurationInSeconds } from "get-video-duration";
+import { getVideoDurationInSeconds } from "get-video-duration";
 // import videoModal from "../../../db/schema/video.js";
 // import VideoTimeReader from "./timer.js";
 // import fs from "fs";
