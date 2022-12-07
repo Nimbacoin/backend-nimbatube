@@ -7,7 +7,7 @@ import multer from "multer";
 import path from "path";
 import videoModal from "../../../db/schema/video.js";
 import fs from "fs";
-import s3UploadVideo from "./upload/aws3.js";
+// import s3UploadVideo from "./upload/aws3.js";
 import timeHandelr from "./timeHandelr.js";
 import channelModal from "../../../db/schema/channel.js";
 const __dirname = path.resolve();
