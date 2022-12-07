@@ -5,7 +5,7 @@ import createNewVideo from "./createNewVideo.js";
 import createNewThumbnail from "./createNewThumbnail.js";
 
 import addToFavorites from "./addToFavorites.js";
-// import addToWatchLater from "./addToWatchLater.js";
+import addToWatchLater from "./addToWatchLater.js";
 // import commentVideo from "./commentVideo.js";
 // import likeVideo from "./likeVideo.js";
 // import submiteVideo from "./submiteVideo.js";
@@ -45,11 +45,11 @@ const allRoutes = [
     auth: true,
     rout: "/add-to-favorites/",
   },
-  // {
-  //   name: addToWatchLater,
-  //   auth: true,
-  //   rout: "/add-to-watch-later/",
-  // },
+  {
+    name: addToWatchLater,
+    auth: true,
+    rout: "/add-to-watch-later/",
+  },
   //
 ];
 
