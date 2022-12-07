@@ -1,6 +1,6 @@
 import express from "express";
 const newUpload = express.Router();
-// import AuthToken from "../../../utils/verify-user/VerifyUser.js";
+import AuthToken from "../../../utils/verify-user/VerifyUser.js";
 // import User from "../../../db/schema/user.js";
 // import mongoose from "mongoose";
 import multer from "multer";
