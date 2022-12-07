@@ -12,10 +12,10 @@ import submiteVideo from "./submiteVideo.js";
 const videoRoutesPosts = express.Router();
 
 const allRoutes = [
-  {
-    name: createNewVideo,
-    auth: true,
-  },
+  // {
+  //   name: createNewVideo,
+  //   auth: true,
+  // },
   {
     name: newUpload,
     auth: true,
