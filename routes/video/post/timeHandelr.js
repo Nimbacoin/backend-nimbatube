@@ -1,10 +1,13 @@
 // import { getVideoDurationInSeconds } from "get-video-duration";
-import videoModal from "../../../db/schema/video.js";
+// import videoModal from "../../../db/schema/video.js";
 // import VideoTimeReader from "./timer.js";
+import videoModal from "../../../db/schema/video.js";
+
 // import fs from "fs";
 const timeHandelr = async (Id, path) => {
   if (Id) {
     videoModal.findOne({ _id: Id }).then(async (video) => {
+      console.log("sd");
       //     if (video) {
       //       await getVideoDurationInSeconds(path).then(async (duration) => {
       //         const timeVideo = VideoTimeReader(duration);
