@@ -4,7 +4,7 @@ import createNewVideo from "./createNewVideo.js";
 // this one is an error import newUpload from "./newUpload.js";
 import createNewThumbnail from "./createNewThumbnail.js";
 
-// import addToFavorites from "./addToFavorites.js";
+import addToFavorites from "./addToFavorites.js";
 // import addToWatchLater from "./addToWatchLater.js";
 // import commentVideo from "./commentVideo.js";
 // import likeVideo from "./likeVideo.js";
@@ -40,11 +40,11 @@ const allRoutes = [
   //   auth: true,
   //   rout: "/comment-video/",
   // },
-  // {
-  //   name: addToFavorites,
-  //   auth: true,
-  //   rout: "/add-to-favorites/",
-  // },
+  {
+    name: addToFavorites,
+    auth: true,
+    rout: "/add-to-favorites/",
+  },
   // {
   //   name: addToWatchLater,
   //   auth: true,
