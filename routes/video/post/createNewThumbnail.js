@@ -1,58 +1,34 @@
 import express from "express";
-import User from "../../../db/schema/user.js";
-import videoModal from "../../../db/schema/video.js";
-const createNewThumbnail = express.Router();
-import { GridFsStorage } from "multer-gridfs-storage";
-import Grid from "gridfs-stream";
-import AuthToken from "../../../utils/verify-user/VerifyUser.js";
+const newUpload = express.Router();
+import fs from "fs";
 import mongoose from "mongoose";
 import multer from "multer";
-import crypto from "crypto";
 import path from "path";
+import channelModal from "../../../db/schema/channel.js";
+import videoModal from "../../../db/schema/video.js";
+import AuthToken from "../../../utils/verify-user/VerifyUser.js";
+import s3UploadVideo from "./upload/aws3.js";
 
-const mongoURL = process.env.MONGOCONNECTURL;
-const conn = mongoose.createConnection(mongoURL);
-let gfs, gridfsBucket, gridfsBucketThumbnail;
-conn.once("open", () => {
-  gridfsBucket = new mongoose.mongo.GridFSBucket(conn.db, {
-    bucketName: "images",
-  });
-  gfs = Grid(conn.db, mongoose.mongo);
-  gfs.collection("images");
-});
+const __dirname = path.resolve();
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, path.resolve(__dirname, "./uploads"));
+  },
 
-const storage = new GridFsStorage({
-  url: mongoURL,
-  file: (req, file) => {
-    const channelId = req.body.channelId;
-    console.log("thum : is creating");
-    return new Promise((resolve, reject) => {
-      crypto.randomBytes(16, (err, buf) => {
-        if (err) {
-          return reject(err);
-        } else {
-          const filename =
-            channelId + buf.toString("hex") + path.extname(file.originalname);
-          const fileInfo = {
-            filename: filename,
-            bucketName: "images",
-          };
-          resolve(fileInfo);
-        }
-      });
-    });
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
   },
 });
 
 const upload = multer({ storage });
-createNewThumbnail.post(
+newUpload.post(
   "/post/video/create-new-thumbnail/:token",
   AuthToken,
   upload.single("thumbnail"),
   async (req, res) => {
-    console.log("thum : is created");
     const File = req.file;
-    const contentType = File.contentType;
+    const contentType = File.mimetype;
+    const videoData = req.body.videoId;
     if (
       contentType === "image/png" ||
       contentType === "image/gif" ||
@@ -61,32 +37,39 @@ createNewThumbnail.post(
       contentType === "image/jfif" ||
       contentType === "image/svg"
     ) {
-      const videoId = req.body.videoId;
+      if (mongoose.Types.ObjectId.isValid(videoData)) {
+        videoModal.findOne({ id: videoData }).then(async (videoDataId) => {
+          if (videoDataId) {
+            fs.readFile(File.path, async (err, buffer) => {
+              const reslt = await s3UploadVideo(
+                buffer,
+                File.originalname,
+                "video-thumbnail",
+                process.env.AWS_BUCKET_NAME
+              );
+              const filter = { _id: videoData };
 
-      if (videoId) {
-        const filter = { _id: videoId };
-        const update = { thumbnail: File.filename };
-        videoModal.findOneAndUpdate(filter, update, (error, resuel) => {
-          if (resuel) {
-            res.json({ file: File, uploaded: true });
+              if (reslt && reslt.Location) {
+                try {
+                  var update = videoDataId;
+                  update.thumbnail = reslt.Location;
+                  if (videoDataId) {
+                    console.log(update);
+                    await videoModal.updateOne(filter, update);
+                    const dataFile = await videoModal.findOne(filter);
+                    console.log("main video updates", dataFile);
+                    res.json({ file: dataFile, uploaded: true });
+                  }
+                } catch (error) {}
+              }
+            });
           }
         });
       }
     } else {
-      // gfs.files.deleteOne(
-      //   { filename: File.filename, root: "images" },
-      //   (err, gridStore) => {
-      //     if (err) {
-      //       console.log("i dont want to delete the file ok");
-      //       return res.status(404).json({ err: err });
-      //     } else {
-      //       res.json({ file: "ONLYIMAGEALLOWED" });
-      //     }
-      //   }
-      // );
+      res.json({ uplaod: false, error: "NOT-IMAGE" });
     }
-    req.file = null;
   }
 );
 
-export default createNewThumbnail;
+export default newUpload;

@@ -1,57 +1,32 @@
 import express from "express";
-
-const profileIamgeChannel = express.Router();
-import { GridFsStorage } from "multer-gridfs-storage";
-import Grid from "gridfs-stream";
+const newUpload = express.Router();
+import fs from "fs";
 import mongoose from "mongoose";
 import multer from "multer";
-import crypto from "crypto";
 import path from "path";
-import AuthToken from "../../../../utils/verify-user/VerifyUser.js";
 import channelModal from "../../../../db/schema/channel.js";
+import videoModal from "../../../../db/schema/video.js";
+import AuthToken from "../../../../utils/verify-user/VerifyUser.js";
+import s3UploadVideo from "../../../video/post/upload/aws3.js";
+const __dirname = path.resolve();
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, path.resolve(__dirname, "./uploads"));
+  },
 
-const mongoURL = process.env.MONGOCONNECTURL;
-const conn = mongoose.createConnection(mongoURL);
-let gfs, gridfsBucket, gridfsBucketThumbnail;
-conn.once("open", () => {
-  gridfsBucket = new mongoose.mongo.GridFSBucket(conn.db, {
-    bucketName: "images",
-  });
-  gfs = Grid(conn.db, mongoose.mongo);
-  gfs.collection("images");
-});
-
-const storage = new GridFsStorage({
-  url: mongoURL,
-  file: (req, file) => {
-    const channelId = req.body.channelId;
-    console.log("channelId", req.body.channelId);
-    return new Promise((resolve, reject) => {
-      crypto.randomBytes(16, (err, buf) => {
-        if (err) {
-          return reject(err);
-        } else {
-          const filename =
-            channelId + buf.toString("hex") + path.extname(file.originalname);
-          const fileInfo = {
-            filename: filename,
-            bucketName: "images",
-          };
-          resolve(fileInfo);
-        }
-      });
-    });
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
   },
 });
 
 const upload = multer({ storage });
-profileIamgeChannel.post(
+newUpload.post(
   "/post/channel/channel-profile-image/:token",
   AuthToken,
   upload.single("thumbnail"),
   async (req, res) => {
     const File = req.file;
-    const contentType = File.contentType;
+    const contentType = File.mimetype;
     if (
       contentType === "image/png" ||
       contentType === "image/gif" ||
@@ -61,42 +36,40 @@ profileIamgeChannel.post(
       contentType === "image/svg"
     ) {
       const channelId = req.body.channelId;
-      // console.log(File);
-      if (channelId) {
-        const filter = { _id: channelId };
-
-        try {
-          await channelModal.findOne(filter).then(async (doc) => {
-            var update = doc;
-            const channelData = doc.channelData;
-            update.channelData.profileImg.url = File.filename;
-            if (doc) {
-              // update = { coverImg: { url: File.filename, id: File.id } };
-              console.log(update);
-              await channelModal.updateOne(filter, update);
-              await channelModal.findOne(filter).then(async (fd) => {
-                console.log("changed", fd.channelData.coverImg);
-              });
-              res.json({ file: File, uploaded: true });
-            }
-          });
-        } catch (error) {}
+      if (mongoose.Types.ObjectId.isValid(channelId)) {
+        channelModal.findOne({ id: channelId }).then(async (channel) => {
+          if (channel.creator === req.userId) {
+            console.log(File);
+            fs.readFile(File.path, async (err, buffer) => {
+              const reslt = await s3UploadVideo(
+                buffer,
+                File.originalname,
+                "images-nimbatube-channels-profiles",
+                process.env.AWS_BUCKET_NAME
+              );
+              const filter = { _id: channelId };
+              if (reslt && reslt.Location) {
+                try {
+                  await channelModal.findOne(filter).then(async (doc) => {
+                    var update = doc;
+                    update.channelData.profileImg.url = reslt.Location;
+                    if (doc) {
+                      await channelModal.updateOne(filter, update);
+                      const dataFile = await channelModal.findOne(filter);
+                      console.log(dataFile);
+                      res.json({ file: dataFile, uploaded: true });
+                    }
+                  });
+                } catch (error) {}
+              }
+            });
+          }
+        });
       }
     } else {
-      // gfs.files.deleteOne(
-      //   { filename: File.filename, root: "images" },
-      //   (err, gridStore) => {
-      //     if (err) {
-      //       console.log("i dont want to delete the file ok");
-      //       return res.status(404).json({ err: err });
-      //     } else {
-      //       res.json({ file: "ONLYIMAGEALLOWED" });
-      //     }
-      //   }
-      // );
+      res.json({ uplaod: false, error: "NOT-IMAGE" });
     }
-    req.file = null;
   }
 );
 
-export default profileIamgeChannel;
+export default newUpload;

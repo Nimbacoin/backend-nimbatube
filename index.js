@@ -16,6 +16,7 @@ const Session = new session({
   saveUninitialized: true,
 });
 import sharedsession from "express-socket.io-session";
+import applod from "./testingadd.js";
 
 let senderStream;
 const app = express();
@@ -29,7 +30,7 @@ const ORIGINHTTPSWWW = process.env.ORIGINHTTPSWWW;
 //
 dotenv.config();
 app.use(Session);
-
+applod();
 app.use(cookieParser());
 app.use(express.json());
 

@@ -45,15 +45,16 @@ allVideos.get("/:length", async (req, res) => {
 
   videoModal
     .find({
-      duration: { $exists: true },
-      $expr: { $gt: [{ $strLenCP: "$duration" }, 1] },
-      title: { $exists: true },
-      $expr: { $gt: [{ $strLenCP: "$title" }, 1] },
-      thumbnail: { $exists: true },
-      $expr: { $gt: [{ $strLenCP: "$thumbnail" }, 1] },
+      // duration: { $exists: true },
+      // $expr: { $gt: [{ $strLenCP: "$duration" }, 1] },
+      // title: { $exists: true },
+      // $expr: { $gt: [{ $strLenCP: "$title" }, 1] },
+      // thumbnail: { $exists: true },
+      // $expr: { $gt: [{ $strLenCP: "$thumbnail" }, 1] },
     })
     .then(async (allVideos) => {
       const vidoesData = allVideos;
+      console.log("vidoesData", vidoesData);
       let dataFinal = [];
       let vidId;
       if (allVideos.length >= 1) {
