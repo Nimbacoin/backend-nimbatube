@@ -1,5 +1,5 @@
 // import { getVideoDurationInSeconds } from "get-video-duration";
-// import VideoTimeReader from "./timer.js";
+import VideoTimeReader from "./timer.js";
 import videoModal from "../../../db/schema/video.js";
 import ffprobe from "ffprobe";
 import ffprobeStatic from "ffprobe-static";
