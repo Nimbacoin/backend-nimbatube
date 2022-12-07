@@ -1,22 +1,17 @@
 import express from "express";
 import User from "../../../db/schema/user.js";
 const newUpload = express.Router();
-import { GridFsStorage } from "multer-gridfs-storage";
-import Grid from "gridfs-stream";
 import AuthToken from "../../../utils/verify-user/VerifyUser.js";
 import mongoose from "mongoose";
 import multer from "multer";
-import crypto from "crypto";
 import path from "path";
 import videoModal from "../../../db/schema/video.js";
-import { dirname } from "path";
 import fs from "fs";
 import s3UploadVideo from "./upload/aws3.js";
 import timeHandelr from "./timeHandelr.js";
 import channelModal from "../../../db/schema/channel.js";
 const __dirname = path.resolve();
 
-// const storage = multer.memoryStorage();
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, path.resolve(__dirname, "./uploads"));
