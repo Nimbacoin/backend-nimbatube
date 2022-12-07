@@ -33,48 +33,48 @@ newUpload.post(
       channelModal.findOne({ id: channelId }).then(async (channel) => {
         if (channel.creator === req.userId) {
           const File = req.file;
-          //         fs.readFile(File.path, async (err, buffer) => {
-          //           console.log("buffer", buffer);
-          //           const reslt = await s3UploadVideo(
-          //             buffer,
-          //             File.originalname,
-          //             "videos",
-          //             process.env.AWS_BUCKET_NAME
-          //           );
-          //           console.log(reslt, File.path);
-          //           // try {
-          //           //   fs.unlinkSync(path);
-          //           //   //file removed
-          //           // } catch (err) {
-          //           //   console.error(err);
-          //           // }
-          //           if (reslt && reslt.Location) {
-          //             const creatoreId = req.userId;
-          //             await videoModal
-          //               .create({
-          //                 channelId,
-          //                 location: reslt.Location,
-          //                 creatore: creatoreId,
-          //                 filename: File.filename,
-          //                 fileId: File.id,
-          //               })
-          //               .then(async (newFile) => {
-          //                 const update = channel;
-          //                 try {
-          //                   const filter = {
-          //                     _id: channel._id,
-          //                   };
-          //                   update.channelData.numbers.uploads =
-          //                     update.channelData.numbers.uploads + 1;
-          //                   console.log(update.channelData);
-          //                   console.log(newFile._id, File);
-          //                   await timeHandelr(newFile._id, File.path);
-          //                   await channelModal.updateOne(filter, update);
-          //                 } catch (error) {}
-          //                 res.json({ file: newFile, uploaded: true });
-          //               });
-          //           }
-          //         });
+          fs.readFile(File.path, async (err, buffer) => {
+            //           console.log("buffer", buffer);
+            //           const reslt = await s3UploadVideo(
+            //             buffer,
+            //             File.originalname,
+            //             "videos",
+            //             process.env.AWS_BUCKET_NAME
+            //           );
+            //           console.log(reslt, File.path);
+            //           // try {
+            //           //   fs.unlinkSync(path);
+            //           //   //file removed
+            //           // } catch (err) {
+            //           //   console.error(err);
+            //           // }
+            //           if (reslt && reslt.Location) {
+            //             const creatoreId = req.userId;
+            //             await videoModal
+            //               .create({
+            //                 channelId,
+            //                 location: reslt.Location,
+            //                 creatore: creatoreId,
+            //                 filename: File.filename,
+            //                 fileId: File.id,
+            //               })
+            //               .then(async (newFile) => {
+            //                 const update = channel;
+            //                 try {
+            //                   const filter = {
+            //                     _id: channel._id,
+            //                   };
+            //                   update.channelData.numbers.uploads =
+            //                     update.channelData.numbers.uploads + 1;
+            //                   console.log(update.channelData);
+            //                   console.log(newFile._id, File);
+            //                   await timeHandelr(newFile._id, File.path);
+            //                   await channelModal.updateOne(filter, update);
+            //                 } catch (error) {}
+            //                 res.json({ file: newFile, uploaded: true });
+            //               });
+            //           }
+          });
         }
       });
     }
