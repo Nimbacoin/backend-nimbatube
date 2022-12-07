@@ -8,7 +8,7 @@ import path from "path";
 import videoModal from "../../../db/schema/video.js";
 import fs from "fs";
 import s3UploadVideo from "./upload/aws3.js";
-//import timeHandelr from "./timeHandelr.js";
+import timeHandelr from "./timeHandelr.js";
 import channelModal from "../../../db/schema/channel.js";
 const __dirname = path.resolve();
 
@@ -67,7 +67,7 @@ newUpload.post(
                       update.channelData.numbers.uploads + 1;
                     console.log(update.channelData);
                     console.log(newFile._id, File);
-                    // await timeHandelr(newFile._id, File.path);
+                    await timeHandelr(newFile._id, File.path);
                     await channelModal.updateOne(filter, update);
                   } catch (error) {}
                   res.json({ file: newFile, uploaded: true });
