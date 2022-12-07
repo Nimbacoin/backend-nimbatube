@@ -8,7 +8,7 @@ import addToFavorites from "./addToFavorites.js";
 import addToWatchLater from "./addToWatchLater.js";
 import commentVideo from "./commentVideo.js";
 import likeVideo from "./likeVideo.js";
-// import submiteVideo from "./submiteVideo.js";
+import submiteVideo from "./submiteVideo.js";
 const videoRoutesPosts = express.Router();
 
 const allRoutes = [
