@@ -7,7 +7,7 @@ import createNewThumbnail from "./createNewThumbnail.js";
 import addToFavorites from "./addToFavorites.js";
 import addToWatchLater from "./addToWatchLater.js";
 import commentVideo from "./commentVideo.js";
-// import likeVideo from "./likeVideo.js";
+import likeVideo from "./likeVideo.js";
 // import submiteVideo from "./submiteVideo.js";
 const videoRoutesPosts = express.Router();
 
@@ -30,11 +30,11 @@ const allRoutes = [
   //   auth: true,
   //   rout: "/submite-video/",
   // },
-  // {
-  //   name: likeVideo,
-  //   auth: true,
-  //   rout: "/like-video/",
-  // },
+  {
+    name: likeVideo,
+    auth: true,
+    rout: "/like-video/",
+  },
   {
     name: commentVideo,
     auth: true,
