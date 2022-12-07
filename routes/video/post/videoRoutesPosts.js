@@ -25,11 +25,11 @@ const allRoutes = [
     name: createNewThumbnail,
     auth: true,
   },
-  // {
-  //   name: submiteVideo,
-  //   auth: true,
-  //   rout: "/submite-video/",
-  // },
+  {
+    name: submiteVideo,
+    auth: true,
+    rout: "/submite-video/",
+  },
   {
     name: likeVideo,
     auth: true,
