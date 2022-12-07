@@ -1,7 +1,7 @@
 import express from "express";
 import AuthToken from "../../../utils/verify-user/VerifyUser.js";
 import createNewVideo from "./createNewVideo.js";
-// this one is an error import newUpload from "./newUpload.js";
+import newUpload from "./newUpload.js";
 import createNewThumbnail from "./createNewThumbnail.js";
 
 import addToFavorites from "./addToFavorites.js";
@@ -16,11 +16,10 @@ const allRoutes = [
     name: createNewVideo,
     auth: true,
   },
-  // {
-  // this one is an error
-  //   name: newUpload,
-  //   auth: true,
-  // },
+  {
+    name: newUpload,
+    auth: true,
+  },
   {
     name: createNewThumbnail,
     auth: true,
