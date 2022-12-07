@@ -1,9 +1,9 @@
 // import { getVideoDurationInSeconds } from "get-video-duration";
 import videoModal from "../../../db/schema/video.js";
-import VideoTimeReader from "./timer.js";
+// import VideoTimeReader from "./timer.js";
 import fs from "fs";
 const timeHandelr = async (Id, path) => {
-  VideoTimeReader(20000)
+  //VideoTimeReader(20000)
   if (Id) {
     videoModal.findOne({ _id: Id }).then(async (video) => {
       if (video) {
