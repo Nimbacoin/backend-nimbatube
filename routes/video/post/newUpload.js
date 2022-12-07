@@ -7,7 +7,7 @@ import multer from "multer";
 import path from "path";
 import videoModal from "../../../db/schema/video.js";
 import fs from "fs";
-// import s3UploadVideo from "./upload/aws3.js";
+import s3UploadVideo from "./upload/aws3.js";
 //import timeHandelr from "./timeHandelr.js";
 import channelModal from "../../../db/schema/channel.js";
 const __dirname = path.resolve();
@@ -34,13 +34,13 @@ newUpload.post(
         if (channel.creator === req.userId) {
           const File = req.file;
           fs.readFile(File.path, async (err, buffer) => {
-            const reslt = {};
-            // const reslt = await s3UploadVideo(
-            //   buffer,
-            //   File.originalname,
-            //   "videos",
-            //   process.env.AWS_BUCKET_NAME
-            // );
+            // const reslt = {};
+            const reslt = await s3UploadVideo(
+              buffer,
+              File.originalname,
+              "videos",
+              process.env.AWS_BUCKET_NAME
+            );
             // try {
             //   fs.unlinkSync(path);
             //   //file removed
