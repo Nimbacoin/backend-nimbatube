@@ -38,7 +38,8 @@ newUpload.post(
       contentType === "image/svg"
     ) {
       if (mongoose.Types.ObjectId.isValid(videoData)) {
-        videoModal.findOne({ id: videoData }).then(async (videoDataId) => {
+        videoModal.findOne({ _id: videoData }).then(async (videoDataId) => {
+          console.log("videoDataId", videoDataId);
           if (videoDataId) {
             fs.readFile(File.path, async (err, buffer) => {
               const reslt = await s3UploadVideo(
@@ -48,16 +49,14 @@ newUpload.post(
                 process.env.AWS_BUCKET_NAME
               );
               const filter = { _id: videoData };
-
               if (reslt && reslt.Location) {
                 try {
                   var update = videoDataId;
                   update.thumbnail = reslt.Location;
                   if (videoDataId) {
-                    console.log(update);
                     await videoModal.updateOne(filter, update);
                     const dataFile = await videoModal.findOne(filter);
-                    console.log("main video updates", dataFile);
+                    console.log("thumnail . dataFile", dataFile);
                     res.json({ file: dataFile, uploaded: true });
                   }
                 } catch (error) {}

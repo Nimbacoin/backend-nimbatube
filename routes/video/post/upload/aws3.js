@@ -1,13 +1,18 @@
 // import { S3 } from "aws-sdk";
-import pkg from "aws-sdk";
-const { S3 } = pkg;
+import aws from "aws-sdk";
+const { S3 } = aws;
 import { v4 as uuidv4 } from "uuid";
 
 const s3UploadVideo = async (buffer, originalname, path, bucketName) => {
-  const s3 = new S3();
+  aws.config.update({
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY_ID,
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID_ID,
+    region: process.env.REGION,
+  });
+  const BUCKET = process.env.AWS_BUCKET_NAME;
+  const s3 = new aws.S3();
   const params = {
-    Bucket: bucketName,
-    // process.env.AWS_BUCKET_NAME,
+    Bucket: BUCKET,
     Key: `${path}/${uuidv4() + originalname}`,
     Body: buffer,
   };
