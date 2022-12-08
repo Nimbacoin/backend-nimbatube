@@ -2,14 +2,12 @@ import jwt from "jsonwebtoken";
 const AuthToken = async (req, res, next) => {
   const reqParamsToken = req.params.token;
   //console.log(reqParamsToken);
-
   if (
     typeof reqParamsToken !== "undefined" &&
     reqParamsToken !== "undefined" &&
     reqParamsToken.length > 20
   ) {
     const CookiesParsed = JSON.parse(req.params.token);
-
     const User = CookiesParsed;
     if (typeof User !== "undefined") {
       const accesToken = User.accessToken;

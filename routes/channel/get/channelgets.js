@@ -30,7 +30,7 @@ const allRoutes = [
   {
     name: followingChannels,
     auth: true,
-    rout: "/following-channels/",
+    rout: "/following-channels",
   },
   ,
 ];
