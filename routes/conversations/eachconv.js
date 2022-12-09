@@ -5,7 +5,6 @@ import Message from "../../db/schema/Message.js";
 const eachConv = async (req, res) => {
   let str = req.path.slice(1);
   const UserId = req.headers.a_custom_header;
-  // console.log(UserId);
   if (str.length >= 12 && str.length <= 24)
     await User.findOne({ _id: str }).then(async (userdoc) => {
       if (userdoc) {
@@ -16,17 +15,13 @@ const eachConv = async (req, res) => {
           var unreadmessagesArray = datamessage.filter(
             (messages) => messages.unread === false && messages.receiver !== str
           );
-          // console.log(unreadmessagesArray);
-        } catch (err) {
-          console.log(err);
-        }
+        } catch (err) {}
 
         let data = userdoc;
         const username = data.username;
         let id = data._d;
         let image = data.image;
         let unreadmessges = unreadmessagesArray.length;
-        // console.log(unreadmessges);
         if (datamessage.length >= 1 && unreadmessagesArray.length >= 1) {
           const lastmessage = datamessage[datamessage.length - 1];
           res.json({

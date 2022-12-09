@@ -48,7 +48,7 @@ likeVideo.post("/", async (req, res) => {
               }
             });
           } catch (error) {
-            console.log(error);
+            
             res.end({ error: error.message });
           }
         } else if (!IsLiked && IsDisLiked) {
@@ -80,7 +80,7 @@ likeVideo.post("/", async (req, res) => {
               }
             });
           } catch (error) {
-            console.log(error);
+            
             res.end({ error: error.message });
           }
         } else if (!IsLiked && !IsDisLiked) {
@@ -112,7 +112,7 @@ likeVideo.post("/", async (req, res) => {
               }
             });
           } catch (error) {
-            console.log(error);
+            
             res.end({ error: error.message });
           }
         }

@@ -15,9 +15,7 @@ createNewChannel.post("/", async (req, res) => {
   const { tags } = req.body;
 
   await User.findOne({ _id: userId }).then(async (docadded) => {
-    console.log("sfd", description);
     if (mongoose.Types.ObjectId.isValid(channelId)) {
-      console.log(other, general, req.body);
       if (docadded && typeof name !== "undefined") {
         if (typeof name !== "undefined") {
           const filter = { _id: channelId };
@@ -39,14 +37,12 @@ createNewChannel.post("/", async (req, res) => {
               if (email?.length) {
                 update.channelData.email = email;
               }
-              console.log("channel data", update.channelData);
               if (doc && doc.creator === userId) {
                 await channelModal.updateOne(filter, update);
                 res.json({ uploaded: true, responsData: doc });
               }
             });
           } catch (error) {
-            console.log(error);
           }
         } else {
           res.json({

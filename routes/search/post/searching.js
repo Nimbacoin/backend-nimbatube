@@ -12,7 +12,6 @@ searching.post("/", async (req, res) => {
     const bb = i + 1;
     return bb;
   });
-  // console.log(sdfsdfdf);
 
   function multiplesOf(numList, num) {
     return numList.filter(function (n) {
@@ -35,7 +34,6 @@ searching.post("/", async (req, res) => {
       const forday = newss * 7;
       const ddd = forday + 1600;
       const lastdat = ddd / i;
-      console.log("price if people are ", i, "is", lastdat + "€");
     }
   });
 
@@ -47,7 +45,6 @@ searching.post("/", async (req, res) => {
       const forday = newss * 7;
       const ddd = forday + priceddd + 1600;
       const lastdat = ddd / i;
-      console.log("price if people are ", i, "is", lastdat + "€");
     }
   });
 });

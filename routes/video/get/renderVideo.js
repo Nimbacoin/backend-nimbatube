@@ -12,7 +12,6 @@ const conn = mongoose.createConnection(mongoURL);
 let gfs, gridfsBucket;
 
 conn.once("open", () => {
-  console.log("db is connected");
   gridfsBucket = new mongoose.mongo.GridFSBucket(conn.db, {
     bucketName: "video",
   });
@@ -37,9 +36,7 @@ renderVideo.get("/get/read/video/:filename", async (req, res) => {
               const videoSize = file.length;
               const start = Number(range.replace(/\D/g, ""));
               const end = videoSize - 1;
-              console.log(start);
-              console.log(end);
-              console.log(range);
+              
               const contentLength = end - start + 1;
               const headers = {
                 "Content-Range": `bytes ${start}-${end}/${videoSize}`,

@@ -29,7 +29,6 @@ const AuthToken = async (req, reqParamsToken) => {
           req.userId = decoded;
           return decoded;
         } else if (err) {
-          console.log(err);
         }
       });
     } else {
@@ -42,10 +41,8 @@ videoData.get("/get/video/:videoId/:unique_id/:userId", async (req, res) => {
   const userId = req.params.userId;
   await AuthToken(req, userId);
   const reqUserId = req.userId;
-  console.log("user id", reqUserId);
   const unique_id = req.params.unique_id;
   const videoId = req.params.videoId;
-  console.log(videoId);
   if (mongoose.Types.ObjectId.isValid(videoId)) {
     let savedToWatchLater = false;
     let savedToFavorites = false;
@@ -69,7 +66,6 @@ videoData.get("/get/video/:videoId/:unique_id/:userId", async (req, res) => {
               };
               await User.updateOne({ _id: reqUserId }, udpate);
             } catch (error) {
-              console.log(error);
             }
           } else if (Some !== videoId) {
             try {
@@ -78,7 +74,6 @@ videoData.get("/get/video/:videoId/:unique_id/:userId", async (req, res) => {
               };
               await User.updateOne({ _id: reqUserId }, udpate);
             } catch (error) {
-              console.log(error);
             }
           }
         }
@@ -131,7 +126,6 @@ videoData.get("/get/video/:videoId/:unique_id/:userId", async (req, res) => {
                     });
               })
             );
-            //console.log(comments);
             videoData[0].comments = comments;
             channelModal
               .findById({ _id: resuel.channelId })
@@ -147,12 +141,6 @@ videoData.get("/get/video/:videoId/:unique_id/:userId", async (req, res) => {
                     followed: inInFollowers,
                   };
                 });
-                console.log(
-                  "savedToWatchLater",
-                  savedToWatchLater,
-                  "savedToFavorites",
-                  savedToFavorites
-                );
 
                 res.json({
                   responseData: videoData[0],

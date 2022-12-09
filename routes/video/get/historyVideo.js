@@ -5,10 +5,8 @@ const historyVideo = express.Router();
 import videoModal from "../../../db/schema/video.js";
 
 historyVideo.get("/", async (req, res) => {
-  console.log("here");
   let dataFinal = [];
   const userId = req.userId;
-  //   await User.updateOne({ _id: userId }, { videoHistory: [] });
   await User.findOne({ _id: userId }).then(async (userData) => {
     if (userData) {
       const videoHistory = userData.videoHistory.length - 11;
@@ -39,7 +37,6 @@ historyVideo.get("/", async (req, res) => {
           }
         })
       );
-      console.log("videos", dataFinal.length);
       dataFinal.sort((a, b) => (a.index < b.index ? 1 : -1))
       res.json({ responseData: dataFinal });
     }

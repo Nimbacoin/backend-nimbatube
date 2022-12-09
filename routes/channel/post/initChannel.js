@@ -7,14 +7,12 @@ const initChannel = express.Router();
 
 initChannel.post("/", async (req, res) => {
   const userId = req.userId;
-  console.log("init");
   await User.findOne({ _id: userId }).then(async (docadded) => {
     channelModal
       .create({
         creator: userId,
       })
       .then((channel) => {
-        // console.log(channel);
         res.json({ responsData: channel });
       });
   });

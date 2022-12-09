@@ -20,7 +20,6 @@ const makeStream = (io, socket, liveStreamers) => {
     socket.emit("broadcasting-stream", data);
     function handleTrackEvent(e, peer) {
       liveStreamers.push({ senderStream: e.streams[0], roomId });
-      console.log(liveStreamers);
     }
   });
 };

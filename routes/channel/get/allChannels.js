@@ -8,7 +8,6 @@ const allChannels = express.Router();
 
 allChannels.get("/", async (req, res) => {
   const userId = req.userId;
-  // console.log("all channels sent");
   if (mongoose.Types.ObjectId.isValid(userId)) {
     await User.findOne({ _id: userId }).then(async (docadded) => {
       if (docadded) {
@@ -43,7 +42,6 @@ allChannels.get("/", async (req, res) => {
         );
         allNofy.sort((a, b) => (a.index < b.index ? 1 : -1));
         channelModal.find({ creator: userId }).then(async (channels) => {
-          // console.log(channels[0]?.channelData);
           if (channels.length) {
             channels.map((item) => {});
             res.json({ responsData: { channels, notification: allNofy } });
@@ -61,7 +59,6 @@ allChannels.get("/", async (req, res) => {
       }
     });
   } else {
-    console.log("SD");
   }
 });
 

@@ -13,7 +13,6 @@ const socketFuncs = (io, socket) => {
     const filtered = rooms.filter((rm) => rm.roomId === roomId);
     filtered.map((roomData) => {
       const userStreamerId = roomData.socketId;
-      console.log("userStreamerId", userStreamerId);
       socket.to(userStreamerId).emit("new-comment", commentData.comments);
       io.to(userStreamerId).emit("new-comment", commentData.comments);
       const viewers = roomData.viewers;
@@ -110,17 +109,14 @@ const socketFuncs = (io, socket) => {
   });
   socket.on("room", (data) => {
     console.log("room join");
-    console.log(data);
     socket.join(data.room);
   });
 
   socket.on("leave room", (data) => {
     console.log("leaving room");
-    console.log(data);
     socket.leave(data.room);
   });
   socket.on("disconnect", (data) => {
-    // console.log("disconnect", socket.id);
     rooms.map(({ viewers, socketId }) => {
       const findIndexLeaver = viewers.findIndex(
         (useeer) => useeer.socketId === socket.id
@@ -131,14 +127,12 @@ const socketFuncs = (io, socket) => {
           "New connection from " + address.address + ":" + address.port
         );
         viewers.splice(findIndexLeaver, 1);
-        console.log("yes", findIndexLeaver);
         socket.to(socketId).emit("watcher-leave", {
           viewers,
         });
       }
       viewers.map(({ socketId }) => {
         if (socket.id === socketId) {
-          console.log("yes");
           console.log(socketId, socket.id);
         }
       });

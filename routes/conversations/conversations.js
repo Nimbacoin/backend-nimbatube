@@ -8,7 +8,6 @@ const router = express.Router();
 router.post("/", async (req, res) => {
   const UserId = req.headers.a_custom_header;
   const { receiver } = req.body;
-  // console.log(receiver, UserId);
   try {
     await Converstion.find({
       members: { $in: [UserId] },
@@ -51,7 +50,6 @@ router.post("/", async (req, res) => {
 
 router.get("/get-conv/:id", async (req, res) => {
   let str = req.path.slice(10);
-  // console.log(str);
   if (mongoose.Types.ObjectId.isValid(str)) {
     if (str.length >= 12 && str.length <= 24)
       await Converstion.findOne({ _id: str }).then((userdoc) => {
@@ -68,7 +66,6 @@ router.get("/", async (req, res) => {
       await Converstion.find({
         members: { $in: [UserId] },
       }).then(async (document) => {
-        // console.log(document);
 
         res.status(200).json({ data: document });
       });

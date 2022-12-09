@@ -5,7 +5,6 @@ const deleteChannel = express.Router();
 deleteChannel.post("/", async (req, res) => {
   const { channelId } = req.body;
   const userId = req.userId;
-  console.log("remove channel");
   await User.findOne({ _id: userId }).then(async (docadded) => {
     if (docadded) {
       await channelModal
@@ -20,10 +19,8 @@ deleteChannel.post("/", async (req, res) => {
                     .find({ creator: userId })
                     .then((channels) => {
                       if (channels.length) {
-                        console.log(channelId);
                         res.json({ responsData: channels });
                       } else {
-                        console.log(channels);
                         res.json({
                           responsMessage: "NoChanelFounded",
                           responsData: [],
@@ -35,7 +32,6 @@ deleteChannel.post("/", async (req, res) => {
               return null;
             }
           }
-          console.log(channelFinded);
         });
     } else if (!docadded) {
       res.json({

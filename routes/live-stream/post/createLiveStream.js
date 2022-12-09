@@ -15,7 +15,6 @@ const createLiveStream = async (req, res) => {
           streaming: { created: true },
         })
         .then((newFile) => {
-          console.log(newFile);
           res.json({ responseData: newFile, uploaded: true });
         });
     }

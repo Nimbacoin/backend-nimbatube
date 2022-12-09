@@ -35,7 +35,6 @@ newUpload.post(
         if (channel.creator === req.userId) {
           const File = req.file;
           fs.readFile(File.path, async (err, buffer) => {
-            console.log("buffer", buffer);
             const reslt = await s3UploadVideo(
               buffer,
               File.originalname,
@@ -67,8 +66,6 @@ newUpload.post(
 
                     update.channelData.numbers.uploads =
                       update.channelData.numbers.uploads + 1;
-                    console.log(update.channelData);
-                    console.log(newFile._id, File);
                     await timeHandelr(newFile._id, File.path);
                     await channelModal.updateOne(filter, update);
                   } catch (error) {}

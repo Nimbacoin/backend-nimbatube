@@ -20,20 +20,16 @@ const applod = async () => {
         //           // async (err, res, body) => {
         //           //   //process exif here
         //           //   if (body) {
-        //           //     console.log(body);
         //           //     const reslt = await s3UploadVideo(
         //           //       body,
         //           //       channelId._id,
         //           //       "images",
         //           //       "images"
         //           //     );
-        //           //     console.log(reslt);
         //           //   }
         //           // }
         //         );
-        //         console.log("this is", channelId?.channelData?.coverImg?.url);
         //       } else {
-        //         console.log("its arledy changed");
         //       }
         //     });
       }

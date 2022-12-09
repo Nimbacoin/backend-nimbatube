@@ -15,7 +15,6 @@ const SocketSend = (socket, AllUsers, io) => {
   //   const { sender, message, conversationId } = messagedata;
   //   const ConverId = await Converstion.findOne({ _id: conversationId });
 
-  //   console.log(AllUsers);
   //   let RevieverArray = ConverId.members
   //     .filter((User) => User !== sender)
   //     .toString();
@@ -30,7 +29,6 @@ const SocketSend = (socket, AllUsers, io) => {
   //     (sender) => sender.userid === SenderArray
   //   );
   //   SenderSocketId.map((item) => {
-  //     console.log("message sent to sender" + item.socketid);
   //     io.to(item.socketid).emit("get-the-live-message-local", {
   //       sender,
   //       message,
@@ -39,7 +37,6 @@ const SocketSend = (socket, AllUsers, io) => {
 
   //   if (typeof ReciverSocketId !== "undefined") {
   //     ReciverSocketId.map((item) => {
-  //       console.log("message sent to oreciever" + item.socketid);
   //       io.to(item.socketid).emit("get-the-live-message-local", {
   //         sender,
   //         message,

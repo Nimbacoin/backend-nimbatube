@@ -62,9 +62,9 @@ io.use(
   })
 );
 
-// io.on("connection", (socket) => {
-//   socketFuncs(io, socket);
-// });
+io.on("connection", (socket) => {
+  socketFuncs(io, socket);
+});
 
 app.use(
   bodyParser.json({

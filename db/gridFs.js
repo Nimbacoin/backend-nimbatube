@@ -7,7 +7,6 @@ export let gfs, gridfsBucket;
 
 const gridConnection = () => {
   conn.once("open", () => {
-    console.log("db is connected");
     gridfsBucket = new mongoose.mongo.GridFSBucket(conn.db, {
       bucketName: "uploads",
     });

@@ -7,7 +7,6 @@ import jwt from "jsonwebtoken";
 
 routerSignIn.post("/", async (req, res) => {
   const { password, email } = req.body;
-  console.log(req.body);
   await User.findOne({ email: email }).then((docadded) => {
     if (docadded) {
       
@@ -20,7 +19,6 @@ routerSignIn.post("/", async (req, res) => {
           if (typeof reqUser === "undefined") {
             req.userId = id;
             req.userEmail = email;
-            console.log(req.userId);
           }
           res.json({
             message: "you successfully log in",

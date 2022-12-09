@@ -39,7 +39,6 @@ newUpload.post(
     ) {
       if (mongoose.Types.ObjectId.isValid(videoData)) {
         videoModal.findOne({ _id: videoData }).then(async (videoDataId) => {
-          console.log("videoDataId", videoDataId);
           if (videoDataId) {
             fs.readFile(File.path, async (err, buffer) => {
               const reslt = await s3UploadVideo(
@@ -56,7 +55,6 @@ newUpload.post(
                   if (videoDataId) {
                     await videoModal.updateOne(filter, update);
                     const dataFile = await videoModal.findOne(filter);
-                    console.log("thumnail . dataFile", dataFile);
                     res.json({ file: dataFile, uploaded: true });
                   }
                 } catch (error) {}

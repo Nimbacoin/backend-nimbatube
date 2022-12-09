@@ -26,7 +26,6 @@ allRoutes.map(({ name, auth, rout }) => {
   }
 });
 searchRoutesGets.get("/get/search/all-search", (req, res) => {
-  console.log("2sd");
   res.json("ASPO");
 });
 

@@ -5,7 +5,6 @@ const watchLater = express.Router();
 import videoModal from "../../../db/schema/video.js";
 
 watchLater.get("/", async (req, res) => {
-  console.log("here");
   let dataFinal = [];
   const userId = req.userId;
 
@@ -39,7 +38,6 @@ watchLater.get("/", async (req, res) => {
           }
         })
       );
-      console.log("videos", dataFinal.length);
       dataFinal.sort((a, b) => (a.index < b.index ? 1 : -1));
       res.json({ responseData: dataFinal });
     }

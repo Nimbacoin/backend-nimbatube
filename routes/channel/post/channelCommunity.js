@@ -14,7 +14,6 @@ import channelModal from "../../../db/schema/channel.js";
 submiteVideo.post("/", async (req, res) => {
   const { channelId, comment } = req.body;
   const userId = req.userId;
-  console.log("comment");
   if (mongoose.Types.ObjectId.isValid(channelId)) {
     await channelModal.findOne({ _id: channelId }).then(async (mainChannel) => {
       commentModal
@@ -44,10 +43,7 @@ submiteVideo.post("/", async (req, res) => {
                         await commentModal
                           .findOne({ _id: comId })
                           .then(async (commentData) => {
-                            console.log(
-                              "comment creatore: ",
-                              commentData.creatore
-                            );
+                           
                             await channelModal
                               .findOne({ creator: commentData.creatore })
                               .then(async (channel) => {
@@ -56,10 +52,7 @@ submiteVideo.post("/", async (req, res) => {
                                   commentData: commentData,
                                   creatoreData: channel?.channelData,
                                 };
-                                console.log(
-                                  "channel creator: ",
-                                  channel?.creator
-                                );
+                               
                                 data.commentData.creatore = null;
                                 // data.creatoreData.creator = null;
                                 await community.push(data);
@@ -71,12 +64,10 @@ submiteVideo.post("/", async (req, res) => {
                   const newData = community.sort((a, b) =>
                     a.index > b.index ? 1 : -1
                   );
-                  console.log(deniedTimeIDs);
                   res.json({ responseData: newData });
                 }
               });
             } catch (error) {
-              console.log(error);
             }
           }
         });

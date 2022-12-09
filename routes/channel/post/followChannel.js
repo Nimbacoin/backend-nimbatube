@@ -23,7 +23,6 @@ followChannel.post("/", async (req, res) => {
         const inInFollowers = channelFollowers.some(({ id }) => id === userId);
         if (!inInFollowers && isFollowing) {
           channelFollowers.push({ id: userId });
-          console.log(channelFollowers);
           const update = { followers: channelFollowers };
           const filter = { _id: channelId };
           try {
@@ -31,7 +30,6 @@ followChannel.post("/", async (req, res) => {
             await channelModal.findOne(filter).then((resuelt) => {
               if (resuelt) {
                 const followers = resuelt.followers.length;
-                console.log("followed", followers);
                 res.json({
                   responseData: {
                     followers: followers,
@@ -41,14 +39,12 @@ followChannel.post("/", async (req, res) => {
               }
             });
           } catch (error) {
-            console.log(error);
             res.end({ error: error.message });
           }
         } else if (inInFollowers && channelFollowers.length >= 1) {
           const index = channelFollowers.findIndex(({ id }) => id === userId);
           let dataNew = channelFollowers;
           dataNew = channelFollowers.splice(1, index);
-          console.log(dataNew);
           const update = { followers: dataNew };
           const filter = { _id: channelId };
           try {
@@ -56,7 +52,6 @@ followChannel.post("/", async (req, res) => {
             await channelModal.findOne(filter).then((resuelt) => {
               if (resuelt) {
                 const followers = resuelt.followers.length;
-                console.log("not followed", followers);
                 res.json({
                   responseData: {
                     followers: followers,
@@ -66,7 +61,6 @@ followChannel.post("/", async (req, res) => {
               }
             });
           } catch (error) {
-            console.log(error);
             res.end({ error: error.message });
           }
         } else {

@@ -5,10 +5,9 @@ const favoritesVideos = express.Router();
 import videoModal from "../../../db/schema/video.js";
 
 favoritesVideos.get("/", async (req, res) => {
-  console.log("here");
   let dataFinal = [];
   const userId = req.userId;
-  //favorites
+  
   await User.findOne({ _id: userId }).then(async (userData) => {
     if (userData) {
       const videoWatchLater = userData.favorites.length - 11;
@@ -39,7 +38,6 @@ favoritesVideos.get("/", async (req, res) => {
           }
         })
       );
-      console.log("videos", dataFinal.length);
       dataFinal.sort((a, b) => (a.index < b.index ? 1 : -1));
       res.json({ responseData: dataFinal });
     }

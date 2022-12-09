@@ -8,7 +8,6 @@ addWallte.post("/", async (req, res) => {
   const walletId = req.body.walletId;
   const userId = req.userId;
 
-  console.log(channelId, userId, "wlt", walletId);
   await User.findOne({ _id: userId }).then(async (doc) => {
     if (doc) {
       channelModal
@@ -37,7 +36,6 @@ addWallte.post("/", async (req, res) => {
                     });
                   });
               } catch (error) {
-                console.log("error", error);
               }
             } else if (channel?.walletId === walletId) {
               res.json({ message: "WALLET-CONNECTED-BEFOR" });
@@ -45,7 +43,6 @@ addWallte.post("/", async (req, res) => {
           } else {
             res.json({ message: "CHANNEL-NOT-FINEDED" });
           }
-          console.log("walletId", channel.walletId);
         });
     }
   });

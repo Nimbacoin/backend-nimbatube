@@ -16,7 +16,6 @@ addToFavorites.post("/", (req, res) => {
           User.findOne({ _id: userId }).then(async (useData) => {
             const event = new Date();
             const userFavorites = useData.favorites;
-            console.log("befor", userFavorites.length);
             const newFavorites = [
               ...userFavorites,
               {
@@ -33,7 +32,6 @@ addToFavorites.post("/", (req, res) => {
                 const dataFavorites = userdata.favorites.some(
                   ({ id }) => id === videoId
                 );
-                console.log("after", userdata.favorites.length, dataFavorites);
                 res.json({ responseData: { favorites: dataFavorites } });
               }
             });

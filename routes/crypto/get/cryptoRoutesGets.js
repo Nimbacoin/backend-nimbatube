@@ -19,7 +19,6 @@ allRoutes.map(({ name, auth, rout }) => {
   }
 });
 // cryptoRoutesGets.get("/get/search/all-search", (req, res) => {
-//   console.log("2sd");
 //   res.json("ASPO");
 // });
 

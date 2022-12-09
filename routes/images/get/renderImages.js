@@ -32,7 +32,6 @@ renderImages.get("/get/read/images/:filename", async (req, res) => {
   //     }
   //   });
   // } catch (error) {
-  //   console.log(error);
   // }
 });
 

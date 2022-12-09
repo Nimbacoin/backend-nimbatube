@@ -7,23 +7,18 @@ import videoModal from "../../../db/schema/video.js";
 allVideos.get("/:length", async (req, res) => {
   let limitLength = req.params.length;
   let limit = Number(limitLength);
-  // console.log("here", limit);
   let skip = limit;
   if (limit <= 0) {
-    // console.log("this is the limit", limit);
     limit = 8;
     skip = 0;
-    console.log("is small");
-    // console.log("this is the limit", limit);
+    
   } else if (limit >= 8) {
     limit = limit + 4;
     skip = limit;
-    console.log("is big", limit);
   } else {
     skip = limit;
   }
-  // console.log(limit);
-  // console.log(skip);
+  
   let allVideoLength = 0;
   videoModal.countDocuments(
     {
@@ -36,10 +31,8 @@ allVideos.get("/:length", async (req, res) => {
     },
     function (err, count) {
       allVideoLength = count;
-      // console.log(count);
     }
   );
-  // console.log(allVideoLength);
   // .skip(0)
   // .limit(1)
 
@@ -54,7 +47,6 @@ allVideos.get("/:length", async (req, res) => {
     })
     .then(async (allVideos) => {
       const vidoesData = allVideos;
-      // console.log("vidoesData", vidoesData);
       let dataFinal = [];
       let vidId;
       if (allVideos.length >= 1) {

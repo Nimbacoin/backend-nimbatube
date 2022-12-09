@@ -10,7 +10,6 @@ const sendmessages = async (req, res) => {
   let convId = asPath.replace(UrlBeRemove, "").toString("hex");
   const UserId = req.headers.a_custom_header;
   if (!mongoose.Types.ObjectId.isValid(convId)) {
-    console.log("non");
   } else if (
     mongoose.Types.ObjectId.isValid(convId) &&
     convId.length >= 12 &&
@@ -30,7 +29,6 @@ const sendmessages = async (req, res) => {
       }
     });
   } else {
-    console.log("i dont know");
   }
 };
 export default sendmessages;

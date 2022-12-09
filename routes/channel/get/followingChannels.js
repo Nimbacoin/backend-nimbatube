@@ -3,10 +3,8 @@ import chanelModal from "../../../db/schema/channel.js";
 import User from "../../../db/schema/user.js";
 const followingChannels = express.Router();
 followingChannels.get("/", async (req, res) => {
-  console.log("channels");
   const userId = req.userId;
   await User.findOne({ _id: userId }).then((docadded) => {
-    console.log("is following");
     if (docadded) {
       chanelModal
         .find({
@@ -17,9 +15,8 @@ followingChannels.get("/", async (req, res) => {
             const allChannels = channels;
             const resChannel = [];
             allChannels.map((item) => {
-              resChannel.push({ channelData: item, _id: item._id });
+              resChannel.push(item);
             });
-            console.log("channels is here", "channels follwoing:", resChannel);
             res.json({ responseData: resChannel });
           } else {
             res.json({ responsMessage: "NoChanelFounded" });

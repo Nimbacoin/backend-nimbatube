@@ -16,7 +16,6 @@ addToWatchLater.post("/", (req, res) => {
           User.findOne({ _id: userId }).then(async (useData) => {
             const event = new Date();
             const userWatchLater = useData.watchLater;
-            console.log("befor", userWatchLater.length);
             const newWatchLater = [
               ...userWatchLater,
               {
@@ -33,11 +32,7 @@ addToWatchLater.post("/", (req, res) => {
                 const dataWatchLater = userdata.watchLater.some(
                   ({ id }) => id === videoId
                 );
-                console.log(
-                  "after",
-                  userdata.watchLater.length,
-                  dataWatchLater
-                );
+                
                 res.json({ responseData: { favorites: dataWatchLater } });
               }
             });

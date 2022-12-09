@@ -7,7 +7,6 @@ import Converstion from "../../db/schema/Converstions.js";
 
 router.post("/", async (req, res) => {
   const { message, sender, conversationId, receiver } = req.body;
-  console.log("reviever is ", receiver);
   await Converstion.findOne({ _id: conversationId }).then(async (Coversion) => {
     if (Coversion) {
       if (Coversion.members.includes(sender)) {
@@ -21,7 +20,6 @@ router.post("/", async (req, res) => {
           });
           const data2 = await Message.find().sort({ _id: -1 }).limit(1);
           const dataa = data2[0];
-          console.log(dataa);
           res.json({ data: dataa });
 
           // res.json({ data: data });
@@ -30,7 +28,6 @@ router.post("/", async (req, res) => {
         }
       }
     } else {
-      console.log("df");
       try {
         const Messages = await Message.find({ conversationId: conversationId });
         res.status(200).json({ data: Messages });

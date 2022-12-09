@@ -1,7 +1,6 @@
 import jwt from "jsonwebtoken";
 const AuthToken = async (req, res, next) => {
   const reqParamsToken = req.params.token;
-  //console.log(reqParamsToken);
   if (
     typeof reqParamsToken !== "undefined" &&
     reqParamsToken !== "undefined" &&
@@ -22,7 +21,6 @@ const AuthToken = async (req, res, next) => {
         }
       });
     } else {
-      console.log("user not founded");
     }
   }
 };

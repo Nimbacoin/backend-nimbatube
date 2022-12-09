@@ -22,11 +22,9 @@ const AuthToken = async (req, reqParamsToken) => {
       const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
       jwt.verify(accesToken, accessTokenSecret, function (err, decoded) {
         if (!err) {
-          console.log("decoded", decoded);
           req.userId = decoded;
           return decoded;
         } else if (err) {
-          console.log(err);
         }
       });
     } else {
@@ -39,7 +37,6 @@ channelPage.get("/get/channel/:channelId/:userId", async (req, res) => {
   const reqUserId = req.userId;
   await AuthToken(req, userId);
   const channelId = req.params.channelId;
-  console.log(reqUserId);
   function onlyLettersAndNumbers(channelId) {
     return /^[A-Za-z0-9]*$/.test(channelId);
   }
@@ -74,7 +71,6 @@ channelPage.get("/get/channel/:channelId/:userId", async (req, res) => {
         const inInFollowers = channel.followers.some(
           ({ id }) => id === reqUserId
         );
-        console.log(inInFollowers);
 
         res.json({
           responsData: channelData[0],

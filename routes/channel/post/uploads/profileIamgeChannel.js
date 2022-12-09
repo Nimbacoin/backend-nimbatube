@@ -39,7 +39,6 @@ newUpload.post(
       if (mongoose.Types.ObjectId.isValid(channelId)) {
         channelModal.findOne({ id: channelId }).then(async (channel) => {
           if (channel.creator === req.userId) {
-            console.log(File);
             fs.readFile(File.path, async (err, buffer) => {
               const reslt = await s3UploadVideo(
                 buffer,
@@ -56,7 +55,6 @@ newUpload.post(
                     if (doc) {
                       await channelModal.updateOne(filter, update);
                       const dataFile = await channelModal.findOne(filter);
-                      console.log(dataFile);
                       res.json({ file: dataFile, uploaded: true });
                     }
                   });

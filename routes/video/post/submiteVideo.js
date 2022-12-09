@@ -29,13 +29,11 @@ submiteVideo.post("/", (req, res) => {
         const channelData = await channelModal.findOne({ _id: channelId });
         const followers = channelData.followers;
         followers.map(({ id }) => {
-          console.log(id);
           try {
             User.findOne({ _id: id }).then(async (useData) => {
               // const updateUse = { notification: [] };
               // const filterUse = { _id: id };
               // await User.updateOne(filterUse, updateUse);
-              console.log(useData);
               const event = new Date();
               let userNotfy = useData?.notification;
 
@@ -63,7 +61,6 @@ submiteVideo.post("/", (req, res) => {
       //   await videoModal.updateOne(filter, update);
 
       if (resuel) {
-        console.log("videos submited");
         res.json({ uploaded: true });
       }
     });

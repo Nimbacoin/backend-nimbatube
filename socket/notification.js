@@ -52,7 +52,6 @@ const notification = (io, socket) => {
 
         socket.on("send-id", async (userDataClient) => {
           var reqParamsToken = socket.handshake.headers.cookie;
-         // console.log(reqParamsToken);
           if (
             typeof reqParamsToken !== "undefined" &&
             reqParamsToken !== "undefined" &&
@@ -80,7 +79,6 @@ const notification = (io, socket) => {
                         );
                         if (users >= 0) {
                           users[Indexd].socketId = socket.id;
-                          console.log(socket.id);
                         }
                       } else if (userUnicId.length <= 0) {
                         users.push({
@@ -90,7 +88,6 @@ const notification = (io, socket) => {
                           unicId: userDataClient,
                         });
                       }
-                   //   console.log("user in", userDataClient, socket.id);
                     }
                   }
                 });
@@ -99,7 +96,6 @@ const notification = (io, socket) => {
         });
 
         socket.on("notification", async (data) => {
-          console.log("notification");
           channelModal
             .findOne({ _id: data?.channelId })
             .then(async (channel) => {
@@ -108,14 +104,12 @@ const notification = (io, socket) => {
                 const followers = channel.followers;
                 followers.map(async (userfollowers) => {
                   if (users.some(({ id }) => id === userfollowers.id)) {
-                    // console.log("user online", userfollowers.id);
                     const indexUser = users.findIndex(
                       ({ id }) => id === userfollowers.id
                     );
                     if (indexUser.id) {
                       await User.findOne({ _id: indexUser.id }).then(
                         async (docadded) => {
-                          console.log(data);
                           const notification = docadded.notification;
                           let videoId;
                           await Promise.all(
@@ -163,11 +157,9 @@ const notification = (io, socket) => {
   socket.on("disconnect", () => {
     const indexUser = users.findIndex(({ socketId }) => socketId === socket.id);
     if (indexUser >= 0) {
-      console.log("user loged out", users[indexUser]?.email);
       users.splice(indexUser, 1);
       console.log(users);
     } else {
-      console.log("user loged out");
     }
   });
 };

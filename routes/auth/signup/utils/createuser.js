@@ -5,7 +5,6 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 const createuser = async (req, res) => {
-  console.log(req.body);
   const { email, password, conifirmpassword, username } = req.body;
   if (
     !email.includes("@") ||
@@ -27,13 +26,11 @@ const createuser = async (req, res) => {
     });
   } else {
     await User.findOne({ email: email }).then((doc) => {
-      console.log("SDDDDDDDDDDDDDDDDdsd");
       if (doc) {
         res.json({
           message: "AvalibleEmail",
         });
       } else if (!doc) {
-        console.log("SDDDDDDDDDDDDDDDDdsd");
         const CreateUser = async () => {
           const salt = await bcrypt.genSalt();
           const hashPassword = await bcrypt.hash(password, salt);
