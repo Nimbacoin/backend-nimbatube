@@ -34,11 +34,11 @@ applod();
 app.use(cookieParser());
 app.use(express.json());
 
-// cors(
-//   // { "Access-Control-Allow-Origin": `*` },
-//   "Access-Control-Allow-Methods: POST, PUT, PATCH, GET, DELETE, OPTIONS",
-//   "Access-Control-Allow-Headers: Origin, X-Api-Key, X-Requested-With, Content-Type, Accept, Authorization"
-// );
+cors(
+  { "Access-Control-Allow-Origin": `*` },
+  "Access-Control-Allow-Methods: POST, PUT, PATCH, GET, DELETE, OPTIONS",
+  "Access-Control-Allow-Headers: Origin, X-Api-Key, X-Requested-With, Content-Type, Accept, Authorization"
+);
 
 dbConnect();
 
@@ -100,5 +100,3 @@ server.listen(PORT, (err) => {
   if (err) console.log(err);
   console.log("Server running on Port ", PORT);
 });
-
-//sdopsodpsdposopdpod
