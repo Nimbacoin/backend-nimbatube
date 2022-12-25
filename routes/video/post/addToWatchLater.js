@@ -1,45 +1,54 @@
 import express from "express";
-import User from "../../../db/schema/user.js";
 const addToWatchLater = express.Router();
+
 import mongoose from "mongoose";
+import userModal from "../../../db/schema/user.js";
+
 import videoModal from "../../../db/schema/video.js";
-import channelModal from "../../../db/schema/channel.js";
 
-addToWatchLater.post("/", (req, res) => {
-  const videoId = req.body.videoId;
+addToWatchLater.post("/", async (req, res) => {
+  const { videoId } = req.body;
   const userId = req.userId;
-  if (mongoose.Types.ObjectId.isValid(videoId)) {
-    const filter = { _id: videoId };
-    videoModal.findOne(filter, async (error, resuel) => {
-      if (resuel) {
-        try {
-          User.findOne({ _id: userId }).then(async (useData) => {
-            const event = new Date();
-            const userWatchLater = useData.watchLater;
-            const newWatchLater = [
-              ...userWatchLater,
-              {
-                id: videoId,
-                createdAt: `${event}`,
-              },
-            ];
 
-            const updateUser = { watchLater: newWatchLater };
-            const filterUser = { _id: userId };
-            await User.updateOne(filterUser, updateUser);
-            await User.findOne(filterUser).then((userdata) => {
-              if (userdata) {
-                const dataWatchLater = userdata.watchLater.some(
-                  ({ id }) => id === videoId
-                );
-                
-                res.json({ responseData: { favorites: dataWatchLater } });
-              }
-            });
-          });
-        } catch (error) {}
-      }
-    });
+  if (mongoose.Types.ObjectId.isValid(videoId)) {
+    try {
+      userModal.findOne({ _id: userId }).then(async (useData) => {
+        await videoModal.findOne({ _id: videoId }).then(async (vid) => {
+          if (vid) {
+            let arrayLikes = useData.watchLater;
+            const index = arrayLikes.findIndex(({ id }) => id === videoId);
+            if (index < 0) {
+              arrayLikes.push({ id: videoId });
+            } else if (index >= 0) {
+              arrayLikes.splice(index, 1);
+            }
+            const update = { watchLater: arrayLikes };
+            const filter = { _id: userId };
+            try {
+              await userModal.updateOne(filter, update);
+              await userModal.findOne(filter).then((resuelt) => {
+                if (resuelt) {
+                  const newLiked = resuelt.watchLater.some(
+                    ({ id }) => id === videoId
+                  );
+                  console.log("arrayLikes", resuelt.watchLater);
+                  console.log("newLiked", newLiked);
+                  res.json({
+                    responseData: {
+                      data: newLiked,
+                    },
+                  });
+                }
+              });
+            } catch (error) {
+              res.end({ error: error.message });
+            }
+          }
+        });
+      });
+    } catch (error) {
+      res.end({ error: error.message });
+    }
   }
 });
 
