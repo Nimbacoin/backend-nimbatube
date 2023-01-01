@@ -13,6 +13,7 @@ createNewChannel.post("/", async (req, res) => {
   const { website, email } = other;
   const channelId = req.body.channelId;
   const { tags } = req.body;
+  const walletId = general?.walletId;
 
   await User.findOne({ _id: userId }).then(async (docadded) => {
     if (mongoose.Types.ObjectId.isValid(channelId)) {
@@ -37,13 +38,15 @@ createNewChannel.post("/", async (req, res) => {
               if (email?.length) {
                 update.channelData.email = email;
               }
+              if (walletId) {
+                update.walletId = walletId;
+              }
               if (doc && doc.creator === userId) {
                 await channelModal.updateOne(filter, update);
                 res.json({ uploaded: true, responsData: doc });
               }
             });
-          } catch (error) {
-          }
+          } catch (error) {}
         } else {
           res.json({
             message: "EnterChannelUserName",
