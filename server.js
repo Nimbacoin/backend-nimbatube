@@ -94,7 +94,7 @@ app.use(function (req, res, next) {
   next();
 });
 
-// app.use("/", Routes);
+app.use("/", Routes);
 app.use("/", (req, res) => {
   res.json("ER");
 });
