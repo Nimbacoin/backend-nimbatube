@@ -156,6 +156,8 @@ videoData.get("/get/video/:videoId/:unique_id/:userId", async (req, res) => {
         });
       }
     });
+  }else {
+    res.json({errorMessage : "video-not-founded"})
   }
 });
 
