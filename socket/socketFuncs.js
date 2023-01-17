@@ -83,13 +83,16 @@ const socketFuncs = (io, socket) => {
     }
   });
   socket.on("offer", (id, message) => {
+    console.log("make offer");
     socket.to(id).emit("offer", socket.id, message);
   });
+  console.log("make answer answer");
   socket.on("answer", (id, message) => {
     socket.to(id).emit("answer", socket.id, message);
     console.log("answer sent");
   });
   socket.on("candidate", (id, message) => {
+    console.log("make answer answer");
     socket.to(id).emit("candidate", socket.id, message);
     console.log("candidate", id);
   });
