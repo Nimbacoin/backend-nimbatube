@@ -6,6 +6,7 @@ import commentModal from "../../../db/schema/comment.js";
 const channelPage = express.Router();
 import * as cookie from "cookie";
 import jwt from "jsonwebtoken";
+// import channelVideos from "./chanelVideos.js";
 
 const AuthToken = async (req, reqParamsToken) => {
   if (
@@ -34,15 +35,12 @@ const AuthToken = async (req, reqParamsToken) => {
 };
 channelPage.get("/get/channel/:channelId/:userId", async (req, res) => {
   const userId = req.params.userId;
+  console.log("userId", userId);
   const reqUserId = req.userId;
   await AuthToken(req, userId);
   const channelId = req.params.channelId;
-  function onlyLettersAndNumbers(channelId) {
-    return /^[A-Za-z0-9]*$/.test(channelId);
-  }
 
-  const IsCorrectId = onlyLettersAndNumbers();
-  if (channelId && mongoose.Types.ObjectId.isValid(channelId) && IsCorrectId) {
+  if (channelId && mongoose.Types.ObjectId.isValid(channelId)) {
     await channelModal.findOne({ _id: channelId }).then(async (channel) => {
       if (channel) {
         const channelData = [channel];
@@ -71,9 +69,10 @@ channelPage.get("/get/channel/:channelId/:userId", async (req, res) => {
         const inInFollowers = channel.followers.some(
           ({ id }) => id === reqUserId
         );
-
+        // channelVideos(channelId);
         res.json({
           responsData: channelData[0],
+          videoData: [],
         });
       } else if (!channel) {
         res.json({

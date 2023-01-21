@@ -39,7 +39,7 @@ allRoutes.map(({ name, auth, rout }) => {
   if (auth) {
     routesChannelGet.use(`/get/channel${rout}:token`, AuthToken, name);
   } else {
-    if (rout !== "") {
+    if (rout.length > 1) {
       routesChannelGet.use(`/get/channel/${rout}`, name);
     } else {
       routesChannelGet.use(`/`, name);

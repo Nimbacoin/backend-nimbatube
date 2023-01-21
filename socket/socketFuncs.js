@@ -7,6 +7,9 @@ let broadcaster;
 
 const socketFuncs = (io, socket) => {
   notification(io, socket);
+  // io.on("connection", () => {
+  //   console.log("DF");
+  // });
   // socket.emit("new-comment", []);
   socket.on("new-comment", (commentData) => {
     const roomId = commentData.videoId;
@@ -86,7 +89,6 @@ const socketFuncs = (io, socket) => {
     console.log("make offer");
     socket.to(id).emit("offer", socket.id, message);
   });
-  console.log("make answer answer");
   socket.on("answer", (id, message) => {
     socket.to(id).emit("answer", socket.id, message);
     console.log("answer sent");

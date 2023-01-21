@@ -5,7 +5,7 @@ import User from "../../../db/schema/user.js";
 import videoModal from "../../../db/schema/video.js";
 const channelVideos = express.Router();
 
-channelVideos.get("/get/channel-all-videos/:channelId/:userId", async (req, res) => {
+channelVideos.get("/get/channel/all-vidoes/:channelId", async (req, res) => {
   console.log("data: is here videos");
   const channelId = req.params.channelId;
   if (mongoose.Types.ObjectId.isValid(channelId)) {
