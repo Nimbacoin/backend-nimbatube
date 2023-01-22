@@ -11,6 +11,10 @@ const socketFuncs = (io, socket) => {
   //   console.log("DF");
   // });
   // socket.emit("new-comment", []);
+  socket.on("live-socket-recored", (data) => {
+    console.log(data);
+    socket.broadcast.emit("new-live-record", data);
+  });
   socket.on("new-comment", (commentData) => {
     const roomId = commentData.videoId;
     const filtered = rooms.filter((rm) => rm.roomId === roomId);
