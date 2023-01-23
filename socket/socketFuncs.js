@@ -75,14 +75,13 @@ const socketFuncs = (io, socket) => {
     let viewers = rooms[filteredIndex]?.viewers;
     const isIn = viewers?.some((m) => m.socketId === socket.id);
     console.log(isIn);
-    if (filtered.length >= 1 && !isIn) {
+    if (filtered.length >= 1) {
       if (viewers.length >= 1) {
         rooms[filteredIndex].viewers.push({ socketId: socket.id });
       } else {
         rooms[filteredIndex].viewers = [{ socketId: socket.id }];
       }
       const roomSocketId = filtered[0].socketId;
-
       socket.to(roomSocketId).emit("watcher", {
         id: socket.id,
         viewers: rooms[filteredIndex].viewers,
@@ -125,6 +124,9 @@ const socketFuncs = (io, socket) => {
     console.log("leaving room");
     socket.leave(data.room);
   });
+  socket.on("finish-live", (data) => {
+    
+  })
   socket.on("disconnect", (data) => {
     rooms.map(({ viewers, socketId }) => {
       const findIndexLeaver = viewers.findIndex(
