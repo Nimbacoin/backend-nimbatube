@@ -10,6 +10,7 @@ import cookieParser from "cookie-parser";
 import socketFuncs from "./socket/socketFuncs.js";
 import session from "express-session";
 import ios from "socket.io-express-session";
+
 const Session = new session({
   secret: "my-secret",
   resave: true,
@@ -34,11 +35,18 @@ applod();
 app.use(cookieParser());
 app.use(express.json());
 
-cors(
-  { "Access-Control-Allow-Origin": `*` },
-  "Access-Control-Allow-Methods: POST, PUT, PATCH, GET, DELETE, OPTIONS",
-  "Access-Control-Allow-Headers: Origin, X-Api-Key, X-Requested-With, Content-Type, Accept, Authorization"
-);
+// cors(
+//   { "Access-Control-Allow-Origin": `*` },
+//   "Access-Control-Allow-Methods: POST, PUT, PATCH, GET, DELETE, OPTIONS",
+//   "Access-Control-Allow-Headers: Origin, X-Api-Key, X-Requested-With, Content-Type, Accept, Authorization"
+// );
+const corsOptions = {
+  origin: `*`,
+  credentials: true, //access-control-allow-credentials:true
+  optionSuccessStatus: 200,
+};
+app.use(cors(corsOptions));
+
 //DFfg
 dbConnect();
 
