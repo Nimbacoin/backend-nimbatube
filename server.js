@@ -28,26 +28,25 @@ const ORIGINHTTP = process.env.ORIGINHTTP;
 const ORIGINHTTPWWW = process.env.ORIGINHTTPWWW;
 const ORIGINHTTPS = process.env.ORIGINHTTPS;
 const ORIGINHTTPSWWW = process.env.ORIGINHTTPSWWW;
-//
+
+app.use(cors());
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Methods",
+    "GET, POST, OPTIONS, PUT, PATCH, DELETE"
+  );
+  res.header(
+    "Access-Control-Allow-Headers",
+    "x-access-token, Origin, X-Requested-With, Content-Type, Accept"
+  );
+  next();
+});
 dotenv.config();
 app.use(Session);
 applod();
 app.use(cookieParser());
 app.use(express.json());
-
-// cors(
-//   { "Access-Control-Allow-Origin": `*` },
-//   "Access-Control-Allow-Methods: POST, PUT, PATCH, GET, DELETE, OPTIONS",
-//   "Access-Control-Allow-Headers: Origin, X-Api-Key, X-Requested-With, Content-Type, Accept, Authorization"
-// );
-const corsOptions = {
-  origin: `*`,
-  credentials: true, //access-control-allow-credentials:true
-  optionSuccessStatus: 200,
-};
-app.use(cors(corsOptions));
-
-//DFfg
 dbConnect();
 
 const server = http.createServer(app);
@@ -87,20 +86,6 @@ app.use(
     extended: true,
   })
 );
-
-app.use(function (req, res, next) {
-  res.setHeader("Access-Control-Allow-Origin", `*`);
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET, POST, OPTIONS,  PUT,PATCH, DELETE"
-  );
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "X-Requested-With,content-type, scrolling, a_custom_header"
-  );
-  res.setHeader("Access-Control-Allow-Credentials", true);
-  next();
-});
 
 app.use("/", Routes);
 app.use("/", (req, res) => {
