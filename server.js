@@ -34,11 +34,19 @@ applod();
 app.use(cookieParser());
 app.use(express.json());
 
-cors(
-  { "Access-Control-Allow-Origin": `https://www.nimbatube.com` },
-  "Access-Control-Allow-Methods: POST, PUT, PATCH, GET, DELETE, OPTIONS",
-  "Access-Control-Allow-Headers: Origin, X-Api-Key, X-Requested-With, Content-Type, Accept, Authorization"
-);
+// cors(
+//   { "Access-Control-Allow-Origin": `${ORIGINHTTPSWWW}` },
+//   "Access-Control-Allow-Methods: POST, PUT, PATCH, GET, DELETE, OPTIONS",
+//   "Access-Control-Allow-Headers: Origin, X-Api-Key, X-Requested-With, Content-Type, Accept, Authorization"
+// );
+
+const corsOptions = {
+  origin: "*",
+  credentials: true, //access-control-allow-credentials:true
+  optionSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions));
 //DFfg
 dbConnect();
 
@@ -80,19 +88,19 @@ app.use(
   })
 );
 
-app.use(function (req, res, next) {
-  res.setHeader("Access-Control-Allow-Origin", `https://www.nimbatube.com`);
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET, POST, OPTIONS,  PUT,PATCH, DELETE"
-  );
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "X-Requested-With,content-type, scrolling, a_custom_header"
-  );
-  // res.setHeader("Access-Control-Allow-Credentials", true);
-  next();
-});
+// app.use(function (req, res, next) {
+//   res.setHeader("Access-Control-Allow-Origin", `*`);
+//   res.setHeader(
+//     "Access-Control-Allow-Methods",
+//     "GET, POST, OPTIONS,  PUT,PATCH, DELETE"
+//   );
+//   res.setHeader(
+//     "Access-Control-Allow-Headers",
+//     "X-Requested-With,content-type, scrolling, a_custom_header"
+//   );
+//   res.setHeader("Access-Control-Allow-Credentials", true);
+//   next();
+// });
 
 app.use("/", Routes);
 app.use("/", (req, res) => {
