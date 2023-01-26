@@ -35,7 +35,7 @@ app.use(cookieParser());
 app.use(express.json());
 
 cors(
-  { "Access-Control-Allow-Origin": `https://www.nimbatube.com/` },
+  { "Access-Control-Allow-Origin": `https://www.nimbatube.com` },
   "Access-Control-Allow-Methods: POST, PUT, PATCH, GET, DELETE, OPTIONS",
   "Access-Control-Allow-Headers: Origin, X-Api-Key, X-Requested-With, Content-Type, Accept, Authorization"
 );
@@ -81,7 +81,7 @@ app.use(
 );
 
 app.use(function (req, res, next) {
-  res.setHeader("Access-Control-Allow-Origin", `https://www.nimbatube.com/`);
+  res.setHeader("Access-Control-Allow-Origin", `https://www.nimbatube.com`);
   res.setHeader(
     "Access-Control-Allow-Methods",
     "GET, POST, OPTIONS,  PUT,PATCH, DELETE"
