@@ -36,8 +36,9 @@ const AuthToken = async (req, reqParamsToken) => {
 channelPage.get("/get/channel/:channelId/:userId", async (req, res) => {
   const userId = req.params.userId;
   console.log("userId", userId);
-  const reqUserId = req.userId;
   await AuthToken(req, userId);
+  const userIdReq = req.userId;
+  console.log("userIdReq", userIdReq);
   const channelId = req.params.channelId;
 
   if (channelId && mongoose.Types.ObjectId.isValid(channelId)) {
@@ -66,12 +67,15 @@ channelPage.get("/get/channel/:channelId/:userId", async (req, res) => {
           })
         );
         channelData[0].community = comments;
-        const inInFollowers = channel.followers.some(
-          ({ id }) => id === reqUserId
+        let userIsFollowing = channelData[0]?.followers.some(
+          ({ id }) => id === `${userIdReq}`
         );
-        // channelVideos(channelId);
+        console.log(channelData[0]);
         res.json({
-          responsData: channelData[0],
+          responsData: {
+            userData: { isFollowing: userIsFollowing },
+            channelData: channelData[0],
+          },
           videoData: [],
         });
       } else if (!channel) {
