@@ -70,7 +70,9 @@ channelPage.get("/get/channel/:channelId/:userId", async (req, res) => {
         let userIsFollowing = channelData[0]?.followers.some(
           ({ id }) => id === `${userIdReq}`
         );
-        console.log(channelData[0]);
+        
+        channelData[0].followers = 1;
+        console.log(channelData[0].followers);
         res.json({
           responsData: {
             userData: { isFollowing: userIsFollowing },
