@@ -31,7 +31,7 @@ newUpload.post(
   async (req, res) => {
     const channelId = req.body.channelId;
     console.log("channelId", channelId);
-    console.log("uplaoding", uplaoding);
+    console.log("uplaoding", "uplaoding");
     if (mongoose.Types.ObjectId.isValid(channelId)) {
       channelModal.findOne({ id: channelId }).then(async (channel) => {
         if (channel.creator === req.userId) {
