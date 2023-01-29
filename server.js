@@ -46,7 +46,7 @@ const corsOptions = {
   optionSuccessStatus: 200,
 };
 
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
 
 dbConnect();
 
@@ -96,7 +96,7 @@ app.use(function (req, res, next) {
   );
   res.setHeader(
     "Access-Control-Allow-Headers",
-    "X-Requested-With,content-type, scrolling, a_custom_header"
+    "X-Requested-With,Content-Type, scrolling, a_custom_header"
   );
   res.setHeader("Access-Control-Allow-Credentials", false);
   next();
