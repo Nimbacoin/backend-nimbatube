@@ -37,7 +37,7 @@ dbConnect();
 app.use(express.json());
 dotenv.config();
 cors(
-  { "Access-Control-Allow-Origin": ORIGINHTTPSWWW },
+  { "Access-Control-Allow-Origin": "*" },
   "Access-Control-Allow-Methods: POST, PUT, PATCH, GET, DELETE, OPTIONS",
   "Access-Control-Allow-Headers: Origin, X-Api-Key, X-Requested-With, Content-Type, Accept, Authorization"
 );

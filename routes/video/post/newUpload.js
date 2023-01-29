@@ -37,7 +37,7 @@ newUpload.post(
         if (channel.creator === req.userId) {
           const File = req.file;
           fs.readFile(File.path, async (err, buffer) => {
-            conosle.log("buffer", buffer);
+            console.log("buffer", buffer);
             const reslt = await s3UploadVideo(
               buffer,
               File.originalname,
