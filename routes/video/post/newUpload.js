@@ -30,11 +30,14 @@ newUpload.post(
   upload.single("video"),
   async (req, res) => {
     const channelId = req.body.channelId;
+    console.log("channelId", channelId);
+    console.log("uplaoding", uplaoding);
     if (mongoose.Types.ObjectId.isValid(channelId)) {
       channelModal.findOne({ id: channelId }).then(async (channel) => {
         if (channel.creator === req.userId) {
           const File = req.file;
           fs.readFile(File.path, async (err, buffer) => {
+            conosle.log("buffer", buffer);
             const reslt = await s3UploadVideo(
               buffer,
               File.originalname,
