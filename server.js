@@ -3,59 +3,138 @@ import http from "http";
 import cors from "cors";
 import dotenv from "dotenv";
 import { Server, Socket } from "socket.io";
-import dbConnect from "./db/dbConnect.js";
-// import Routes from "./routes/routes.js";
-import mongoose from "mongoose";
-import axios from "axios";
 import Routes from "./routes/routes.js";
+import bodyParser from "body-parser";
+import dbConnect from "./db/dbConnect.js";
+import cookieParser from "cookie-parser";
+import socketFuncs from "./socket/socketFuncs.js";
+import session from "express-session";
+import ios from "socket.io-express-session";
+const Session = new session({
+  secret: "my-secret",
+  resave: true,
+  saveUninitialized: true,
+});
+import sharedsession from "express-socket.io-session";
+import applod from "./testingadd.js";
 
-//config the appp
+let senderStream;
 const app = express();
 const PORT = process.env.PORT || 5000;
 const ORIGIN = process.env.ORIGIN;
+const ORIGINWWW = process.env.ORIGINWWW;
+const ORIGINHTTP = process.env.ORIGINHTTP;
+const ORIGINHTTPWWW = process.env.ORIGINHTTPWWW;
+const ORIGINHTTPS = process.env.ORIGINHTTPS;
 const ORIGINHTTPSWWW = process.env.ORIGINHTTPSWWW;
-
-console.log(ORIGIN);
+//
 dotenv.config();
-console.log("main_origin is ");
-cors(
-  { "Access-Control-Allow-Origin": ORIGINHTTPSWWW },
-  "Access-Control-Allow-Methods: POST, PUT, PATCH, GET, DELETE, OPTIONS",
-  "Access-Control-Allow-Headers: Origin, X-Api-Key, X-Requested-With, Content-Type, Accept, Authorization"
-);
+app.use(Session);
+applod();
+app.use(cookieParser());
+app.use(express.json());
 
-//db conncet
+// cors(
+//   { "Access-Control-Allow-Origin": `${ORIGINHTTPSWWW}` },
+//   "Access-Control-Allow-Methods: POST, PUT, PATCH, GET, DELETE, OPTIONS",
+//   "Access-Control-Allow-Headers: Origin, X-Api-Key, X-Requested-With, Content-Type, Accept, Authorization"
+// );
+
+const corsOptions = {
+  origin: "*",
+  // credentials: true, //access-control-allow-credentials:true
+  optionSuccessStatus: 200,
+};
+var allowlist = [
+  ORIGIN,
+  ORIGINWWW,
+  ORIGINHTTP,
+  ORIGINHTTPWWW,
+  ORIGINHTTPS,
+  ORIGINHTTPSWWW,
+];
+var corsOptionsDelegate = function (req, callback) {
+  console.log(
+    req.header("Origin"),
+    ORIGIN,
+    ORIGINWWW,
+    ORIGINHTTP,
+    ORIGINHTTPWWW,
+    ORIGINHTTPS
+  );
+  var corsOptions;
+  if (allowlist.indexOf(req.header("Origin")) !== -1) {
+    corsOptions = { origin: true }; // reflect (enable) the requested origin in the CORS response
+  } else {
+    corsOptions = { origin: false }; // disable CORS for this request
+  }
+  callback(null, corsOptions); // callback expects two parameters: error and options
+};
+
+app.get("/products/:id", cors(corsOptionsDelegate), function (req, res, next) {
+  res.json({ msg: "This is CORS-enabled for an allowed domain." });
+});
+
+// app.use(cors(corsOptions));
+//DFfg
 dbConnect();
-// create server
 
 const server = http.createServer(app);
 const io = new Server(server, {
-  cors: { origin: ORIGIN },
+  cors: {
+    origins: [
+      `${ORIGIN}`,
+      // `${ORIGINWWW}`,
+      // `${ORIGINHTTP}`,
+      // `${ORIGINHTTPWWW}`,
+      `${ORIGINHTTPS}`,
+      `${ORIGINHTTPSWWW}`,
+    ],
+  },
 });
-// concect app
+io.use(ios(Session));
+io.use(
+  sharedsession(Session, {
+    autoSave: true,
+  })
+);
 
-app.use(express.json());
-
-app.use(function (req, res, next) {
-  res.setHeader("Access-Control-Allow-Origin", `*`);
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET, POST, OPTIONS,  PUT,PATCH, DELETE"
-  );
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "X-Requested-With,Content-Type, scrolling, a_custom_header"
-  );
-  res.setHeader("Access-Control-Allow-Credentials", true);
-  next();
-});
-
-app.use("/", Routes);
-app.get("/", (req, res) => {
-  console.log("main");
-  res.json("ESs");
+io.on("connection", (socket) => {
+  socketFuncs(io, socket);
 });
 
+app.use(
+  bodyParser.json({
+    limit: "50mb",
+  })
+);
+//:
+app.use(
+  bodyParser.urlencoded({
+    // limit: "50mb",
+    // parameterLimit: 100000,
+    extended: true,
+  })
+);
+
+// app.use(function (req, res, next) {
+//   res.setHeader("Access-Control-Allow-Origin", `*`);
+//   res.setHeader(
+//     "Access-Control-Allow-Methods",
+//     "GET, POST, OPTIONS,  PUT,PATCH, DELETE"
+//   );
+//   res.setHeader(
+//     "Access-Control-Allow-Headers",
+//     "X-Requested-With,content-type, scrolling, a_custom_header"
+//   );
+//   res.setHeader("Access-Control-Allow-Credentials", true);
+//   next();
+// });
+
+app.use("/", cors(corsOptionsDelegate), Routes);
+app.use("/", (req, res) => {
+  res.json("ER");
+});
 server.listen(PORT, (err) => {
   if (err) console.log(err);
   console.log("Server running on Port ", PORT);
