@@ -44,16 +44,16 @@ app.use(function (req, res, next) {
   );
   res.setHeader(
     "Access-Control-Allow-Headers",
-    "X-Requested-With,content-type, scrolling, a_custom_header"
+    "X-Requested-With,Content-Type, scrolling, a_custom_header"
   );
-  // res.setHeader("Access-Control-Allow-Credentials", true);
+  res.setHeader("Access-Control-Allow-Credentials", true);
   next();
 });
 
 app.use("/", Routes);
 app.get("/", (req, res) => {
   console.log("main");
-  res.json("ES");
+  res.json("ESs");
 });
 
 server.listen(PORT, (err) => {
