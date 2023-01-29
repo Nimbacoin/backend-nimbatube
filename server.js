@@ -3,44 +3,35 @@ import http from "http";
 import cors from "cors";
 import dotenv from "dotenv";
 import { Server, Socket } from "socket.io";
-import Routes from "./routes/routes.js";
-import bodyParser from "body-parser";
 import dbConnect from "./db/dbConnect.js";
-import cookieParser from "cookie-parser";
-import socketFuncs from "./socket/socketFuncs.js";
-import session from "express-session";
-import ios from "socket.io-express-session";
-const Session = new session({
-  secret: "my-secret",
-  resave: true,
-  saveUninitialized: true,
-});
-import sharedsession from "express-socket.io-session";
-import applod from "./testingadd.js";
+import Routes from "./routes/routes.js";
+import mongoose from "mongoose";
+import axios from "axios";
 
-let senderStream;
+//config the appp
 const app = express();
 const PORT = process.env.PORT || 5000;
 const ORIGIN = process.env.ORIGIN;
-const ORIGINWWW = process.env.ORIGINWWW;
-const ORIGINHTTP = process.env.ORIGINHTTP;
-const ORIGINHTTPWWW = process.env.ORIGINHTTPWWW;
-const ORIGINHTTPS = process.env.ORIGINHTTPS;
-const ORIGINHTTPSWWW = process.env.ORIGINHTTPSWWW;
-//
-dotenv.config();
-app.use(Session);
-applod();
-app.use(cookieParser());
-app.use(express.json());
-dbConnect();
-app.use(express.json());
+console.log(ORIGIN);
 dotenv.config();
 cors(
-  { "Access-Control-Allow-Origin": "*" },
+  { "Access-Control-Allow-Origin": ORIGIN },
   "Access-Control-Allow-Methods: POST, PUT, PATCH, GET, DELETE, OPTIONS",
   "Access-Control-Allow-Headers: Origin, X-Api-Key, X-Requested-With, Content-Type, Accept, Authorization"
 );
+
+//db conncet
+dbConnect();
+// create server
+
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: { origin: ORIGIN },
+});
+// concect app
+
+app.use(express.json());
+
 app.use(function (req, res, next) {
   res.setHeader("Access-Control-Allow-Origin", `*`);
   res.setHeader(
@@ -55,34 +46,8 @@ app.use(function (req, res, next) {
   next();
 });
 
-const server = http.createServer(app);
-const io = new Server(server, {
-  cors: {
-    origins: [
-      `${ORIGIN}`,
-      // `${ORIGINWWW}`,
-      // `${ORIGINHTTP}`,
-      // `${ORIGINHTTPWWW}`,
-      `${ORIGINHTTPS}`,
-      `${ORIGINHTTPSWWW}`,
-    ],
-  },
-});
-io.use(ios(Session));
-io.use(
-  sharedsession(Session, {
-    autoSave: true,
-  })
-);
-
-io.on("connection", (socket) => {
-  socketFuncs(io, socket);
-});
-
 app.use("/", Routes);
-app.use("/", (req, res) => {
-  res.json("test");
-});
+
 server.listen(PORT, (err) => {
   if (err) console.log(err);
   console.log("Server running on Port ", PORT);
