@@ -34,7 +34,7 @@ app.use(express.json());
 dbConnect();
 app.use(
   cors({
-    origin: "http://localhost:3000", // use your actual domain name (or localhost), using * is not recommended
+    origin: ORIGINHTTPSWWW, // use your actual domain name (or localhost), using * is not recommended
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"],
     allowedHeaders: [
       "Content-Type",
