@@ -53,7 +53,7 @@ var allowlist = [
   ORIGINHTTPS,
   ORIGINHTTPSWWW,
 ];
-console.log(ORIGIN, ORIGINWWW, ORIGINHTTP, ORIGINHTTPWWW, ORIGINHTTPS);
+console.log(allowlist);
 var corsOptionsDelegate = function (req, callback) {
   console.log(
     req.header("Origin"),
