@@ -53,7 +53,14 @@ var allowlist = [
   ORIGINHTTPS,
   ORIGINHTTPSWWW,
 ];
-console.
+console.log(
+  req.header("Origin"),
+  ORIGIN,
+  ORIGINWWW,
+  ORIGINHTTP,
+  ORIGINHTTPWWW,
+  ORIGINHTTPS
+);
 var corsOptionsDelegate = function (req, callback) {
   console.log(
     req.header("Origin"),
@@ -73,7 +80,7 @@ var corsOptionsDelegate = function (req, callback) {
 };
 
 app.get("/products/:id", cors(corsOptionsDelegate), function (req, res, next) {
-  console.log("main-origin" , ORIGINHTTPSWWW)
+  console.log("main-origin", ORIGINHTTPSWWW);
   res.json({ msg: "This is CORS-enabled for an allowed domain." });
 });
 
