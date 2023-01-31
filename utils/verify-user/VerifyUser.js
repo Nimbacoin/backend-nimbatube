@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 const AuthToken = async (req, res, next) => {
   const reqParamsToken = req.params.token;
+  console.log("user is verfying from here", reqParamsToken);
   if (
     typeof reqParamsToken !== "undefined" &&
     reqParamsToken !== "undefined" &&

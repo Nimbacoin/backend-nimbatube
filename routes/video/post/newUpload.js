@@ -30,6 +30,13 @@ newUpload.post(
   upload.single("video"),
   async (req, res) => {
     const channelId = req.body.channelId;
+    console.log(
+      "is making the req uplaoding now from channel",
+      channelId,
+      "and user id is",
+      req.userId
+    );
+
     console.log("channelId", channelId);
     console.log("uplaoding", "uplaoding");
     if (mongoose.Types.ObjectId.isValid(channelId)) {
