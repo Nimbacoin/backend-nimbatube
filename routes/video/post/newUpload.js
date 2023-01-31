@@ -39,6 +39,7 @@ newUpload.post(
 
     console.log("channelId", channelId);
     console.log("uplaoding", "uplaoding");
+    console.log("video", req.body.video);
     if (mongoose.Types.ObjectId.isValid(channelId)) {
       channelModal.findOne({ id: channelId }).then(async (channel) => {
         if (channel.creator === req.userId) {
