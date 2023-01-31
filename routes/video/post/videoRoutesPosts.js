@@ -17,7 +17,8 @@ const allRoutes = [
   // },
   {
     name: newUpload,
-    auth: true,
+    auth: false,
+    rout: false,
   },
   {
     name: createNewThumbnail,
@@ -59,7 +60,11 @@ allRoutes.map(({ name, auth, rout }) => {
       videoRoutesPosts.use(`/`, name);
     }
   } else {
-    videoRoutesPosts.use(`/post/chanel${rout}:token`, name);
+    if (rout) {
+      videoRoutesPosts.use(`/post/chanel${rout}:token`, name);
+    } else {
+      videoRoutesPosts.use(`/`, name);
+    }
   }
 });
 
