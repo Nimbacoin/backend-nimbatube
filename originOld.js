@@ -4,12 +4,20 @@ import cors from "cors";
 import dotenv from "dotenv";
 import { Server, Socket } from "socket.io";
 import Routes from "./routes/routes.js";
-// import bodyParser from "body-parser";
+import bodyParser from "body-parser";
 import dbConnect from "./db/dbConnect.js";
 import cookieParser from "cookie-parser";
 import socketFuncs from "./socket/socketFuncs.js";
 import session from "express-session";
+import ios from "socket.io-express-session";
+const Session = new session({
+  secret: "my-secret",
+  resave: true,
+  saveUninitialized: true,
+});
+import sharedsession from "express-socket.io-session";
 
+let senderStream;
 const app = express();
 const PORT = process.env.PORT || 5000;
 const ORIGIN = process.env.ORIGIN;
@@ -20,6 +28,7 @@ const ORIGINHTTPS = process.env.ORIGINHTTPS;
 const ORIGINHTTPSWWW = process.env.ORIGINHTTPSWWW;
 //
 dotenv.config();
+app.use(Session);
 app.use(cookieParser());
 app.use(express.json());
 dbConnect();
@@ -53,13 +62,19 @@ const io = new Server(server, {
     ],
   },
 });
+io.use(ios(Session));
+io.use(
+  sharedsession(Session, {
+    autoSave: true,
+  })
+);
 
 io.on("connection", (socket) => {
   socketFuncs(io, socket);
 });
 
 app.use("/", Routes);
-app.get("/", (req, res) => {
+app.use("/", (req, res) => {
   res.json("ER");
 });
 server.listen(PORT, (err) => {
