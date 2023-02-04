@@ -60,7 +60,8 @@ io.on("connection", (socket) => {
 
 app.use("/", Routes);
 app.get("/", (req, res) => {
-  res.json("ER");
+  console.log("updated");
+  res.json("2");
 });
 server.listen(PORT, (err) => {
   if (err) console.log(err);

@@ -5,20 +5,20 @@ const allVideos = express.Router();
 import videoModal from "../../../db/schema/video.js";
 
 allVideos.get("/:length", async (req, res) => {
+  console.log("main from here data, length");
   let limitLength = req.params.length;
   let limit = Number(limitLength);
   let skip = limit;
   if (limit <= 0) {
     limit = 8;
     skip = 0;
-    
   } else if (limit >= 8) {
     limit = limit + 4;
     skip = limit;
   } else {
     skip = limit;
   }
-  
+
   let allVideoLength = 0;
   videoModal.countDocuments(
     {

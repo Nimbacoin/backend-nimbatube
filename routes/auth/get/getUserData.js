@@ -4,6 +4,7 @@ import userModal from "../../../db/schema/user.js";
 const getUserData = express.Router();
 
 getUserData.get("/", async (req, res) => {
+  console.log("main from here");
   const reqUserId = req.userId;
   var converData = [];
   if (mongoose.Types.ObjectId.isValid(reqUserId)) {
