@@ -61,7 +61,7 @@ io.on("connection", (socket) => {
 app.use("/", Routes);
 app.get("/", (req, res) => {
   console.log("updated");
-  res.json("2");
+  res.json("24");
 });
 server.listen(PORT, (err) => {
   if (err) console.log(err);
