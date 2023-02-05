@@ -1,11 +1,36 @@
 import videoModal from "../db/schema/video.js";
 import notification from "./notification.js";
 import streamingVideo from "./streaming/streamingVideo.js";
+import { writeFile } from "fs";
+import s3UploadVideo from "../routes/video/post/upload/aws3.js";
+import path from "path";
 
 let rooms = [];
 let broadcaster;
 
 const socketFuncs = (io, socket) => {
+  console.log("data");
+  socket.on("ooo", async (file, callback) => {
+    console.log(file);
+    // const reslt = await s3UploadVideo(
+    //   file,
+    //   "/File.originalname/",
+    //   "videos",
+    //   process.env.AWS_BUCKET_NAME
+    // );
+    // console.log(reslt);
+    // <Buffer 25 50 44 ...>
+    // save the content to the disk, for example
+    // const __dirname = path.resolve();
+    // const pathhhhh = path.resolve(__dirname, "./upload");
+    // console.log(pathhhhh);
+    writeFile("video.mp4", file, (err) => {
+      console.log(err);
+      callback({ message: err ? "failure" : "success" });
+    });
+    // writeFile("video.mp4", file, (err) => console.log("video saved!", err));
+  });
+
   notification(io, socket);
   // io.on("connection", () => {
   //   console.log("DF");
@@ -124,9 +149,7 @@ const socketFuncs = (io, socket) => {
     console.log("leaving room");
     socket.leave(data.room);
   });
-  socket.on("finish-live", (data) => {
-    
-  })
+  socket.on("finish-live", (data) => {});
   socket.on("disconnect", (data) => {
     rooms.map(({ viewers, socketId }) => {
       const findIndexLeaver = viewers.findIndex(

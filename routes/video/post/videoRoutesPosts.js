@@ -8,6 +8,7 @@ import addToWatchLater from "./addToWatchLater.js";
 import commentVideo from "./commentVideo.js";
 import likeVideo from "./likeVideo.js";
 import submiteVideo from "./submiteVideo.js";
+import uplaodFiles2 from "./uplaodFiles2.js";
 const videoRoutesPosts = express.Router();
 
 const allRoutes = [
@@ -15,11 +16,17 @@ const allRoutes = [
   //   name: createNewVideo,
   //   auth: true,
   // },
+  // {
+  //   name: newUpload,
+  //   auth: false,
+  //   rout: false,
+  // },
   {
-    name: newUpload,
+    name: uplaodFiles2,
     auth: false,
     rout: false,
   },
+
   {
     name: createNewThumbnail,
     auth: true,
