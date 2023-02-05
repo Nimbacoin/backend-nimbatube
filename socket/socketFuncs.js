@@ -12,6 +12,8 @@ const socketFuncs = (io, socket) => {
   console.log("data");
   socket.on("ooo", async (file, callback) => {
     console.log(file);
+    callback({ message: !file ? "failure" : "success" });
+
     // const reslt = await s3UploadVideo(
     //   file,
     //   "/File.originalname/",
@@ -24,10 +26,10 @@ const socketFuncs = (io, socket) => {
     // const __dirname = path.resolve();
     // const pathhhhh = path.resolve(__dirname, "./upload");
     // console.log(pathhhhh);
-    writeFile("video.mp4", file, (err) => {
-      console.log(err);
-      callback({ message: err ? "failure" : "success" });
-    });
+    // writeFile("video.mp4", file, (err) => {
+    //   console.log(err);
+    //   callback({ message: err ? "failure" : "success" });
+    // });
     // writeFile("video.mp4", file, (err) => console.log("video saved!", err));
   });
 
