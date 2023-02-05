@@ -8,7 +8,7 @@ import videoData from "./videoData.js";
 import watchLater from "./watchLater.js";
 const videoRoutesGets = express.Router();
 videoRoutesGets.use(`/get/video/display`, allVideos);
-renderVideo();
+
 const allRoutes = [
   // {
   //   name: renderVideo,

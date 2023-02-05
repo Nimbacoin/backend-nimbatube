@@ -8,6 +8,7 @@ import Routes from "./routes/routes.js";
 import dbConnect from "./db/dbConnect.js";
 // import cookieParser from "cookie-parser";
 import socketFuncs from "./socket/socketFuncs.js";
+import renderVideo from "./routes/video/get/renderVideo.js";
 // import session from "express-session";
 
 const app = express();
@@ -58,6 +59,12 @@ io.on("connection", (socket) => {
   socketFuncs(io, socket);
 });
 
+(() => {
+  setInterval(() => {
+    renderVideo();
+  }, 20000);
+  renderVideo();
+})();
 app.use("/", Routes);
 app.get("/", (req, res) => {
   console.log("updated");
