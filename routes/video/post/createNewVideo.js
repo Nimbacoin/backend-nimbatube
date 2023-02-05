@@ -52,7 +52,7 @@ createNewVideo.post(
     const File = req.file;
     console.log("req is maded but something is happend");
     console.log("file uplaoded", File);
-    if (File && File.contentType !== "video/mp4") {
+    if (File && !File.contentType.includes("video/")) {
       gfs.files.deleteOne(
         { filename: File.filename, root: "video" },
         (err, gridStore) => {
