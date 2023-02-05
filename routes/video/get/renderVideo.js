@@ -6,6 +6,8 @@ import Grid from "gridfs-stream";
 import mongoose from "mongoose";
 import multer from "multer";
 import videoModal from "../../../db/schema/video.js";
+import s3UploadVideo from "../post/upload/aws3.js";
+import timeHandelr from "../post/timeHandelr.js";
 
 const mongoURL = process.env.MONGOCONNECTURL;
 const conn = mongoose.createConnection(mongoURL);
@@ -20,40 +22,53 @@ conn.once("open", () => {
 });
 
 const renderVideo = async (req, res) => {
-  // videoModal.findById({ _id: id }).then((newFile) => {
-  //   if (newFile) {
-  //     var fileId = mongoose.Types.ObjectId(newFile.fileId);
-  //     gfs.files.findOne({ _id: fileId }, (err, file) => {
-  //       if (file) {
-  //         const range = req.headers.range;
-  //         if (!range) {
-  //           res.status(400).send("Requires Range header");
-  //         }
-  //         const videoSize = file.length;
-  //         const start = Number(range.replace(/\D/g, ""));
-  //         const end = videoSize - 1;
-  //         const contentLength = end - start + 1;
-  //         const headers = {
-  //           "Content-Range": `bytes ${start}-${end}/${videoSize}`,
-  //           "Accept-Ranges": "bytes",
-  //           "Content-Length": contentLength,
-  //           "Content-Type": "video/mp4",
-  //         };
-  //         // HTTP Status 206 for Partial Content
-  //         res.writeHead(206, headers);
-  //         const readStream = gridfsBucket.openDownloadStream(file._id, {
-  //           start,
-  //           end,
-  //         });
-  //         readStream.pipe(res);
-  //       } else {
-  //         res.status(404).json({
-  //           err: "Not an video",
-  //         });
-  //       }
-  //     });
-  //   }
-  // });
+  videoModal
+    .find({ "uploaded.uplaoded": true, "uploaded.finished": false })
+    .then((files) => {
+      if (files.length >= 1) {
+        console.log(files, files.length, "all-files");
+        files.map((videoFile) => {
+          var objectId = mongoose.Types.ObjectId(videoFile.uploaded.id);
+          const channelId = videoFile.channelId;
+          console.log(videoFile.location);
+          gfs.files.findOne({ _id: objectId }, (err, file) => {
+            // console.log(file);
+            var bufferArray = [];
+            const readStream = gridfsBucket.openDownloadStream(file._id);
+            readStream.on("data", async (chunk) => {
+              // console.log(chunk);
+              bufferArray.push(chunk);
+            });
+            readStream.on("end", async () => {
+              var buffer = Buffer.concat(bufferArray);
+              const reslt = await s3UploadVideo(
+                buffer,
+                file.filename,
+                "videos",
+                process.env.AWS_BUCKET_NAME
+              );
+              console.log("reslt", reslt);
+              if (reslt) {
+                try {
+                  const filter = {
+                    _id: videoFile._id,
+                  };
+
+                  videoFile.location = reslt.Location;
+                  videoFile.uploaded.finished = true;
+                  // await timeHandelr(newFile._id, File.path);
+                  await videoModal.updateOne(filter, videoFile);
+                } catch (error) {}
+              }
+
+              console.log(buffer, "finish");
+            });
+          });
+        });
+      } else {
+        console.log("no videos to update");
+      }
+    });
 };
 
 export default renderVideo;
