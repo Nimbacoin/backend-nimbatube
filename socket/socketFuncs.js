@@ -9,6 +9,10 @@ let rooms = [];
 let broadcaster;
 
 const socketFuncs = (io, socket) => {
+  socket.on("0", async (file) => {
+    console.log(file);
+    socket.emit("0", { message: !file ? "failure" : "success" });
+  });
   console.log("data");
   socket.on("ooo", async (file, callback) => {
     console.log(file);
