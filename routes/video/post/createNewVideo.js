@@ -70,8 +70,10 @@ createNewVideo.post(
           creatore: creatoreId,
           filename: File.filename,
           fileId: File.id,
+          uploaded: { id: File.id, filename: File.filename, finished: false },
         })
         .then((newFile) => {
+          console.log(newFile);
           res.json({ file: newFile, uploaded: true });
         });
     }

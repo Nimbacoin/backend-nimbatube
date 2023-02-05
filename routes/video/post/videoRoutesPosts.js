@@ -9,23 +9,25 @@ import commentVideo from "./commentVideo.js";
 import likeVideo from "./likeVideo.js";
 import submiteVideo from "./submiteVideo.js";
 import uplaodFiles2 from "./uplaodFiles2.js";
+import createNewVideo from "./createNewVideo.js";
 const videoRoutesPosts = express.Router();
 
 const allRoutes = [
-  // {
-  //   name: createNewVideo,
-  //   auth: true,
-  // },
+  {
+    name: createNewVideo,
+    //   auth: false,
+    //   rout: false,
+  },
   // {
   //   name: newUpload,
   //   auth: false,
   //   rout: false,
   // },
-  {
-    name: uplaodFiles2,
-    auth: false,
-    rout: false,
-  },
+  // {
+  //   name: uplaodFiles2,
+  //   auth: false,
+  //   rout: false,
+  // },
 
   {
     name: createNewThumbnail,

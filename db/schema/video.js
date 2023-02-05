@@ -35,6 +35,7 @@ const videoSchema = mongoose.Schema(
       completed: { type: Boolean, default: false },
       isLive: { type: Boolean, default: false },
     },
+    uploaded: { id: String, filename: String, finished: false },
   },
   { timestamps: true }
 );
