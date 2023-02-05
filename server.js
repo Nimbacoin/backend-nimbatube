@@ -6,9 +6,9 @@ import { Server, Socket } from "socket.io";
 import Routes from "./routes/routes.js";
 // import bodyParser from "body-parser";
 import dbConnect from "./db/dbConnect.js";
-import cookieParser from "cookie-parser";
+// import cookieParser from "cookie-parser";
 import socketFuncs from "./socket/socketFuncs.js";
-import session from "express-session";
+// import session from "express-session";
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -20,7 +20,7 @@ const ORIGINHTTPS = process.env.ORIGINHTTPS;
 const ORIGINHTTPSWWW = process.env.ORIGINHTTPSWWW;
 //
 dotenv.config();
-app.use(cookieParser());
+// app.use(cookieParser());
 app.use(express.json());
 dbConnect();
 app.use(
